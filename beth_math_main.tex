@@ -1,0 +1,134 @@
+\documentclass[12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+
+%\newcommand{\theoremsandsuchchapter}{}
+
+\input{/Users/sunyun/mytex/mydefs}
+
+\usepackage{appendix}
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ...
+%\geometry{landscape}                		% Activate for rotated page geometry
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex
+\usepackage{amssymb}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    %urlcolor=cyan,
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+
+%SetFonts
+
+%SetFonts
+
+\newcommand{\feasibleset}{\mathcal{F}}
+\newcommand{\optsolset}{\mathcal{X}^\ast}
+\newcommand{\grad}{\nabla}
+\newcommand{\possemidefset}[1]{\mathcal{S}_+^{#1}}
+\newcommand{\posdefset}[1]{\mathcal{S}_{++}^{#1}}
+\newcommand{\covmat}[1]{{\Sigma}_{#1}}
+
+
+\title{Math for Beth}
+%\author{}
+%\date{}							% Activate to display a given date or no date
+
+
+\begin{document}
+
+\maketitle
+
+%\setcounter{secnumdepth}{4}
+%\setcounter{tocdepth}{3}
+%\tableofcontents
+
+
+\section{Algebra}
+
+\subsection{Commutative law, associative law, distributive law}
+
+\begin{itemize}
+\item Commutative law
+\begin{eqnarray*}
+a + b &=& b + a
+\\
+a \times b &=& b \times a
+\end{eqnarray*}
+
+Examples:
+\begin{itemize}
+\item $2 + 4 = 4 + 2$
+\item $3 \times 4 = 4 \times 3$
+\end{itemize}
+
+However,
+\begin{eqnarray*}
+a - b &\neq& b - a
+\\
+a \div b &\neq& b \div a
+\end{eqnarray*}
+\ie, commutative law does not hold for operations, such as, subtraction and division.
+
+Counter examples:
+\begin{itemize}
+\item $ 2 - 4 = -2 \neq 2 = 4 - 2 $
+\item $2 \div 4 = 1/2 \neq 2 = 4 \div 2$
+\end{itemize}
+
+
+\item Associative law
+\begin{eqnarray*}
+(a + b) + c  &=&  a + (b + c)
+\\
+(a \times b) \times c  &=&  a \times (b \times c)
+\end{eqnarray*}
+
+Examples:
+\begin{itemize}
+    \item $(2 + 3) + 1  =  2 + (3 + 1)$
+    \item $(2 \times 4) \times 3  =  2 \times (4 \times 3)$
+\end{itemize}
+
+However, 
+\begin{eqnarray*}
+(a - b) - c  &\neq&  a - (b - c)
+\\
+(a \div b) \div c  &\neq&  a \div (b \div c)
+\end{eqnarray*}
+
+\item Distributive law
+\begin{eqnarray*}
+a \times (b + c)  &=& a \times b + a \times c
+\\
+(a + b) \times c  &=&  a \times c + b \times c
+\end{eqnarray*}
+
+Examples:
+\begin{itemize}
+    \item $3 \times (4 + 2)  = 3 \times 4 + 3 \times 2$
+    \item $(4 + 3) \times 5  =  4 \times 5 + 3 \times 5$
+\end{itemize}
+
+\end{itemize}
+
+
+\section{Others}
+
+\subsection{Pigeonhole principle}
+
+If $n$ pigeons are put to into $m$ pigeonholes with $n>m$,
+then at least one pigeonhole must contain more than one pigeon.
+
+For example, assume that there are $5$ pigeons and $4$ pigeonholes.
+If $5$ pigeons go into one of the $4$ pigeonholes,
+then there exists at least one pigeonhole with more than one pigeon.
+
+
+\end{document}
