@@ -1,0 +1,576 @@
+\section{Matrix Factorization and Dimension Reduction}
+
+
+\subsection{Lecture}
+
+
+\subsection{Assignments}
+
+\subsubsection{Assignment \#2}
+
+\paragraph{Question: Analyzing PCA [2pts]}
+
+
+\#\#\#\# Compute SVD
+
+\begin{enumerate}
+\item We will compute the SVD of the adjusted image matrix, \verb+img_arr_adj+, $\bf{X}$. That is, we calculate the SVD as $\bf{X} = \bf{U} \bf{\Sigma}  \bf{V}^T$ where $\bf{U}$, $\bf{V}$ are left and right singlular vectors of $\bf{X}$ and $\bf{\Sigma}$ is the diagonal matrix of singular values. 
+\item Interpret the components of SVD for the image matrix - What do $\bf{U}$, $\bf{\Sigma}$ and $\bf{V}$ represent? Which component corresponds to the eigenfaces (that is the fundamental building blocks to "re-construct" any image in the data set)?
+\end{enumerate}
+
+
+
+
+\paragraph{Answer for Analyzing PCA}
+
+Let $m=32$ and $n=HW$, *i.e.*, $m$ is the number if images and $n$ is the number of pixles. Let $k$ be the rank of $X$. Note that $k\leq\min\{m, n\}$.
+
+Suppose that $v_1, \ldots, v_k \in \reals^n$ be the column vectors of $V\in\reals^{n\times k}$,
+that $u_1, \ldots, u_k \in \reals^m$ be the column vectors of $U\in\reals^{m\times k}$,
+and that $\diag(\sigma_1,\ldots,\sigma_k)\in\reals^{k\times k}$ be the diagonal matrix with $k$ singular values as its diagonal entries.
+
+Then we can express $X$ as
+\begin{equation}
+X = \sum_{j=1}^k \sigma_j u_j v_j^T \in\reals^{m\times n}.
+\end{equation}
+This means the whole image set can be reconstructed with rank $1$ matrices $u_i v_i^T$ with coefficients $\sigma_j$. Thus,
+
+* **$\Sigma$ represents how much each such component contributes to the whole image set.**
+
+Now the $i$th image can be retrieved by $e_i^T X$ where $e_i\in\reals^m$ is the $i$th unit vector whose entries are zeros except the $i$the entriy, which is $1$.
+Since
+\begin{equation}
+e_i^T X = \sum_{j=1}^k \sigma_j e_i^Tu_j v_j^T
+= \sum_{j=1}^k (U_{i,j} \sigma_j) v_j^T \in\reals^{1\times n},
+\end{equation}
+**the $i$th image is the linear combination of $v_j$s with coefficients, $U_{i,j} \sigma_j$**. Thus,
+
+* **$V$ represents the eigenfaces with which we can reconstruct the orignal faces.**
+
+* **$U$ represents how much each eigefaces should contribute to reconstruct each original faces.**
+
+
+
+
+
+\paragraph{Optional Question: SVD and Regression [bonus +3pts]}
+
+This question is more theoretical in nature and lets you see how SVD can be used as a tool to derive expressions for problems involving matrices - We discussed square root of the matrix as an example in the lecture!
+Let $\bf{X}$ be the data matrix and we have the SVD for the matrix with components given as $\bf{U}$, $\bf{\Sigma}$ and $\bf{V}$. Let $\bf{b}$ be the data corresponding to the output of the regression and $\bf{\theta}$ be the parameters we wish to learn. You may assume the bias term is already accounted for. The closed form solution to $\bf{\theta}$ is given by:
+$$
+{\bf{\theta}} = \left({\bf{X}}^T {\bf{X}} \right)^{-1}{\bf{X}}^T {\bf{b}}
+$$
+
+\begin{enumerate}
+\item Express $\bf{\theta}$ exclusively in terms of the components of the SVD of $\bf{X}$ (i.e. $\bf{\theta}$ should only depend directly on $\bf{U}$, $\bf{\Sigma}$, $\bf{V}$ and $\bf{b}$).
+\item Assume we have an L2 regularizer term with regularization hyper-parameter $\lambda$. The new closed form looks as follows: ${\bf{\theta}} = \left({\bf{X}}^T {\bf{X}} + \lambda {\bf{I}}\right)^{-1}{\bf{X}}^T {\bf{b}}$. Again, express $\bf{\theta}$ exclusively in terms of the components of the SVD of $\bf{X}$
+\item Suppose that $\bf{X}$ is under-determined so that $\bf{X} \bf{\theta} = \bf{b}$ has infinitely many solutions. One particular solution is ${\bf{\theta}} = {\bf{X}}^{+} {\bf{b}}$, where ${\bf{X}}^{+}$ is the \emph{pseudo-inverse} of ${\bf{X}}$. Can you think of a way to express the pseudo-inverse in terms of $\bf{U}$, $\bf{\Sigma}$, $\bf{V}$ ? \emph{Hint}: It has an expression similar to what you obtained for question 1 above.
+\end{enumerate}
+
+
+
+
+
+
+
+\paragraph{Answers to the Optional Question}
+
+\iffalse
+\begin{equation}
+\newcommand{\reals}{\mathbf{R}}
+\newcommand{\rank}{\mathbf{rank}}$
+\newcommand{\diag}{\mathbf{diag}}
+\newcommand{\range}{\mathcal{R}}
+\end{equation}
+\fi
+
+%\begin{equation}
+\newcommand{\V}{\hat{V}}
+\newcommand{\U}{\hat{U}}
+\newcommand{\Sig}{\hat{\Sigma}}
+%\end{equation}
+
+First, we assume that $X$ is a $m$-by-$n$ matrix with rank $k$, *i.e.*,
+\begin{equation}
+X\in\reals^{m\times n},\
+\rank\ A = k.
+\end{equation}
+Since the rank of $X$ equals to the maximum number of linearly independent columns of $X$, or equivalently, the maximum number of linearly independent rows of $X$, we should have $k\leq\min\{m,n\}$.
+
+We also assume that $X$ has the following singular value decomposition (SVD):
+\begin{equation}
+X = U \Sigma V^T
+\end{equation}
+where $U\in\reals^{m\times k}$, $V\in\reals^{n\times k}$, and $\Sigma \in \reals^{k \times k}$.
+By definition the column vectors of $U$ are orthonormal, *i.e.*, $u_i^T u_j = \delta_{i,j}$ where $\delta_{i,j}$ is the Kronecker delta function, *i.e.*,
+\begin{equation}
+\delta_{i,j} = \left\{\begin{array}{ll}
+1 & i=j\\
+0 & i\neq j
+\end{array}\right.
+\end{equation}
+Therefore, we have $U^TU = I_k$. 
+Likewise, the column vectors of $V$ are also orthonormal, *i.e.*, $v_i^T v_j = \delta_{i,j}$, hence, $V^TV=I_k$.
+Thus, we have
+\begin{equation}
+U^TU = V^TV = I_k.
+\end{equation}
+
+We also note that for two matrices, $A$ and $B$, we have 
+\begin{equation}
+(AB)^T = B^T A^T
+\end{equation}
+assuming that the matrix multiplication $AB$ can be defined.
+If we apply this recursively, we have
+\begin{equation}
+(A_1 A_2 \cdots A_n)^{T} = A_n^{T}A_{n-1}^{T}\cdots A_1^{T}.
+\end{equation}
+assuming that the matrix multiplication $A_1 A_2 \cdots A_n$ can be defined.
+
+We want to show similar results for matrix inverse,
+*i.e.*,
+for any two nonsingular matrices of the same size, $A$ and $B$, we have
+\begin{equation}
+(AB)^{-1} = B^{-1}A^{-1}
+\end{equation}
+since $B^{-1}A^{-1} AB = B^{-1} B = I$.
+If we apply this recursively, we have,
+for any $n$ nonsingular matrices of the same size, $A_1$, $A_2$, $\ldots$, $A_n$,
+\begin{equation}
+(A_1 A_2 \cdots A_n)^{-1} = A_n^{-1}A_{n-1}^{-1}\cdots A_1^{-1}.
+\end{equation}
+
+**We will use these assumptions and results in the following.**
+
+
+
+
+
+
+
+\begin{enumerate}
+\item Express $\bf{\theta}$ exclusively in terms of the components of the SVD of $\bf{X}$ (i.e. $\bf{\theta}$ should only depend directly on $\bf{U}$, $\bf{\Sigma}$, $\bf{V}$ and $\bf{b}$).
+
+**Answer:** $\theta = (X^TX)^{-1} X^T b = V \Sigma^{-1} U^T b$.
+
+\begin{solution}
+\begin{enumerate}
+
+
+
+
+
+
+
+\item
+
+**Proof 1:** Since  $X = U \Sigma V^T$ is the SVD of $X$,
+\begin{equation}
+X^T = (U\Sigma V^T)^T = (V^T)^T (U\Sigma)^T = V \Sigma^T U^T = V \Sigma U^T,
+\end{equation}
+using the fact that the traspose of the transpose of a matrix is the original matrix itself,
+thus,
+\begin{equation}
+X^TX
+= (V \Sigma U^T) (U \Sigma V^T) 
+= V \Sigma (U^T U) \Sigma V^T
+= V \Sigma^2 V^T.
+\end{equation}
+Note that 
+$V\in\reals^{n\times k}$,
+$\Sigma^2\in\reals^{k\times k}$,
+and
+$V^T\in\reals^{k\times n}$ with $k\leq n$.
+
+The problem implicitly implies this matrix, $X^TX$, is nonsingular. If $k < n$, then $X^TX$ becomes rank-deficient, i.e., $\rank(X^TX) = k < n$, hence cannot be nonsingular.
+Therefore we should have $k=n$, thus $V$ should be a square matrix.
+Since $V^T V=I$, we have
+\begin{equation}
+V^{-1} = V^T.
+\end{equation}
+
+Therefore
+\begin{eqnarray*}
+\theta
+&=&
+(V \Sigma^2 V^T)^{-1} (V \Sigma U^T) b
+\\
+&=&
+((V^T)^{-1} \Sigma^{-2} V^{-1}) (V \Sigma U^T) b
+\\
+&=&
+(V \Sigma^{-2} V^T )(V \Sigma U^T) b = V \Sigma^{-2} (V^TV) \Sigma U^T b
+\\
+&=&
+V \Sigma^{-1} U^T b,
+\end{eqnarray*}
+hence the proof!
+
+
+
+
+
+
+
+
+
+\item
+
+**Proof 2:**
+
+We can see this in another way. Note that $\theta = (X^TX)^{-1}X^Tb$ is the optimal solution of the following optimization problem:
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & \|Xx - b\|_2
+\end{array}
+\end{equation}
+which is equivalent to
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & \|U\Sigma V^T x - b\|_2
+\end{array}
+\end{equation}
+where the optimization variable is $x\in\reals^n$.
+Now if we let $y = \Sigma V^T x$, then this problem is equivalent to
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & \|U y - b\|_2
+\\
+\mbox{subject to} & y = \Sigma V^T x.
+\end{array}
+\end{equation}
+Using the fact that for any $x,y\in\reals^n$,
+$\|x+y\|_2^2 = (x+y)^T(x+y) = x^Tx + y^Ty + 2x^Ty = \|x\|_2^2 + \|y\|_2^2 + 2x^Ty$,
+we can dervie
+\begin{eqnarray*}
+\|U y - b\|_2^2
+&=&
+\|U (y - U^Tb) + UU^Tb - b\|_2^2
+\\ &=&
+\|U (y - U^Tb)\|_2^2 + \|UU^Tb - b\|_2^2
++2 (y-U^Tb)^T U^T (UU^Tb - b)
+\\ &=&
+\|U (y - U^Tb)\|_2^2 + \|UU^Tb - b\|_2^2
++2 (y-U^Tb)^T (U^TUU^Tb - U^Tb)
+\\ &=&
+\|U (y - U^Tb)\|_2^2 + \|UU^Tb - b\|_2^2
++2 (y-U^Tb)^T (U^Tb - U^Tb)
+\\ &=&
+\|U (y - U^Tb)\|_2^2 + \|UU^Tb - b\|_2^2
+\\
+&\geq&
+\|UU^Tb - b\|_2^2
+\end{eqnarray*}
+where the equality holds if and only if $U (y - U^Tb)=0$.
+Since this implies that $U^T U(y-U^Tb) = y-U^Tb = 0$,
+and vice versa, we conclude that $U (y - U^Tb)=0$ if and only if $y=U^Tb$.
+
+Therefore $y^\ast = U^Tb$ is the (only) optimal solution attaining its optimal value.
+Thus,
+\begin{equation}
+\theta = x^\ast = (\Sigma V^T)^{-1} y^\ast = ((V^T)^{-1} \Sigma^{-1}) U^T b = V \Sigma^{-1} U^T b,
+\end{equation}
+hence the proof!
+
+
+
+
+
+
+
+
+
+
+\item 
+
+**Proof 3**
+
+Here we use the same optimization problem as above, but take advantage of the convexity and the differentiability of the objective function.
+The objective function of the above optimization problem is $\|Uy-b\|_2$. This is a convex function, but not differential for $y$ such that $Uy-b=0$.
+Hence, we consider minimizing $\|Uy-b\|_2^2$. Now this function is not only differentiable, but also convex.
+Hence it achives its minimum where the gradient vanishes.
+Since
+\begin{equation}
+\nabla_y \|Uy-b\|_2^2 = \nabla_y U^T(Uy-b),
+\end{equation}
+equating this to zero implies
+\begin{equation}
+U^T(Uy-b) = 0 \Leftrightarrow U^TUy - U^Tb = 0 \Leftrightarrow y - U^Tb=0,
+\end{equation}
+hence we have the same results as above. Going throught the same procedure leads us to conlude that
+\begin{equation}
+\theta = x^\ast = (\Sigma V^T)^{-1} y^\ast = ((V^T)^{-1} \Sigma^{-1}) U^T b = V \Sigma^{-1} U^T b.
+\end{equation}
+
+
+\end{enumerate}
+
+\end{solution}
+
+
+
+
+\item Assume we have an L2 regularizer term with regularization hyper-parameter $\lambda$. The new closed form looks as follows: ${\bf{\theta}} = \left({\bf{X}}^T {\bf{X}} + \lambda {\bf{I}}\right)^{-1}{\bf{X}}^T {\bf{b}}$. Again, express $\bf{\theta}$ exclusively in terms of the components of the SVD of $\bf{X}$.
+
+**Answer:**
+$\theta = V \diag \left(\sigma_1/(\sigma_1^2+\lambda), \sigma_2/(\sigma_2^2+\lambda), \ldots, \sigma_k/(\sigma_k^2+\lambda) \right) U^T b$.
+We observe that this quantity converges to $V\Sigma^{-1}U^Tb$ as $\lambda$ goes to $0$, which makes a perfect sense!
+
+\begin{solution}
+
+
+**Proof:** Since we don't assume that $X^TX$ is nonsingluar for this problem,
+$V^T$ is not necessarily equal to $V^{-1}$. Indeed, $V$ is not a square matrix in general.
+Thus, we introduce **full** SVD here as follows.
+
+Let $v_1, \ldots, v_k\in\reals^n$ be the $k$ column vectors of $V$. These vectors are orthonormal.
+Suppose that there are $n-k$ more vectors $v_{k+1}, \ldots, v_n\in\reals^n$ so that all the $n$ vectors, $v_1, \ldots, v_n\in\reals^n$ are orthonormal.
+(We can find these vectors by, *e.g.*, applying Gram-Schmidt procedure to $\begin{bmatrix}v_1&\cdots&v_k&I_n\end{bmatrix}$.)
+Now let $\hat{V}\in\reals^{n\times n}$ be a matrix such that
+\begin{equation}
+\V = \begin{bmatrix}V&v_{k+1}&\cdots&v_n\end{bmatrix} \in\reals^{n\times n}.
+\end{equation}
+Likewise, we can find $m-k$ vectors $u_{k+1}, \ldots, u_m\in\reals^m$ so that all the $m$ vectors, $u_1, \ldots, u_m\in\reals^m$ are orthonormal.
+Let $\hat{U}\in\reals^{m\times m}$ be a matrix such that
+\begin{equation}
+\U = \begin{bmatrix}U&u_{k+1}&\cdots&u_m\end{bmatrix} \in\reals^{m\times m}.
+\end{equation}
+Now $\V$ is a square matrix with $\V^T \V = I_n$, hence $\V^T = \V^{-1}$.
+For the same reason, $\U^T = \U^{-1}$.
+
+Now we define $\Sig\in\reals^{m\times n}$ such that
+\begin{equation}
+\Sig_{i,j} = \left\{\begin{array}{ll}
+        \sigma_i & \mbox{if } i = j \leq k\\
+        0 & \mbox{otherwise}.
+\end{array}\right.
+\end{equation}
+Then we have
+\begin{equation}
+X = \U \Sig \V^T,
+\end{equation}
+which is called **full SVD** of $X$.
+That is, the very same matrix $X$ can also be expressed with bigger matrices.
+
+Then
+
+\begin{eqnarray}
+X^TX + \lambda I &=& \left(\U\Sig \V^T\right)^T\left(\U \Sig \V^T\right) + \lambda I
+= \V \Sig^T \U^T \U \Sig \V^T + \lambda I
+\\
+&=& \V \Sig^T\Sig  \V^T + \lambda I
+= \V \Sig^T\Sig  \V^T + \lambda \V \V^T
+\\
+&=& \V (\Sig^T\Sig  + \lambda I) \V^T
+\end{eqnarray}
+where we use the fact that $\V^T = \V^{-1}$.
+Note that $\Sig$ is not a square diagonal matrix (anymore),
+hence the equation gets a bit different.
+
+Therefore
+\begin{eqnarray}
+\theta
+&=& (X^TX + \lambda I)^{-1} X^T b
+= \left(\V(\Sig^T\Sig + \lambda I)\V^T \right)^{-1} \V \Sig^T \U^T b
+\\
+&=&
+\left( \V(\Sig^T\Sig + \lambda I)^{-1} \V^T \right) \V \Sig^T \U^T b
+= \V \left(\Sig^T\Sig + \lambda I \right)^{-1} \left(\V^T \V \right) \Sig^T \U^T b
+\\
+&=&
+\V \left(\Sig^T\Sig + \lambda I \right)^{-1} \Sig^T \U^T b
+\\
+&=&
+\V
+f(\Sigma, \lambda)
+\U^T b
+\end{eqnarray}
+where
+\begin{equation}
+f(\Sigma, \lambda) =
+\begin{bmatrix}
+\sigma_1/(\sigma_1^2+\lambda) & 0                             & \cdots & 0                             & 0          & \cdots
+\\
+0                             & \sigma_2/(\sigma_2^2+\lambda) & \cdots & 0                             & 0          & \cdots
+\\
+\vdots                        & \vdots                        & \ddots & 0                             & 0          & \cdots
+\\
+0                             & 0                             & \cdots & \sigma_k/(\sigma_k^2+\lambda) & 0          & \cdots
+\\
+0                             & 0                             & \cdots & 0                             & 0          & \cdots
+\\
+\vdots                        & \vdots                        & \vdots & \vdots                        & \vdots     & \ddots
+\end{bmatrix}
+\in\reals^{n\times m}
+\end{equation}
+Since this matrix has zero entries everywhere except the first $k$-by-$k$ major submatrix,
+the latter $n-k$ column vectors in $\V$ diminishes as well as the latter $m-k$ column vectors in $\U$.
+Therefore we have
+\begin{equation}
+\theta = V \diag \left(\sigma_1/(\sigma_1^2+\lambda), \sigma_2/(\sigma_2^2+\lambda), \ldots, \sigma_k/(\sigma_k^2+\lambda) \right) U^T b
+\end{equation}
+where $\diag(d_1,\ldots,d_k)\in\reals^{k\times k}$ denotes a (square) diagonal matrix whose diagonal entries are $d_1, \ldots, d_k$ (in this order),
+hence the proof!
+
+\end{solution}
+
+
+
+
+\item Suppose that $\bf{X}$ is under-determined so that $\bf{X} \bf{\theta} = \bf{b}$ has infinitely many solutions. One particular solution is ${\bf{\theta}} = {\bf{X}}^{+} {\bf{b}}$, where ${\bf{X}}^{+}$ is the \emph{pseudo-inverse} of ${\bf{X}}$. Can you think of a way to express the pseudo-inverse in terms of $\bf{U}$, $\bf{\Sigma}$, $\bf{V}$ ? \emph{Hint}: It has an expression similar to what you obtained for question 1 above.
+
+**Answer:** One solution can be expressed as
+\begin{equation}
+\theta^\ast = V\Sigma^{-1}U^Tb,
+\end{equation}
+*i.e.*, it is the same as the least-squre case. However, note that in this case, it should be satisfied that $
+b\in\range(U)$ and $n>k$ where $k=\rank(X)$ and $\range(U)$ denotes the range of $U$, hence $\range(U) = \{Ux|x\in\reals^k\}$. Note that if $X$ is full-rank, then
+\begin{equation}
+\theta^\ast = X^T(XX^T)^{-1} b.
+\end{equation}
+Indeed, this solution is the minimum-norm solution for $X\theta=b$,
+*i.e.*, for any $\theta$ satisfying $X\theta = b$, $\|\theta\|_2 \geq \|\theta^\ast\|_2$. The proof is given below.
+
+\begin{solution}
+\begin{enumerate}
+\item
+
+
+**Proof 1:**
+
+If $\theta$ satisfies $X\theta=b$, then $U\Sigma V^T \theta = b$, 
+hence, $b$ should be in the rnage of $X$, *i.e.*, $b\in\range(U)$.
+Also,
+\begin{eqnarray*}
+U\Sigma V^T \theta = b
+&\Rightarrow&
+U^T(U\Sigma V^T \theta) = U^Tb
+\\
+&\Leftrightarrow&
+(U^TU)\Sigma V^T \theta = \Sigma V^T \theta = U^Tb
+\\
+&\Leftrightarrow&
+V^T \theta = \Sigma^{-1} U^Tb.
+\end{eqnarray*}
+
+Now let $V_0 \in\reals^{n\times(n-k)}$ be a matrix whose columns vectors comprise a basis for the null space of $V^T$.
+Since the range of $\begin{bmatrix} V & V_0 \end{bmatrix}\in\reals^{n\times n}$ is $\reals^n$,
+any $\theta\in\reals^n$ can be expressed as $\theta = Vx + V_0y$ for some $x\in\reals^k$ and $y\in\reals^{n-k}$.
+Thus,
+\begin{equation}
+V^T\theta = V^TV x + V^TV_0 y = x = \Sigma^{-1} U^Tb
+\end{equation}
+since the columns of $V_0$ are a basis of the null space of $V^T$.
+Therefore
+\begin{equation}
+\theta =  V\Sigma^{-1}U^Tb + V_0y.
+\end{equation}
+Now we show the converse is true,
+*i.e.*,
+we show that this satisfies $X\theta = b$ for every $y\in\reals^{n-k}$.
+\begin{eqnarray*}
+X(V\Sigma^{-1}U^Tb + V_0y)
+&=& U\Sigma V^T(V\Sigma^{-1}U^Tb + V_0y)
+\\
+&=& U\Sigma (V^TV)\Sigma^{-1}U^Tb + U\Sigma V^T V_0y
+\\
+&=& UU^Tb.
+\end{eqnarray*}
+Now since we assume that $b\in\range(U)$,
+$b=Uz$ for some $z\in\reals^k$.
+Hence,
+\begin{equation}
+UU^Tb =  UU^TUz = Uz = b,
+\end{equation}
+thus
+\begin{equation}
+X(V\Sigma^{-1}U^Tb + V_0y) = b
+\end{equation}
+for all $y\in\reals^{n-k}$.
+Since we assume that $X\theta = b$ has infinitely many solutions,
+$V^T$ should have non-zero null space.
+Note that $V^T$ has non-zero null space if and only if $n>k$.
+
+In summary, $X\theta = b$ has infinitely many solution if and only if
+
+* $b\in\range(U)$
+
+* $n > k = \rank(X)$,
+
+and
+\begin{equation}
+\theta^\ast = V\Sigma^{-1}U^Tb
+\end{equation}
+is one such solution.
+
+Now we show that $\theta^\ast$ has the smallest $2$-norm among such solutions.
+Assume that $\theta$ satisfies $X\theta = b$.
+Then $\theta =  \theta^\ast + V_0y$, hence
+\begin{eqnarray*}
+\|\theta\|_2^2
+&=& \| \theta^\ast + V_0y \|_2^2
+\\
+&=& \| \theta^\ast\|_2^2 +\| V_0y \|_2^2 + 2 y^T V_0^T \theta^\ast
+\\
+&=& \| \theta^\ast\|_2^2 +\| V_0y \|_2^2 + 2 y^T V_0^T V\Sigma^{-1}U^Tb
+\\
+&=& \| \theta^\ast\|_2^2 +\| V_0y \|_2^2 \geq \|\theta^\ast\|_2^2,
+\end{eqnarray*}
+thus $\theta^\ast$ has the smallest $2$-norm.
+
+
+
+
+
+
+
+
+
+
+\item
+
+**Proof 2:**
+
+There is another way to prove the above argument.
+The smallest $2$-norm solution can be found by solving the following optimization problem:
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & \|\theta\|_2^2
+\\
+\mbox{subject to} & X\theta = b
+\end{array}
+\end{equation}
+
+The Lagrangian $L:\reals^n\times\reals^m \to \reals$ is defined by
+\begin{equation}
+L(\theta, \nu) = \theta^T\theta + 2\nu^T(b-X\theta).
+\end{equation}
+
+Thus, the KKT optimality conditions are
+
+* $X\theta^\ast = b$.
+
+* $\nabla_\theta L(\theta^\ast, \nu^\ast) = 2\theta^\ast - 2X^T \nu^\ast = 0$
+
+where $\theta^\ast$ is the primal optimum and $\nu^\ast$ is the dual optimum.
+
+Then $\theta^\ast = X^T \nu^\ast$, hence $XX^T \nu^\ast = b$.
+Since
+\begin{equation}
+XX^T \nu^\ast = U\Sigma V^T V \Sigma U^T \nu^\ast = U\Sigma^2 U^T \nu^\ast = b
+\Rightarrow
+\Sigma^2 U^T \nu^\ast = U^T b
+\Leftrightarrow
+U^T \nu^\ast = \Sigma^{-2} U^T b.
+\end{equation}
+Therefore
+\begin{equation}
+\theta^\ast = X^T \nu^\ast = V \Sigma U^T \nu^\ast = V \Sigma \Sigma^{-2} U^T b = V \Sigma^{-1} U^T b,
+\end{equation}
+hence the proof!
+
+
+\end{enumerate}
+\end{solution}
+
+\end{enumerate}

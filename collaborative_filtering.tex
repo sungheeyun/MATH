@@ -1,0 +1,44 @@
+\documentclass[10pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+
+\input{/Users/sunyun/mytex/mydefs}
+
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ...
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex
+\usepackage{amssymb}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    %urlcolor=cyan,
+    urlcolor=blue,
+}
+
+%SetFonts
+
+%SetFonts
+
+\newcommand{\feasibleset}{\mathcal{F}}
+\newcommand{\optsolset}{\mathcal{X}^\ast}
+\newcommand{\grad}{\nabla}
+\newcommand{\possemidefset}[1]{\mathcal{S}_+^{#1}}
+\newcommand{\posdefset}[1]{\mathcal{S}_{++}^{#1}}
+\newcommand{\covmat}[1]{{\Sigma}_{#1}}
+
+
+\title{Collaborative Filtering}
+\author{Sunghee Yun}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\input{chp_cf}
+
+\end{document}

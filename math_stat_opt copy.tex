@@ -1,0 +1,1258 @@
+\documentclass[10pt, twoside]{book}   	% use "amsart" instead of "article" for AMSLaTeX format
+
+\newcommand{\theoremsandsuchchapter}{}
+\input{/Users/sunyun/mytex/mydefs}
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ...
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex
+\usepackage{amssymb}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    %urlcolor=cyan,
+    urlcolor=blue,
+}
+
+%SetFonts
+
+%SetFonts
+
+\newcommand{\feasibleset}{\mathcal{F}}
+\newcommand{\optsolset}{\mathcal{X}^\ast}
+\newcommand{\grad}{\nabla}
+\newcommand{\possemidefset}[1]{\mathcal{S}_+^{#1}}
+\newcommand{\posdefset}[1]{\mathcal{S}_{++}^{#1}}
+\newcommand{\covmat}[1]{{\Sigma}_{#1}}
+
+
+\title{Mathematics, Statistics, Optimization, and Machine Learning}
+\author{Sunghee Yun}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\part{Mathematics}
+
+\chapter{Calculus}
+
+\section{Basics}
+
+\begin{theorem}
+[L'H\^opital's rule]
+Let $f:\reals\to\reals$ and $f:\reals\to\reals$ be differentiable on an open interval $I\subseteq \reals$
+except possibly at $c\in I$.
+If $\lim_{x\to c} f(x) = \lim_{x\to c} g(x) = 0$ or $\pm \infty$,
+$g'(x)=0$ for all $x\in I\backslash \{c\}$,
+and $\lim_{x\to c} \frac{f'(x)}{g'(x)}$ exists,
+then
+\begin{equation}
+\label{eq:lhopital-rule}
+\lim_{x\to c} \frac{f(x)}{g(x)}
+= \lim_{x\to c} \frac{f'(x)}{g'(x)}.
+\end{equation}
+\end{theorem}
+
+\begin{definition}
+[Taylor polynomial]
+Let $n\in\integers$ be a positive integer and
+let $f:\reals\to\reals$ be $n$ times differentiable at $a\in\reals$.
+The $n$-th order Taylor polynomial is defined by
+\begin{eqnarray}
+T_{f,n}(x) &=& f(a) + f'(a)(x-a)
++ \frac{f''(a)}{2!}(x-a)^2
++ \cdots
++ \frac{f^{(n)}(a)}{n!}(x-a)^n
+\nonumber
+\\
+&=&
+\sum_{k=0}^n \frac{f^{(k)}(a)}{k!} (x-a)^k
+\label{eq:taylor-poly}
+\end{eqnarray}
+\end{definition}
+
+
+\begin{theorem}
+[Taylor's theorem]
+\label{theorem:taylor-peano}
+Let $n\in\integers$ be a positive integer and
+let $f:\reals\to\reals$ be $n$ times differentiable at $a\in\reals$.
+Then there exists a function $h_n:\reals\to\reals$ such that
+\begin{equation}
+\label{eq:taylor-peano}
+f(x) = T_{f,n}(x) + h_n(x) (x-a)^n
+\end{equation}
+and $\lim_{x\to a} h_n(x)=0$.
+The remainder is called the Peano form of the remainder.
+\end{theorem}
+
+\begin{theorem}
+[Taylor's theorem]
+\label{theorem:taylor-lagrange}
+Let $n\in\integers$ be a positive integer, $a,b\in\reals$,
+and $I_o = (a,b) \cup (b,a)$ and $I_c = [a,b] \cup [b,a]$.
+Let $f:\reals\to\reals$ be $n+1$ times differentiable on $I_o$
+and $f^{(n)}$ is continuous on $I_c$.
+Then for some $c \in I_o$,
+\begin{equation}
+\label{eq:taylor-lagrange}
+f(b) = T_{f,n}(b) + \frac{f^{(n+1)}(c)}{(n+1)!}(b-a)^{n+1}.
+\end{equation}
+The remainder is called the Peano form of the remainder.
+\end{theorem}
+
+
+
+\section{Chain rule}
+
+\begin{theorem}
+\label{theorem:chain-rule}
+Let $f:\reals\to\reals^n$ and $g:\reals^n\to\reals$ be differentiable.
+Then $h:\reals\to\reals$ such that $h(t) = g(f(t))$ is also differentiable and
+\[
+h'(t) = \sum_{i=1}^n f_i'(t) \frac{\partial g}{\partial x_i} (f(t))
+= \nabla^T g(f(t))^T D_f (t)
+\]
+for all $t\in\dom f$.
+\end{theorem}
+
+\begin{corollary}
+\label{corollary:chain-rule-gen}
+Let $f:\reals^n\to\reals^m$ and $g:\reals^m\to\reals^p$ be differentiable.
+Then define a function $h:\reals^n\to\reals^p$ such that $h(x) = g(f(x))$ for all $x\in\dom f$.
+Then $h$ is differentiable and
+\begin{equation}
+\label{eq:chain-rule-gen}
+D h(x) = Dg(f(x)) Df(x)
+\end{equation}
+where
+$D f:\reals^n\to\reals^{m\times n}$,
+$D g:\reals^m\to\reals^{p\times m}$,
+and $D f:\reals^n\to\reals^{p\times n}$
+are the Jacobian matrix functions of $f$, $g$, and $h$ respectively.
+\end{corollary}
+
+\begin{corollary}
+\label{corollary:dixu}
+Let $f:\reals^n\to\reals$ be differentiable.
+Then for some $A\in\reals^{n\times m}$ and $b\in\reals^n$,
+define $g:\reals^m\to\reals$ such that $g(y) = f(Ay+b)$.
+Then
+\begin{equation}
+\label{eq:dixu}
+\nabla g(y) = A^T \nabla f(Ay+b).
+\end{equation}
+\end{corollary}
+
+
+\begin{corollary}
+\label{corollary:eicg}
+Let $f:\reals^n\to\reals$ be twice differentiable.
+Then for some $A\in\reals^{n\times m}$ and $b\in\reals^n$,
+define $g:\reals^m\to\reals$ such that $g(y) = f(Ay+b)$.
+Then
+\begin{equation}
+\label{eq:eicg}
+\nabla^2 g(y) = A^T \nabla^2 f(Ay+b)A.
+\end{equation}
+\end{corollary}
+
+
+\chapter{Convex analysis}
+
+\section{Convex function}
+
+A function $f:\reals^n\to\reals$ is a convex function if, for all $x,y \in \dom f$ and all $0\leq \lambda \leq 1$,
+\begin{equation}
+f(\lambda x + (1-\lambda)y)
+\leq
+\lambda f(x) + (1-\lambda)f(y).
+\end{equation}
+
+\begin{theorem}
+\label{theorem:cvx-equiv-1d-fcn}
+Let $f:\reals^n\to\reals$.
+Then for some $x\in\dom f$ and $v\in\reals^n$,
+define a function $g_{x,v}(t):\reals\to\reals$ such that $g_{x,v}(t) = f(x+tv)$
+with the domain, $\set{t\in\reals}{x+tv\in \dom f}$.
+Then $f$ is a convex function iff $g_{x,v}$ is a convex function for any $x\in\dom f$ and any $v\in\reals^n$.
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then for any $x\in\dom f$ and $v\in\reals^n$,
+for any $s,t \in\set{t\in\reals}{x+tv\in \dom f}$ and any $\lambda\in\reals$ such that $0\leq \lambda \leq 1$,
+\begin{eqnarray*}
+\lefteqn{
+g_{x,v}(\lambda s + (1-\lambda) t)
+=f(x+(\lambda s + (1-\lambda) t)v)
+}
+\\
+&=&
+f(\lambda (x+sv) + (1-\lambda) (x+tv))
+\\
+&\leq&
+\lambda f(x+sv) + (1-\lambda) f(x+tv)
+= \lambda g_{x,v}(s) + (1-\lambda) g_{x,v}(t).
+\end{eqnarray*}
+Therefore $g_{x,v}$ is a convex function.
+
+Now assume that
+$g_{x,v}(t):\reals\to\reals$ is a convex function for any $x\in\dom f$ and $v\in\reals^n$.
+Then for any $x,y \in \dom f$ and any $\lambda\in\reals$ such that $0\leq \lambda \leq 1$,
+\begin{eqnarray*}
+\lefteqn{
+f((1-\lambda) x + \lambda y ) =f(x + \lambda (y-x) )
+}
+\\
+&=&
+g_{x,y-x}(\lambda)
+= g_{x,y-x}((1-\lambda)\cdot 0 + \lambda \cdot 1)
+\leq (1-\lambda) g_{x,y-x}(0) + \lambda g_{x,y-x}(1)
+\\
+&=&
+(1-\lambda) f(x) + \lambda f(y),
+\end{eqnarray*}
+thus, $f$ is a convex function.
+\end{proof}
+
+\subsection{First order condition}
+
+\begin{theorem}
+\label{theorem:cvx-1st-order-cond-1}
+If a function $f:\reals\to\reals$ is differentiable, it is a convex function iff, for all $x, y \in \dom f$,
+\begin{equation}
+\label{eq:cvx-1st-order-cond-1}
+        f(y) \geq f(x) + f'(x) (y-x).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then assume that $y>x$. Let $h\in\reals$ be a positive number such that $h<y-x$. Then the definition of convexity implies that
+\[
+f(x+h) \leq (1-\lambda) f(x) + \lambda f(y)
+\]
+where $\lambda = h/(y-x)$ since
+\[
+(1-\lambda) x + \lambda y = x + \lambda (y-x) = x +h.
+\]
+Thus
+\[
+f(x+h) - f (x) \leq \lambda (f(y)-f(x)) = \frac{h}{y-x} (f(y)-f(x)),
+\]
+which implies
+\[
+f'(x) = \lim_{h\to0} \frac{f(x+h) - f (x)}{h} \leq \frac{f(y)-f(x)}{y-x}.
+\]
+Therefore
+\[
+f(y) - f(x) \geq f'(x)(y-x),
+\]
+hence (\ref{eq:cvx-1st-order-cond-1}) is true when $y>x$.
+
+We can prove (\ref{eq:cvx-1st-order-cond-1}) is true when $y<x$ using the very same method.
+Assume that $x>y$. Let $h\in\reals$ be a positive number such that $h<x-y$. Then the definition of convexity implies that
+\[
+f(x-h) \leq (1-\lambda) f(x) + \lambda f(y)
+\]
+where $\lambda = h/(x-y)$ since
+\[
+(1-\lambda) x + \lambda y = x + \lambda (y-x) = x -h.
+\]
+Thus
+\[
+f(x) - f (x-h) \geq \lambda (f(x)-f(y)) = \frac{h}{x-y} (f(x)-f(y)),
+\]
+which implies
+\[
+f'(x) = \lim_{h\to0} \frac{f(x) - f (x-h)}{h} \geq \frac{f(x)-f(y)}{x-y}  =\frac{f(y)-f(x)}{y-x}.
+\]
+Therefore
+\[
+f(y) - f(x) \geq f'(x)(y-x),
+\]
+hence (\ref{eq:cvx-1st-order-cond-1}) is true when $y<x$.
+It is obvise that (\ref{eq:cvx-1st-order-cond-1}) is true when $y=x$.
+Hence we have just proved that if $f:\reals\to\reals$ is a convex function, then (\ref{eq:cvx-1st-order-cond-1}) holds
+for any $x,y\in\dom f$.
+
+Now we prove the converse.
+Suppose that (\ref{eq:cvx-1st-order-cond-1}) holds for any $x,y\in\dom f$.
+Now let $x,y\in\dom f$ and $\lambda \in \reals$ suc that $0\leq \lambda \leq 1$.
+Let $z=\lambda x + (1-\lambda) y$. Then (\ref{eq:cvx-1st-order-cond-1}) implies that
+\begin{equation}
+\label{eq:dkfj-1}
+f(x) - f(z) \geq f'(z) (x-z) = (1-\lambda) f'(z) (x-y)
+\end{equation}
+and
+\begin{equation}
+\label{eq:dkfj-2}
+f(y) - f(z) \geq f'(z) (y-z) = \lambda f'(z) (y-x)
+\end{equation}
+If we multiply $\lambda$ on both sides of (\ref{eq:dkfj-1}),
+multiply $1-\lambda$ on both sides of (\ref{eq:dkfj-2}),
+and add both sides, we have
+\[
+\lambda(f(x) - f(z)) + (1-\lambda) (f(y) - f(z))
+\geq \lambda f(x) +(1-\lambda) f(y) - f(z) \geq 0,
+\]
+hence
+\[
+f(\lambda x + (1-\lambda) y)
+\leq \lambda f(x) + (1-\lambda) f(y).
+\]
+Therefore $f$ is a convex function.
+\end{proof}
+
+\begin{corollary}
+\label{corollary:cvx-deriv-non-decreasing}
+Let $f:\reals\to\reals$ be differentiable. Then $f$ is a convex function iff the derivative of $f$ is a nondecreasing function.
+\end{corollary}
+\begin{proof}
+Suppose that $f$ is a convex function.
+Let $x,y\in\dom f$ such that $x<y$.
+Then \theoremname~\ref{theorem:cvx-1st-order-cond-1} implies
+\[
+f(y) \geq f(x) + f'(x)(y-x)
+\]
+and
+\[
+f(x) \geq f(y) + f'(y)(x-y),
+\]
+thus
+\[
+f'(x) \leq \frac{f(y)-f(x)}{y-x}
+= \frac{f(x)-f(y)}{x-y} \leq f'(y)
+\]
+since $y>x$.
+Therefore $f'$ is a nondecreasing function.
+
+Now we prove the converse. Suppose that $f'$ is a nondecreasing function.
+Then if $y>x$, the mean value theorem implies that there exists some $z \in (x,y)$ such that
+\[
+\frac{f(y)-f(x)}{y-x} = f'(z).
+\]
+Since $f'$ is nondecreasing, we have
+\[
+f'(x) \leq \frac{f(y)-f(x)}{y-x} \leq f'(y),
+\]
+thus
+\begin{equation}
+\label{eq:cias-1}
+f(y) \geq f(x) + f'(x)(y-x)
+\end{equation}
+and
+\begin{equation}
+\label{eq:cias-2}
+f(y) \leq f(x) + f'(y)(y-x).
+\end{equation}
+Therefore (\ref{eq:cias-1}) implies that $f$ satisfies (\ref{eq:cvx-1st-order-cond-1}).
+Now if $x>y$, (\ref{eq:cias-2}) implies that
+\[
+f(x) \leq f(y) + f'(x)(x-y)
+\Leftrightarrow
+f(y) \geq f(x) + f'(x)(y-x)
+\]
+which again implies that $f$ satisfies (\ref{eq:cvx-1st-order-cond-1}).
+Therefore (\ref{theorem:cvx-1st-order-cond-1}) implies that $f$ is a convex function.
+\end{proof}
+
+\begin{corollary}
+\label{corollary:cvx-1st-order-cond}
+If a function $f:\reals^n\to\reals$ is differentiable, it is a convex function iff, for all $x,y \in \dom f$,
+\begin{equation}
+\label{eq:cvx-1st-order-cond}
+        f(y) \geq f(x) + \nabla f(x)^T (y-x).
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Suppose that $f$ is a convex funciton.
+Let $x,y\in\dom f$.
+If we let $g_{x,y-x}:\reals\to\reals$ be a funciton such that $g_{x,y-x}(t) = f(x+t(y-x))$,
+\theoremname~\ref{theorem:cvx-equiv-1d-fcn} implies $g_{x,y-x}$ is a convex function.
+Therefore \theoremname~\ref{theorem:cvx-1st-order-cond-1} together with \corollaryname~\ref{corollary:dixu}
+implies
+\[
+f(y) = g_{x,y-x}(1) \geq g_{x,y-x}(0) + g_{x,y-x}'(0) (1-0)
+= f(x) + \nabla f(x) ^T (y-x)
+\]
+for any $x,y \in \dom f$.
+
+Now suppose that (\ref{eq:cvx-1st-order-cond}) holds for any $x,y \in \dom f$.
+Then \corollaryname~\ref{corollary:dixu} implies that,
+for any $r,s\in\reals$ and $v\in\reals^n$ such that $r,s\in\set{t\in\reals}{x+tv\in\dom f}$,
+\[
+g_{x,v}(r) = f(x+rv) \geq f(x+sv) + (r-s) \nabla f(x+sv)^T v = g_{x,v}(s) + g_{x,v}'(s)(r-s).
+\]
+Thus \theoremname~\ref{theorem:cvx-1st-order-cond-1} implies
+$g_{x,v}$ is a convex function for any $x\in\dom f$ and $v\in\reals^n$.
+Therefore by \theoremname~\ref{theorem:cvx-equiv-1d-fcn}, $f$ is a convex function.
+\end{proof}
+
+\subsection{Second order condition}
+
+\begin{theorem}
+\label{theorem:cvx-2nd-order-cond-1}
+If a function $f:\reals\to\reals$ is twice differentiable, it is a convex function iff, for all $x \in \dom f$,
+\begin{equation}
+\label{eq:cvx-2nd-order-cond-1}
+        f''(x) \geq 0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then \corollaryname~\ref{corollary:cvx-deriv-non-decreasing} implies that $f'$ is a nondecreasing function,
+hence
+\[
+f''(x)
+= \lim_{h\to0} \frac{f'(x+h) - f'(x)}{h}
+= \lim_{h\to0^+} \frac{f'(x+h) - f'(x)}{h} \geq 0.
+\]
+Now if $f''(x)\geq0$ for all $x\in\dom f$, the mean value theorem implies that $f'$ is a nondecreasing function.
+\end{proof}
+
+
+\begin{theorem}
+\label{theorem:cvx-2nd-order-cond}
+If a function $f:\reals^n\to\reals$ is twice differentiable, it is a convex function iff, for all $x \in \dom f$,
+\begin{equation}
+\label{eq:cvx-2nd-order-cond}
+        \nabla^2 f(x) \succeq 0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then \theoremname~\ref{theorem:cvx-equiv-1d-fcn} implies that
+for any $x\in\dom f$ and any $v\in\reals^n$,
+the function $g_{x,v}:\reals\to\reals$ such that $g_{x,v}(t) = f(x+tv)$
+is a convex function in $\set{t\in\reals}{x+tv \in \dom f}$.
+Then \theoremname~\ref{theorem:cvx-2nd-order-cond-1} together with \corollaryname~\ref{corollary:eicg}
+implies that
+\[
+v^T \nabla^2 f(x) v = g_{x,v}''(0) \geq0.
+\]
+Therefore $\nabla^2 f(x) \succeq 0$ for any $x \in \dom f$.
+
+Now if $\nabla^2 f(x) \succeq 0$ for all $x\in\dom f$,
+then
+\corollaryname~\ref{corollary:eicg}
+implies that
+$g_{x,v}''(t) = v^T \nabla^2 f(x+tv) v \geq0$ for any $x \in \dom f$ and any $v\in\reals^n$.
+Then \theoremname~\ref{theorem:cvx-2nd-order-cond-1} implies
+$g_{x,v}$ is a convex function for any $x \in \dom f$ and any $v\in\reals^n$,
+hence by \theoremname~\ref{theorem:cvx-equiv-1d-fcn},
+$f$ is a convex function.
+\end{proof}
+
+
+
+\chapter{Linear Algebra}
+\section{Eigenvalues}
+
+\subsection{Basic definitions}
+
+Given a square matrix $A\in\reals^{n\times n}$,
+if there exist $\lambda \in \complexes$ and nonzero $v \in \complexes^n$ such that
+\begin{equation}
+        A v = \lambda v
+\end{equation}
+then $\lambda$ is called an eigenvalue of $A$ and $v$ is called an eigenvector associated with $\lambda$.
+
+If there exist $n$ linearly independent eigenvectors, we have
+\begin{equation}
+A \begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix}
+= \begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix} \diag(\lambda_1,\ldots,\lambda_n)
+\end{equation}
+or
+\begin{equation}
+\label{eq:v8dy}
+A V = V \Lambda
+\end{equation}
+where
+\begin{equation}
+V = \begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix}
+\in\complexes^{n\times n}
+\end{equation}
+and
+\begin{equation}
+\Lambda = \diag(\lambda_1,\ldots,\lambda_n)
+= \begin{my-matrix}{cccc}
+\lambda_1 & 0 & \cdots & 0
+\\
+0 & \lambda_2 & \cdots & 0
+\\
+\vdots & \vdots & \ddots & \vdots
+\\
+0 & 0 & \cdots & \lambda_n
+\end{my-matrix}
+\in\complexes^{n\times n}.
+\end{equation}
+In this case, $A$ is said to be diagonalizable.
+
+Since $V$ is nonsingular, \ie, invertible, we can rewrite (\ref{eq:v8dy}) as
+\begin{equation}
+\label{eq:2}
+A = V \Lambda V^{-1} \Leftrightarrow V^{-1} A V = \Lambda.
+\end{equation}
+
+
+\subsection{Symmetric matrices}
+
+Given a symmetric matrix $A = A^T\in\reals^{n\times n}$,
+all the eigenvalues are real and we can choose $n$ real orthonormal eigenvectors,
+\ie,
+we can find $n$ eigenvectors $v_1, \ldots, v_n\in\reals^n$
+associated with $n$ eigenvectors, $\lambda_1, \ldots, \lambda_n \in \reals$
+such that
+\begin{equation}
+    \|v_i\| = 1
+\end{equation}
+for $i=1,\ldots,n$
+and
+\begin{equation}
+    v_i^T v_j = 0
+\end{equation}
+for $1\leq i\neq j\leq n$.
+Thus, all symmetric matrices are diagonalizable.
+
+Now (\ref{eq:2}) becomes
+\begin{equation}
+\label{eq:sym-eigen-decomp}
+A = V \Lambda V^T \Leftrightarrow V^T A V = \Lambda
+\end{equation}
+since
+\begin{equation}
+V^T V = I_n
+\end{equation}
+where $I_n\in\reals^{n\times n}$ is the indentity matrix.
+We can rewrite (\ref{eq:sym-eigen-decomp}) as
+\begin{equation}
+\label{eq:sym-eigen-decomp-1}
+A =
+\begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix}
+\diag(\lambda_1,\ldots,\lambda_n)
+\begin{my-matrix}{c} v_1^T \\ \vdots \\ v_n^T \end{my-matrix}
+= \sum_{i=1}^n \lambda_i v_i v_i^T.
+\end{equation}
+
+\section{Positive definiteness}
+
+\begin{itemize}
+
+\item
+A symmetric matrix $A=A^T\in\reals^{n\times n}$ is called positive semidefinite if for all $x\in\reals^n$,
+\begin{equation}
+x^T A x \geq 0.
+\end{equation}
+
+\item
+A symmetric matrix $A=A^T\in\reals^{n\times n}$ is called positive definite if for all nonzero $x\in\reals^n$,
+\begin{equation}
+x^T A x > 0.
+\end{equation}
+
+\item The set of all the $n$-by-$n$ positive semidefinite matrices is (sometimes) denoted by $\possemidefset{n}$,
+\ie,
+\begin{equation}
+\possemidefset{n} = \set{A=A^T\in\reals^{n\times n}}{x^T A x \geq 0 \mbox{ for all } x \in \reals^n}.
+\end{equation}
+
+\item The set of all the $n$-by-$n$ positive definite matrices is (sometimes) denoted by $\posdefset{n}$,
+\ie,
+\begin{equation}
+\posdefset{n} = \set{A=A^T\in\reals^{n\times n}}{x^T A x > 0 \mbox{ for all nonzero } x \in \reals^n}.
+\end{equation}
+
+\item $A=A^T\in\reals^{n\times n}$ is positive semidefinite if and only if all the eigenvalues of $A$ are nonnegative.
+
+\item $A=A^T\in\reals^{n\times n}$ is positive definite if and only if all the eigenvalues of $A$ are positive.
+
+\begin{proof}
+For symmetric $A=A^T$, there exist orthgonal $V\in\reals^{n\times n}$ and diagonal $\Lambda\in\reals^{n\times n}$
+such that
+\[
+A = V \Lambda V^T = \sum_{i=1}^n \lambda_i v_i v_i^T,
+\]
+thus for any $x\in\reals^n$,
+\[
+x^T A x = x^T \left(\sum_{i=1}^n \lambda_i v_i v_i^T \right) x
+= \sum_{i=1}^n \lambda_i x^T v_i v_i^T x
+= \sum_{i=1}^n \lambda_i (v_i^T x)^2.
+\]
+Therefore if all $\lambda_i$ are nonnegative, $x^T A x\geq0$ for any $x\in\reals^n$, hence $A\in\possemidefset{n}$.
+Now assume $A\in\possemidefset{n}$, but $\lambda_j < 0$ for some $j\in\{1,\ldots,n\}$.
+Then
+\begin{equation}
+v_j^T A v_j
+= \sum_{i=1}^n \lambda_i (v_i^T v_j)^2
+= \sum_{i=1}^n \lambda_i \delta_{i,j}
+= \lambda_j < 0
+\end{equation}
+since $v_1$, \ldots, $v_n$ are orthonormal
+where
+$\delta_{i,j}$ is the \href{https://en.wikipedia.org/wiki/Kronecker_delta}{Kronecker delta function},
+hence $A\not \in \possemidefset{n}$.
+Therefore if $A\in\possemidefset{n}$, all $\lambda_i$ are nonnegative.
+
+Therefore $A\in\possemidefset{n}$ if and only if all $\lambda_i$ are nonnegative.
+
+Now assume that all $\label_i$ are positive.
+Then for all nonzero $x\in\reals^n$,
+there exists $i\in\{1,\ldots,n\}$ such tat $v_i^Tx$
+since if $v_i^Tx=0$ for all $i$, then
+$V^T x = 0$, hence $x=0$ since $V^T$ is nonnsigular.
+Therefore
+\begin{equation}
+x^T A x = \sum_{i=1}^n \lambda_i (v_i^T x)^2
+\geq \lambda_j (v_j^T x)^2 > 0.
+\end{equation}
+Thus, $A\in\posdefset{n}$.
+
+Now assume that $A\in\posdefset{n}$.
+If $\lambda_j \leq 0$ for some $j\in\{1,\ldots,n\}$,
+then
+\begin{equation}
+v_j^T A v_j
+= \sum_{i=1}^n \lambda_i \delta_{i,j}
+= \lambda_j \leq 0,
+\end{equation}
+hence $A\not\in\posdefset{n}$. Therefore if $A\in\posdefset{n}$, all $\lambda_i$ are positive.
+
+Therefore $A\in\posdefset{n}$ if and only if all $\lambda_i$ are positive.
+
+\end{proof}
+
+
+
+\end{itemize}
+
+\part{Optimization}
+\chapter{Optimization}
+
+\section{Mathematical optimization problem}
+
+A mathematical optimization problem can be expressed as
+\begin{equation}
+\label{eq:opt-prob}
+\begin{array}{ll}
+\mbox{minimize} & f_0(x)
+\\
+\mbox{subject to} & f_i(x) \leq 0 \mbox{ for } i = 1, \ldots, m
+\\
+& h_i(x) = 0 \mbox{ for } i = 1, \ldots, p
+\end{array}
+\end{equation}
+where
+$x\in\reals^n$ is the optimization variable,
+$f_0:\reals^n\to\reals$ is the objective function,
+$f_i:\reals^n\to\reals$ for $i=1,\ldots,n$ are the inequality constraint functions,
+and
+$h_i:\reals^n\to\reals$ for $i=1,\ldots,p$ are the equality constraint functions.
+
+The conditions, $f_i(x) \leq 0$ for $ i = 1, \ldots, m$, are called inequality constraints
+and the conditions, $ h_i(x) = 0 $ for $ i = 1, \ldots, p$ are called equation constraints.
+
+Note that this formulation covers pretty much every single-objective optimization problem.
+For example,
+consider the following optimization problem.
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{maximize} & f(x_1,x_2)
+\\
+\mbox{subject to} & x_1 \geq x_2
+\\
+& x_1 + x_2 = 2
+\end{array}
+\end{equation}
+This problem can be cast into an equivalent problem as follows.
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & -f(x_1,x_2)
+\\
+\mbox{subject to} & - x_1 + x_2 \leq 0
+\\
+& x_1 + x_2 - 2 = 0
+\end{array}
+\end{equation}
+
+
+The feasible set for (\ref{eq:opt-prob}) is defined by the set of $x\in\reals^n$ which satisfies all the contraints.
+Also, the optimal value for (\ref{eq:opt-prob}) is the infimum of $f_0(x)$ while $x$ is in the feasible set.
+When the infimum is achievable, we define the optimal solution set as the set of all feasible $x$ achieving
+the infimum value.
+These are defined in mathematically rigorous terms below.
+
+\begin{itemize}
+
+\item
+The feasible set for (\ref{eq:opt-prob}) is defined by
+\begin{equation}
+\feasibleset
+=
+\set{x\in \mathcal{D}}
+{ f_i(x)\leq 0 \mbox{ for } i =0, \ldots, m,\ h_j(x) = 0 \mbox{ for } j = 1,\ldots,p}
+\subseteq \reals^n
+\end{equation}
+where
+\begin{equation}
+\mathcal{D} = \left( \bigcap_{0\leq i\leq m} \dom f_i \right) \cap \left( \bigcap_{1\leq i\leq p} \dom h_i \right).
+\end{equation}
+
+\item
+The optimal value for (\ref{eq:opt-prob}) is defined by
+\begin{equation}
+p^\ast = \inf_{x\in\feasibleset} f_0(x)
+\end{equation}
+
+We use the conventions that $p^\ast = -\infty$ if $f_0(x)$ is unbounded below for $x\in \feasibleset$
+and that $p^\ast = \infty$ if $\feasibleset = \emptyset$.
+
+\item
+The optimal solution set for (\ref{eq:opt-prob}) is defined by
+\begin{equation}
+\optsolset = \set{x\in\feasibleset}{f_0(x) = p^\ast}.
+\end{equation}
+
+
+\end{itemize}
+
+
+\section{Convex optimization problem}
+
+A mathematical optimization problem is called a convex optimization problem
+if the objective function and all the inequality constraint functions are convex functions
+and all the equality constraint functions are affine functions.
+
+Hence, a convex optimization problem can be expressed as
+\begin{equation}
+\label{eq:cvx-opt-prob}
+\begin{array}{ll}
+\mbox{minimize} & f_0(x)
+\\
+\mbox{subject to} & f_i(x) \leq 0 \mbox{ for } i = 1, \ldots, m
+\\
+& A x = b
+\end{array}
+\end{equation}
+where
+$x\in\reals^n$ is the optimization variable,
+$f_i:\reals^n\to\reals$ for $i=0,\ldots,n$ are convex functions,
+$h_i:\reals^n\to\reals$ for $i=1,\ldots,p$ are the equality constraint functions,
+$A \in \reals^{p\times n}$, and $b\in\reals^p$.
+
+A function, $f:\reals^n \to \reals$, is called a convex function if
+$\dom f \subseteq \reals^n$ is a convex set
+and
+for all $x, y\in\dom f$
+and all $0\leq \lambda \leq 1$,
+\begin{equation}
+    f( \lambda x + (1-\lambda) y) \leq
+    \lambda f(x) + (1-\lambda) f(y)
+\end{equation}
+where $\dom f \subseteq \reals^n$ denotes the domain of $f$.
+
+A convex optimization enjoys a number of nice theoretical and practical properties.
+
+\begin{itemize}
+\item A local minimum of a convex optimization problem is a global minimum,
+\ie,
+if for some $R>0$ and $x_0\in\feasibleset$, $\|x-x_0\|<R$ and $x\in\feasibleset$ imply $f_0(x_0) \leq f_0(x)$,
+then $f_0(x_0) \leq f_0(x)$ for all $x\in\feasibleset$.
+\begin{proof}
+Assume that $x_0\in\feasibleset$ is a local minimum, \ie,
+for some $R>0$, $\|x-x_0\|<R$ and $x\in\feasibleset$ imply $f_0(x_0) \leq f_0(x)$.
+
+Now assume that $x_0$ is not a global minimum, \ie, there exists $y\in\feasibleset$
+such that $y\neq x_0$ and $f_0(y) < f_0(x_0)$.
+Then for $z = \lambda y + (1-\lambda) x_0$ with $\lambda = \min\{ R/\|y-x_0\|, 1\}/2$,
+the convexity of $f_0$ implies
+\begin{equation}
+\label{eq:4}
+f_0(z) \leq \lambda f_0(y) + (1-\lambda) f_0(x_0)
+\end{equation}
+since $0 < \lambda \leq 1/2 < 1$.
+Furthermore
+\begin{equation}
+\|z - x_0\| = \lambda \|y-x_0\| \leq R/2,
+\end{equation}
+hence $f_0(z) \geq f_0(x_0)$, which together with (\ref{eq:4}) implies
+\begin{equation}
+f_0(x_0) \leq f_0(z)
+\leq \lambda f_0(y) + (1-\lambda) f_0(x_0)
+< \lambda f_0(x_0) + (1-\lambda) f_0(x_0)
+= f_0(x_0),
+\end{equation}
+which is a contradiction.
+Therefore there is no $y\in\feasibleset$ such that $y\neq x_0$ and $f_0(y) < f_0(x_0)$.
+Therefore $x_0$ is a global minimum.
+\end{proof}
+
+
+
+\item For a unconstrained problem, \ie, the problem (\ref{eq:cvx-opt-prob}) with $m=p=0$, with differential objective function,
+$x\in\dom f_0$ is an optimal solution if and only if $\grad f_0(x)= 0 \in \reals^n$.
+
+\begin{proof}
+The Taylor theorem implies that for any $x,y\in\dom f_0$,
+\begin{equation}
+\label{eq:second-order-taylor}
+f_0(y) = f(x) + \grad f_0(x) ^T (y-x) + \frac{1}{2} (y-x)^T \grad^2 f_0(z) (y-x)
+\end{equation}
+for some $z$ on the line segment having $x$ and $y$ as its end points,
+\ie, $z = \alpha x + (1-\alpha) y$ for some $0\leq \alpha \leq 1$.
+Since $\grad^2 f(x) \succeq0$ for any $z \in \dom f_0$, we have
+\begin{equation}
+f_0(y) \geq f_0(x) + \grad f_0(x) ^T (y-x)
+\end{equation}
+
+Thus, if for some $x_0 \in \reals^n$, $\grad f_0(x_0) = 0$, for any $x\in\dom f_0$,
+\begin{equation}
+f_0(x) \geq f_0(x_0) + \grad f_0(x_0) ^T (x-x_0) = f_0(x_0),
+\end{equation}
+
+hence $x_0$ is an optimal solution.
+Now assume that $x_0$ is an optimal solution, but $\grad f_0(x_0) \neq 0$.
+Then for any $k>0$, if we let $x=x_0$ and $y = x_0 - k \grad f_0(x_0) $,
+(\ref{eq:second-order-taylor}) becomes
+\begin{eqnarray*}
+\lefteqn{
+f_0(y) = f(x_0) + \grad f_0(x_0) ^T (-k \grad f_0(x_0)) + \frac{k^2}{2} \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0)
+}
+\\
+&=&
+f(x_0) - k \|\grad f_0(x_0)\|^2 + \frac{k^2}{2} \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0)
+\end{eqnarray*}
+for all $y = x_0 - k \grad f_0(x_0) \in \dom f_0$.
+
+Since for $k< 2 \|\grad f_0(x_0)\|^2 / \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0)$,
+$-k \|\grad f_0(x_0)\|^2 + \frac{k^2}{2} \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0) < 0$,
+thus
+$f_0(y) < f(x_0)$,
+hence the constradiction.
+Therefore, if $x_0$ is an optimal solution for the unconstrained problem, $\grad f_0(x_0) = 0$.
+
+\end{proof}
+\end{itemize}
+
+
+\newpage
+\chapter{Portfolio optimization}
+
+\section{Problem formulation}
+
+Suppose that we have $n$ assets to invest on
+and that the return of each asset per unit invest is modeled by random variables $R_i$ for $i=1,\ldots,n$.
+Then we want to decide the amount of investment on each asset, $x_i\in\reals$ for $i=1,\ldots,n$,
+so that it optimizes the overall investment (in certain senses).
+
+For formulization, we use the following definitions.
+
+\begin{itemize}
+\item Define a vector random variable $R\in\reals^n$ such that
+\begin{equation}
+R = \begin{my-matrix}{c}
+R_1
+\\
+\vdots
+\\
+R_n
+\end{my-matrix}
+\in\reals^n.
+\end{equation}
+
+\item Let $r\in\reals^n$ be the expected value of $R$,
+\ie,
+\begin{equation}
+r
+= \Expect(R)
+= \begin{my-matrix}{c}
+\Expect(R_1)
+\\
+\vdots
+\\
+\Expect(R_n)
+\end{my-matrix}
+= \begin{my-matrix}{c}
+r_1
+\\
+\vdots
+\\
+r_n
+\end{my-matrix}
+\in\reals^n.
+\end{equation}
+
+\item Define a vector $x\in\reals$ which is an aggregate of the investments:
+\begin{equation}
+x = \begin{my-matrix}{c}
+x_1
+\\
+\vdots
+\\
+x_n
+\end{my-matrix}
+\in\reals^n.
+\end{equation}
+
+\item Define a feasible set $\mathcal{X}\subseteq \reals^n$ for $x$.
+For example, if we have a limit on the total investment,
+\begin{equation}
+\label{eq:cnst-on-cost}
+\mathcal{X} = \set{x\in\reals^n}{\sum_{i=1}^n c_i x_i \leq c_\mathrm{max}},
+\end{equation}
+or if we have the minimum and maximum amount to invest for each asset,
+we'd have
+\begin{equation}
+\label{eq:cnst-on-each-amount}
+\mathcal{X} = \set{x\in\reals^n}{d_\mathrm{min} \leq x_i \leq d_\mathrm{max} \mbox{ for } i=1,\ldots,n}.
+\end{equation}
+Generally, we'd prefer $\mathcal{X}$ to be a convex set, \ie,
+for any $x,y\in\mathcal{X}$ and $0\leq \lambda \leq 1$,
+\begin{equation}
+\lambda x + (1-\lambda) y \in \mathcal{X}.
+\end{equation}
+
+\end{itemize}
+
+\subsection{A portfolio optimization problem}
+
+A portfolio optimization problem can be formulized by
+\begin{equation}
+\label{eq:opt-port-prob}
+\begin{array}{ll}
+\mbox{maximize} & f(x) = \Expect(Z)
+\\
+\mbox{minimize} & g(x) = \Var(Z)
+\\
+\mbox{subject to} & x \in \mathcal{X}
+\end{array}
+\end{equation}
+where the optimization variable is $x\in\reals^n$
+and
+\begin{equation}
+Z = \sum_{i=1}^n x_i R_i = x^T R
+\end{equation}
+where $\Expect(\cdot)$ and $\Var(\cdot)$ refer to the expected value and the variance operators respectively.
+
+This problem formulation tries to \emph{maximize the expected return}
+while \emph{minimizing the variance or uncertainty or risk}, which generally makes sense.
+
+(\ref{eq:cnst-on-cost})
+(\ref{eq:cnst-on-each-amount})
+
+
+Note that
+\begin{equation}
+\Expect(Z)
+= \Expect(x^T R)
+= \Expect \left(\sum_{i=1}^n x_i R_i \right)
+= \sum_{i=1}^n x_i \Expect(R_i)
+= \sum_{i=1}^n x_i r_i
+= r^T x
+\end{equation}
+and
+\begin{eqnarray*}
+\lefteqn{
+\Var(Z) = \Expect(Z-\Expect(Z))^2 = \Expect \left(x^TR-x^Tr \right)^2
+}
+\\
+&=&
+\Expect \left(x^T(R-r) \right)^2
+= \Expect \left(x^T(R-r)(R-r)^T x \right)
+\\
+&=&
+x^T \Expect(R-r)(R-r)^T x
+=
+x^T \covmat{R} x
+\end{eqnarray*}
+where $\covmat{R} = \Expect(R-r)(R-r)^T$ is the \href{https://en.wikipedia.org/wiki/Covariance_matrix}{covariance matrix} of $R$.
+Note that $\covmat{R}\in\possemidefset{n}$
+since for any $y\in\reals^n$,
+\begin{equation}
+y^T \covmat{R} y = y^T \Expect(R-r)(R-r)^T y = \Expect(x^T(R-r))^2 \geq 0.
+\end{equation}
+
+
+
+Thus, (\ref{eq:opt-port-prob}) can be rewritten as
+\begin{equation}
+\label{eq:opt-port-prob-vec}
+\begin{array}{ll}
+\mbox{maximize} & f(x) = r^T x
+\\
+\mbox{minimize} & g(x) = x^T \covmat{R} x
+\\
+\mbox{subject to} & x \in \mathcal{X}.
+\end{array}
+\end{equation}
+
+
+
+\part{Statistics}
+
+\chapter{Statistics Basics}
+
+\section{Correlation coefficients}
+
+The correlation coefficients of two random variables, $X$ and $Y$, is defined by
+
+\begin{equation}
+\rho_{X,Y} = \frac{\Expect (X-\mu_X)(Y-\mu_Y)} {\sqrt{\Expect (X-\mu_X)^2 \Expect(Y-\mu_Y)^2}}
+\end{equation}
+
+
+\section{Probability density function transformation}
+
+Assume two random variables, $X\in\reals$ and $Y\in\reals$, which are related by
+a smooth function $g:\reals \to \reals$
+such that
+\begin{equation}
+\label{eq:g8cx}
+Y = g(X).\footnote{We assume that $g\in C^1$.}
+\end{equation}
+
+If $f_X:\reals\to\preals$ is the probability density function (PDF), what would be the PDF of $Y$?
+
+First note that we should have
+\begin{equation}
+        f_X(x) \Delta x \sim f_Y(y) \Delta y
+\end{equation}
+for $x$ and $y$ such that $y=g(x)$
+where $g(x)$ is increasing at $x$.
+
+Suppose that $g$ is an injective function (or one-to-one function).
+Then for every $y \in g(\mathcal{D})$ where $\mathcal{D}$ is the domain of $g$,
+if we make $\Delta x$ or $\Delta y$ infinitesimally small,
+(\ref{eq:g8cx}) becomes
+\begin{equation}
+\label{eq:pdf-transform}
+f_Y(y)
+= \lim_{\Delta x \to 0}\frac{\Delta x}{\Delta y} f_X(x)
+= \frac{1}{\lim_{\Delta x \to 0} \frac{\Delta y}{\Delta x}} f_X(x)
+= \frac{1}{g'(x)} f_X(x).
+\end{equation}
+
+This equation can be generalized for any smooth function $g$
+and any $y\in g(\mathcal{D})$,
+\begin{equation}
+f_Y(y) = \sum_{g(x)=y} \frac{1}{|g'(x)|} f_X(x)
+\end{equation}
+
+\section{Log-normal distribution}
+
+ We say $Y$ is log-normally distributed, if, for $X\sim\mathcal{N}(\mu_X,\sigma_X^2)$,
+ \begin{equation}
+ Y = \exp(X).
+ \end{equation}
+
+Then (\ref{eq:pdf-transform}) implies that
+\begin{eqnarray}
+f_Y(y) &=& \frac{1}{\exp(\log(y))} \cdot \frac{1}{\sqrt{2\pi} \sigma_X}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\nonumber
+\\
+&=& \frac{1}{\sqrt{2\pi} \sigma_X y}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right).
+\label{eq:log-normal-pdf}
+\end{eqnarray}
+
+
+\subsection{Some statistics}
+
+The definition of the expected value implies
+\begin{eqnarray*}
+\lefteqn{
+\Expect Y = \int_{0}^{\infty} y f_Y(y) \, dy
+= \int_{0}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right) dy
+}
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}\right) \exp(x) \, dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}+x\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{x^2 - 2(\mu_X +\sigma_X^2)x + \mu_X^2}{2\sigma_X^2}\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 + \mu_X^2 -(\mu_X+\sigma_X^2)^2}{2\sigma_X^2}\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 - 2\mu_X\sigma_X^2 - \sigma_X^4}{2\sigma_X^2}\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 - \sigma_X^2(2\mu_X+ \sigma_X^2)}{2\sigma_X^2}\right) dx
+\\
+&=&
+\exp\left(\frac{2\mu_X+ \sigma_X^2}{2}\right)
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 }{2\sigma_X^2}\right) dx
+\\
+&=&
+\exp\left(\frac{2\mu_X+ \sigma_X^2}{2}\right)
+\end{eqnarray*}
+since $dy = \exp(x) dx$
+and $\frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 }{2\sigma_X^2}\right)$
+is the PDF of a random variable $\sim$ $\mathcal{N}(\mu_X+\sigma_X^2,\sigma_X^2)$,
+thus
+\begin{equation}
+\label{eq:log-normal-mean}
+\mu_Y
+= \Expect Y = \exp\left(\frac{2\mu_X+ \sigma_X^2}{2}\right).
+\end{equation}
+
+Similarly,
+\begin{eqnarray*}
+\lefteqn{
+\Expect Y^2 = \int_{0}^{\infty} y^2 f_Y(y) \, dy
+= \int_{0}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  y \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right) dy
+}
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp(x) \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}\right) \exp(x) \, dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}+2x\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{x^2 - 2(\mu_X +2\sigma_X^2)x + \mu_X^2}{2\sigma_X^2}\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 + \mu_X^2 -(\mu_X+2\sigma_X^2)^2}{2\sigma_X^2}\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 - 4\mu_X\sigma_X^2 - 4\sigma_X^4}{2\sigma_X^2}\right) dx
+\\
+&=&
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 - 4\sigma_X^2(\mu_X+ \sigma_X^2)}{2\sigma_X^2}\right) dx
+\\
+&=&
+\exp\left({2(\mu_X+ \sigma_X^2)}\right)
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 }{2\sigma_X^2}\right) dx
+\\
+&=&
+\exp\left({2(\mu_X+ \sigma_X^2)}\right),
+\end{eqnarray*}
+thus
+\begin{equation}
+\label{eq:log-normal-var}
+\sigma_Y^2 =
+\Var(Y) = \Expect Y^2 - (\Expect Y)^2 = \exp(2(\mu_X+\sigma_X^2)) - \exp(2\mu_X+\sigma_X^2)
+= (\exp(\sigma_X^2)-1) \exp(2\mu_X+\sigma_X^2)).
+\end{equation}
+
+Note that (\ref{eq:log-normal-mean}) implies that
+\begin{equation}
+\mu_Y^2
+= \exp(2\mu_X+\sigma_X^2)),
+\end{equation}
+hence
+\begin{equation}
+\sigma_Y^2
+= (\exp(\sigma_X^2)-1) \mu_Y^2.
+\end{equation}
+This multiplicative dependency of the standard deviation on the expected value
+is attributed to the fact that $\log(Y) \sim \mathcal{N}(\mu_X,\sigma_X^2)$,
+\ie,
+the log-scale of $Y$ follows the normal distribution.
+
+Now if we differentiate the PDF with respect to $y$,
+(\ref{eq:log-normal-pdf}) implies that
+\begin{eqnarray*}
+\lefteqn{
+\frac{d}{dy} f_Y(y)
+= \frac{d}{dy} \left(\frac{1}{\sqrt{2\pi} \sigma_X y}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)\right)
+}
+\\
+&=&
+-\frac{1}{\sqrt{2\pi} \sigma_X y^2}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\\
+&&
++
+\frac{1}{\sqrt{2\pi} \sigma_X y}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\left(-\frac{(\log(y)-\mu_X)}{\sigma_X^2}\right)
+\frac{1}{y}
+\\
+&=&
+-\frac{1}{\sqrt{2\pi} \sigma_X y^2}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\left(1+\frac{(\log(y)-\mu_X)}{\sigma_X^2} \right)
+\\
+&=&
+-\frac{1}{\sqrt{2\pi} \sigma_X^3 y^2}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\left(\log(y)-(\mu_X-\sigma_X^2) \right).
+\end{eqnarray*}
+Equating the derivative to zero yields
+\begin{equation}
+y = \exp(\mu_X-\sigma_X^2),
+\end{equation}
+which is the mode of $Y$.
+
+
+\subsection{Parameter estimation}
+
+Now assume that we have a log-normally distributed random variable, $Y\in\ppreals$,
+with $\mu_Y$ and $\sigma_Y^2$ as its mean and variance.
+We derived the parameters of the source distribution, $\mu_X$ and $\sigma_X$.
+
+The two equations, (\ref{eq:log-normal-mean}) and (\ref{eq:log-normal-var}), imply
+\begin{eqnarray*}
+\mu_Y &=& \exp(\mu_X+\sigma_X^2/2),
+\\
+\sigma_Y^2 &=& (\exp(\sigma_X^2)-1)\exp(2\mu_X+\sigma_X^2) = (\exp(\sigma_X^2)-1) \mu_Y^2,
+\end{eqnarray*}
+thus
+\begin{eqnarray*}
+\sigma_X^2 &=& \log(1+{\sigma_Y^2}/{\mu_Y^2}),
+\\
+\mu_X &=& \log(\mu_Y) - \sigma_X^2/2 = \log(\mu_Y) - \log(1+{\sigma_Y^2}/{\mu_Y^2})/2
+= \frac{1}{2} \log\left(\frac{\mu_Y^2}{1+{\sigma_Y^2}/{\mu_Y^2}}\right).
+\end{eqnarray*}
+
+
+\chapter{Information Theory}
+
+\section{Basics}
+
+
+\subsection{Entropy}
+
+\subsection{Mutual Information}
+
+The mutual information (MI) is defined by
+
+\begin{equation}
+I(X;Y) = \Expect \log \frac{f_{X,Y}(X,Y)}{f_{X}(X)f_{Y}(Y)}
+= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \log \frac{f_{X,Y}(x,y)}{f_{X}(x)f_{Y}(y)} \, dx dy
+\end{equation}
+
+
+
+
+
+\part{Machine Learning}
+
+\chapter{Bayesian Network}
+
+
+\begin{equation}
+\Pr\{X_1,\ldots,X_n\}
+= \prod_{i=1}^n \Pr\set{X_i}{X_1,\ldots,X_{i-1}}
+= \prod_{i=1}^n \Pr\set{X_i}{\mathbf{parent}(X_i)}
+\end{equation}
+
+
+
+\end{document}

@@ -1,0 +1,1515 @@
+
+\newcommand{\numcus}{\ensuremath{{n_C}}}
+\newcommand{\numitem}{\ensuremath{{n_I}}}
+\newcommand{\numfeat}{\ensuremath{{n_F}}}
+\newcommand{\numrating}{\ensuremath{{n_R}}}
+\newcommand{\nan}{\ensuremath{\mathrm{NaN}}}
+\newcommand{\ratmat}{\ensuremath{R}}
+\newcommand{\ratvec}{r}
+\newcommand{\ratmataggr}{\ensuremath{\bar{\ratmat}}}
+\newcommand{\ratmatnorm}{\ensuremath{\tilde{\ratmat}}}
+\newcommand{\ratmatpred}{\hat{\ratmat}}
+\newcommand{\datsourceset}{\ensuremath{\mathcal{S}}}
+\newcommand{\dir}{\mathrm{Dir}}
+\newcommand{\simil}{s}
+\newcommand{\bmscore}{\mathrm{bm}_{25}}
+\newcommand{\avgcl}{\ensuremath{\bar{c}}}
+
+\newcommand{\numfactors}{\ensuremath{{n_L}}}
+\newcommand{\lfcn}{\ensuremath{l}}
+\newcommand{\confvar}{c}
+\newcommand{\confmat}{C}
+\newcommand{\binvar}{p}
+\newcommand{\binmat}{P}
+
+\newcommand{\Xsvd}{\XYsvd{X}}
+\newcommand{\Ysvd}{\XYsvd{Y}}
+\newcommand{\XYsvd}[1]{{#1}_\mathrm{svd}}
+
+\newcommand{\XY}[2]{{{#1}_{#2}}}
+\newcommand{\XX}[1]{\XY{X}{#1}}
+\newcommand{\YY}[1]{\XY{Y}{#1}}
+
+\newcommand{\initX}{\tilde{X}}
+\newcommand{\initY}{\tilde{Y}}
+
+%\newcommand{\Xsim}{\ensuremath{X_\mathrm{sim}^\ast}}
+%\newcommand{\Ysim}{\ensuremath{Y_\mathrm{sim}^\ast}}
+\newcommand{\Xsim}{\ensuremath{X^\mathrm{sim}}}
+\newcommand{\Ysim}{\ensuremath{Y^\mathrm{sim}}}
+
+\newcommand{\popest}{{\hat{\theta}}}
+\newcommand{\popestk}[1]{\ensuremath{\popest_{#1}}}
+
+
+\newpage
+
+\section{Item-based Collaborative Filtering}
+
+The purpose of the item-based collaborative filtering is to recommend items using the information obatined from similar items.
+Since the information from other items help provide better recommendation to customers,
+it is called an \emph{item-based collaborative filtering}.
+
+We formulate an item-based collaborative filtering as follows.
+We assume that there are \numcus\ customers and \numitem\ items.
+We further assume that we have partial information as to the taste of each customer for each item.
+In typical cases,
+we have customers can leave reviews with ratings for $n$ items where $n \ll \numitem$.
+When we have hundreds of thousands of items, this makes the data structure extremely sparse.
+This fact plays a critical role when we calculate similarities among items or customers,
+or learn the matrix factorization-based collaborative filtering models,
+e.g., using gradient descent (GD) method or alternating least squares (ALS) method.\footnote{
+    These models will be discussed in later sections.
+}
+
+Now suppose that we have the rating matrix
+\begin{equation}
+\label{eq:rating-matrix}
+\ratmat \in (\reals\cup\{\nan\})^{\numcus \times \numitem}
+\end{equation}
+where $\ratmat_{ij} \in (\reals\cup\{\nan\})$ denotes \emph{certain score} corresponding to $i$th customer and $j$th item
+and \nan\ denotes we do not know the values.
+Note that this {certain score} can refer to rating of movies, but can mean virtually anything related to customers'
+taste or activities. For example, it can mean the frequency of customers' clicks on certain menus
+where the items mean the menu items for this example.
+
+This matrix is sparse, but not in a traditional way. Generally, we say a matrix is sparse if the number of nonzero entries
+is much less than $\numcus \times \numitem$. We say \ratmat\ is sparse because there are huge number of entries
+for which we \emph{do not know} the true values for them.
+In a general recommendation problem, the purpose is to guess or estimate the true values,
+\eg, what rating the customer would give if she did, or how frequently a customer would click on the menu item if she knew
+there exist such menu item.
+
+Now we want to evaluate the similarity (or distance) among items.
+In many places in the recommendation systems and information retrieval literature,
+it is shown that applying some transformation or weighting on the values
+before calculating the similarity measure,
+\eg, \href{https://en.wikipedia.org/wiki/Cosine_similarity}{cosine similarity}
+or \href{https://en.wikipedia.org/wiki/Correlation_coefficient}{correlation coefficient}\footnote{
+    The correlation coefficient is sometimes called the Pearson correlation coefficient
+    after \href{https://en.wikipedia.org/wiki/Karl_Pearson}{Karl Pearson}, who was an English mathematician and biostatistician.
+}.
+There weighting methods and similarity measures will be discussed in later sections.
+
+\subsection{Rating matrix modeling for menu personalization for mobile shopping app}
+
+Here we consider a problem of using a collaborative filtering for efficient menu personalization problem for an mobile shoppiong app.
+Suppose that we have some history data of the number of clicks or tabs on each menu item by each customer for certain period.
+Therefore we can define the matrix in (\ref{eq:rating-matrix})
+where
+\numcus\ denotes the number of customers,
+\numitem\ denotes the number of menu items,
+and
+$\ratmat_{ij}$ denotes the number of clicks or tabs on $j$th menu item by $i$th customer
+with $1\leq i\leq \numcus$ and $1\leq j\leq \numitem$.
+recommendation system design cases where each component represents the rating of an item,
+these numbers vary depending on the time interval for which we collect the data.
+So here we model this matrix as a function of time.
+Moreover, we can have more than one source for the customers' data.
+Thus we assume multi-source model.
+
+\subsubsection{Rating matrix modeling}
+
+Suppose that $\ratmat_s: \reals \to \reals^{\numcus \times \numitem}$ for $s\in\datsourceset$ is the rating matrix dependent on time,
+\ie,
+\begin{equation}
+\label{eq:rating-matrix-temporal}
+\ratmat_s(t)  \in \reals^{\numcus \times \numitem}
+\end{equation}
+where
+\datsourceset\ refers to the set of data sources
+and $\ratmat_s(t)_{ij}$ refers to the number of clicks or tabs for $j$th item by $i$th customer
+which was collected from data source, $s \in \datsourceset$.
+For example, $\datsourceset = \{\mathrm{mobile}, \mathrm{web}\}$.
+
+For our purpose, we want to have one matrix which represents the customers' activity or behavior with their taste
+by properly aggregating the history data.
+Among many possible choices, we choose exponentially decaying weight method together with proper weight on data sources.
+We define the following aggregate rating matrix
+\begin{equation}
+\label{eq:ratmat-aggr}
+\ratmataggr(t) = \sum_{s\in\datsourceset} \sum_{\tau=0}^\infty \gamma^\tau w_s \ratmat_s(t-\tau)
+\end{equation}
+where $\gamma$ is a positive constant less than $1$ and $w_s$ are the weights on each data source such that
+$\sum_{s\in\datsourceset} w_s = 1$.
+
+
+This aggregate matrix, however, has one problem.
+Suppose that the $1$st customer and the $2$nd customer have the very same activity pattern on menu items.
+However, the $1$st customer happens to have actively used the shopping app or website for this week,
+but the $2$nd customer has not used the app or website for the past few days or weeks.
+Because of the decay factor, the $2$nd customer's activity would appear much less than those of the $1$st customer
+even ideally we need to have the very same pattern for those two customers.
+Therefore we need to normalize the values so that these two customers' preferences are considered the same.
+For this we normalize each row, so that the sum of each row is always one.
+\begin{equation}
+\label{eq:ratmat-norm}
+\ratmatnorm(t) = \diag(\ratmataggr(t) \ones_{\numitem})^{-1}\ratmataggr(t)
+\end{equation}
+where $\ones_{\numitem}\in\reals^{\numitem}$ is the vector where every entry is $1$
+and $\diag(x)$ for $x\in\reals^n$ refers to a diagonal matrix whose diagonal entries are the entries of $x$ in the same order.
+We can readily see that
+\begin{equation}
+\ratmatnorm(t) \ones_{\numitem} = \diag(\ratmataggr(t) \ones_{\numitem})^{-1}\ratmataggr(t) \ones_{\numitem} = \ones_{\numcus},
+\end{equation}
+\ie, the sum of each row is $1$.
+From this point on, we will remove the subscript for $\ones$ unless it can cause confusion as to the dimension of the vector.
+
+One problem of this approach is that $\ratmatnorm(t)$ cannot be defined if some row has all zero entries.
+Even if the sum of every row is nonzero, if the values is very small,
+\eg, a customer has not shown any activity except for a few clicks or tabs on a handful of menu items,
+that doesn't mean that the corresponding row represents the customer's preference.
+Hence, we can augment the values of $\ratmatnorm(t)$ by prior distribution of menu items
+as in the following section.
+
+
+\subsection{Value augmentation based on Bayesian MAP}
+\label{subsec:bayes-prior}
+
+To prevent the divide-by-zero errors from occurring while evaluating (\ref{eq:ratmat-norm}),
+we consider maximum a posteriori (MAP) estimation for all the rows of $\ratmataggr(t)$ in (\ref{eq:ratmat-aggr}).
+
+We can think of a problem of filling out each entry in $\ratmataggr(t)$
+as performing $N$ multinomial experiments on each item $j\in\{1,\ldots,\numitem\}$
+and count the occurrences for each item and fill in $\ratmataggr(t)$ for each customer $i\in\{1,\ldots,\numcus\}$
+after normalization.
+
+
+Now assume that we the prior as Dirichlet-multinomial model,
+\ie,
+\begin{equation}
+\dir(\theta|\alpha) = \frac{1}{B(\alpha)} \prod_{k=1}^{\numitem} \theta_k^{\alpha_k-1} I(x = k).
+\end{equation}
+Then since the likelihood for the multinomial distribution has the form
+\begin{equation}
+p(\mathcal{D}|\theta) = \prod_{k=1}^{\numitem} \theta_k^{N_k},
+\end{equation}
+the posterior is
+\begin{equation}
+p(\theta|\mathcal{D})
+\propto p(\mathcal{D}|\theta)  p(\theta)
+\propto \prod_{k=1}^{\numitem} \theta_k^{\alpha_k+N_k-1}
+= \dir(\theta|\alpha_1+N_1, \ldots, \alpha_{\numitem} + N_{\numitem}).
+\end{equation}
+
+It can be proved that the maximum a posteriori (MAP) estimate for $\theta_1, \ldots, \theta_{\numitem}$ is
+\begin{equation}
+\label{eq:map-estimate}
+\popestk{k} = \frac{N_k + \alpha_k - 1}{N + \alpha_0 -{\numitem}}
+\end{equation}
+where $\alpha_0 = \sum_{k=1}^{\numitem} \alpha_k$ (K.P. Murphy).
+By choosing proper values for $\alpha_k > 1$, we can make every entry nonzero in $\ratmataggr(t)$.
+
+Adding this information to the rating matrix is equivalent to Bayesian inference
+since this uses a priori distribution.
+Therefore, it will play a regularization role in our inference.
+
+\subsection{Similarity measure among items}
+
+Suppose that we have the transformed matrix, $\ratmatnorm\in\reals^{\numcus \times \numitem}$.
+For the case of mobile shopping app menu personalization, $\ratmatnorm = \ratmatnorm(t)$ for some $t$.
+For general cases, \ratmatnorm\ equals to \ratmat\ with all \nan s replaced by $0$.
+
+Suppose that $c_1, \ldots, c_{\numcus} \in \reals^{\numitem}$ are the row vectors of \ratmatnorm\
+and $d_1, \ldots, d_{\numitem} \in \reals^{\numcus}$ are the column vectors of \ratmatnorm,
+\ie,
+\begin{equation}
+\ratmatnorm
+= \begin{my-matrix}{c}
+c_1^T
+\\
+\vdots
+\\
+c_{\numcus}^T
+\end{my-matrix}
+= \begin{my-matrix}{ccc}
+d_1
+&
+\cdots
+&
+d_{\numitem}
+\end{my-matrix}
+\in\reals^{\numcus \times \numitem}.
+\end{equation}
+
+\subsubsection{Cosine similarity}
+
+The cosine similarity measures the cosine of the angle between the two vectors,
+\ie, it is defined by
+\begin{equation}
+\label{eq:cos-simil}
+\simil(d_i, d_j) = \frac{d_i^T d_j}{\|d_i\|_2 \|d_j\|_2}
+\end{equation}
+where $x^Ty$ denotes the inner product of two vectors $x$ and $y$,
+and $\|\cdot\|_2$ denotes the $2$-norm of a vector.
+The \href{https://en.wikipedia.org/wiki/Jensen\%27s_inequality}{Jensen's inequality}
+guarantees that $-1 \leq \simil(d_i,d_j) \leq 1$.
+It can be easily shown that we have $0 \leq \simil(d_i,d_j) \leq 1$
+when every entry in \ratmatnorm\ is nonzero.
+
+\subsubsection{Cosine similarity when prior distribution is used}
+
+When a prior distribution is added to \ratmatnorm\ as in \S\ref{subsec:bayes-prior},
+the sparsity breaks and the matrix becomes a dense matrix.
+Therefore it seems that we lose huge advantage in computation efforts
+when calculating the similarities.
+However, because the added matrix is rank-one matrix, we can still exploit the sparsity and calculate the similarities
+at almost the same cost as before.
+
+Assume that \popestk{k}\ in (\ref{eq:map-estimate}) has been calculated and is added to \ratmatnorm.
+Thus we have a new rating matrix.
+\begin{equation}
+\ratmatnorm_\popest
+= \ratmatnorm + \lambda \ones_{\numcus\times\numitem}\diag(\popest)
+= \ratmatnorm + \lambda \rowvecthree{\popestk{1} \ones}{\cdots}{\popestk{\numitem} \ones}
+\in \reals^{\numcus \times \numitem}
+\end{equation}
+where $\popest = \rowvecthree{\popestk{1}}{\cdots}{\popestk{\numitem}}^T \in \reals^\numitem$.
+Here $\lambda$ plays a similar role as the coefficient for the regularization
+when we assume that
+\begin{equation}
+        p(\popest) \sim N(0,\lambda I_\numitem).
+\end{equation}
+Now let $\tilde{d}_1$, \ldots, $\tilde{d}_\numitem$ are the column vectors of $\ratmatnorm_\popest$.
+Then the cosine similarity of $i$th item and $j$th item is
+\begin{equation}
+\simil(\tilde{d}_i, \tilde{d}_j) = \frac{\tilde{d}_i^T \tilde{d}_j}{\|\tilde{d}_i\|_2 \|\tilde{d}_j\|_2}.
+\end{equation}
+Now note that
+\begin{equation}
+\label{eq:vusg}
+\tilde{d}_i^T \tilde{d}_j = (d_i + \lambda \popestk{i} \ones)^T(d_j + \lambda \popestk{j} \ones)
+= d_i ^Td_j
++ \lambda \popestk{j} \ones^T d_i^T
++ \lambda \popestk{i} \ones^T d_j
++ \lambda^2 \popestk{i} \popestk{j} \numcus
+\end{equation}
+hence
+\begin{equation}
+\label{eq:ubms}
+\|\tilde{d}_i\|_2^2 = \tilde{d}_i^T \tilde{d}_i
+= \|d_i\|_2^2
++ 2 \lambda \popestk{i} \ones^T d_i^T
++ \lambda^2 \popestk{i}^2 \numcus
+\end{equation}
+
+We can pre-compute $\ones^T d_i$ for $i=1,\ldots, \numitem$
+which takes less than \numrating\ where \numrating\ refers to the number of nonzero entries in \ratmatnorm.
+Hence, the additional computational cost is negligible.
+
+We can also solve this problem at a different angle. In order to calculate the inner projects and the norms in
+(\ref{eq:vusg}) and (\ref{eq:ubms}), we can do the following matrix multiplication.
+\begin{eqnarray}
+\ratmatnorm_\popest^T
+\ratmatnorm_\popest
+&=&
+(\ratmatnorm + \lambda \ones_{\numcus\times\numitem}\diag(\popest))^T
+(\ratmatnorm + \lambda \ones_{\numcus\times\numitem}\diag(\popest))
+\\
+&=&
+\ratmatnorm^T \ratmatnorm
++ \lambda \ratmatnorm^T \ones_{\numcus\times\numitem}\diag(\popest)
++\lambda \diag(\popest)  \ones_{\numitem\times\numcus} \ratmatnorm
+\\
+&&+\lambda^2 \diag(\popest) \ones_{\numitem\times\numcus} \ones_{\numcus\times\numitem}\diag(\popest)
+\\
+&=&
+\ratmatnorm^T \ratmatnorm
++\lambda \popest \tilde{r}^T
++\lambda \tilde{r} \popest^T
++\lambda^2 \numcus \popest \popest^T
+\end{eqnarray}
+
+\subsubsection{Correlation coefficient similarity}
+The correlation coefficient is defined by
+\begin{equation}
+\label{eq:corr-coef-simil}
+\simil(d_i, d_j) = \frac{(d_i-\ones^Td_i/\numcus)^T (d_j-\ones^T d_j/\numcus)}{\|d_i-\ones^Td_i/\numcus\|_2 \|d_j-\ones^Td_j/\numcus\|_2}.
+\end{equation}
+Again the \href{https://en.wikipedia.org/wiki/Jensen\%27s_inequality}{Jensen's inequality}
+guarantees that $-1 \leq \simil(d_i,d_j) \leq 1$,
+but the fact that every entry in \ratmatnorm\ is nonzero does not make this similarity nonnegative.
+
+
+\subsection{Data value transformation}
+
+When there are popular items across many customers,
+those values can dominate in the similarity measure evaluation.
+For example,
+the aggregate rating matrix, \ratmataggr, looks like the following:
+\begin{equation}
+\begin{array}{c}
+\begin{my-matrix}{ccccc}
+\cdots & 100 & \cdots & 130 & \cdots
+\\
+\cdots & 2 & \cdots & 5 & \cdots
+\\
+\cdots & 3 & \cdots & 3 & \cdots
+\\
+\cdots & 10 & \cdots & 1 & \cdots
+\end{my-matrix}
+\\
+\begin{array}{ccccc}
+& \uparrow & \ \ \ \ \ \   & \uparrow &
+\\
+& d_i &  & d_j &
+\end{array}
+\end{array}
+\end{equation}
+
+Note here that the scores in the first row are much larger than the other terms.
+This can be caused by the fact that some customers are way more active than other customers,
+\eg, they can listen to some musics many times or uses an shopping app very frequently.
+Now the cosine similarity and the correlation coefficient similarity between $d_i$ and $d_j$
+are
+\begin{equation}
+0.9956 \mbox{ and } 0.9951
+\end{equation}
+respectively.
+However, if we remove the first customer and recalculate both similarities,
+it yields
+\begin{equation}
+0.4611 \mbox{ and } -0.9176
+\end{equation}
+respectively.
+
+Note that both similarity measures give very different measures.
+The correlation coefficient similarity, which also tells whether both have positive or negative correlations
+by its sign, gives opposite signs.
+This shows how \emph{some} customers activity or behavior can change the item-to-item similarities drastically.
+
+However, this doesn't seem to be right.
+The item-to-time similarities are supposed to represent the nature of the relation among items,
+hence should not be decided by a small number of extremely active customers.
+
+For this reason, in many recommendation systems literature,
+it has been reported that the similarity measures mentioned above do not show good performance.
+To address this issue,
+various value transformation methods have been introduced.
+We will discuss some of these methods in the following sections.
+
+\subsubsection{TFIDF (or tf-idf)}
+
+The \href{https://en.wikipedia.org/wiki/Tf-idf}{term frequency–inverse document frequency} (TFIDF or tf-idf)
+is a numerical statistic which has been widely used in the field of
+\href{https://en.wikipedia.org/wiki/Information_retrieval}{information retrieval}.
+It was orginally designed to reflect how important a word is to a document in a collection or corpus.
+It is often used as a weighting factor in searches of information retrieval,
+text mining, and user modeling.
+The tf–idf value increases proportionally to the number of times a word appears in the document
+and is offset by the number of documents in the corpus that contain the word,
+which helps to adjust for the fact that some words appear more frequently in general.
+Tf–idf is one of the most popular term-weighting schemes today;
+83\% of text-based recommender systems in digital libraries use tf–idf.
+
+\subsubsection{Okapi BM25 transformation}
+
+Instead, the \href{https://en.wikipedia.org/wiki/Okapi_BM25}{Okapi BM25} score has shown much better performance when applied to the entries in \ratmatnorm\
+before calculating similarity measures.
+It is defined by
+\begin{equation}
+\bmscore(i,j) = \log\left(\frac{\numcus - \|d_j\|_0 + 0.5}{\|d_j\|_0 + 0.5}\right)
+\frac{\ratmatnorm_{ij}(k_1+1)}{\ratmatnorm_{ij} + k_1 \left(1-b+b\frac{\|c_i\|_0}{\avgcl}\right)}
+\end{equation}
+where
+$\|\cdot\|_0$ denotes the number of nonzero entries of a vector
+and
+$k_{1}$ and $b$ are some parameters usually with $k_{1}\in [1.2,2.0]$ and $b \sim 0.75$.
+
+
+\subsection{Recommendation based on item similarities}
+
+Now finally, we can evaluate new (menu) item scores for each (menu) items for each customer.
+Here we suggest two methods.
+
+\begin{itemize}
+\item For customer $i$ and item $j$, we calculate new recommendation as
+\begin{equation}
+\ratmatpred_{ij} = \frac{\sum_{i=1}^{\numitem}\simil(i,j) \ratmatnorm_{i,j}}{\sum_{i=1}^{\numitem}\simil(i,j)}
+\end{equation}
+where $\simil(i,j)$ is the cosine similarity between $d_i$ and $d_j$.
+
+\item The second candidate considers the deviation from the average, \ie,
+\begin{equation}
+\ratmatpred_{ij} =
+\ones^Tc_i/\numitem
++
+\frac{\sum_{i=1}^{\numitem}\simil(i,j)(\ratmatnorm_{ij}-\ones^Tc_i/\numitem) }{\sum_{i=1}^{\numitem}\simil(i,j)}
+\end{equation}
+where $\simil(i,j)$ is the correlation coefficient similarity between $d_i$ and $d_j$.
+\end{itemize}
+
+
+These new values are the ones obtained from the history data for that particular customer together
+with those for neighboring customers. Hence, this will give better recommendation.
+
+
+\newpage
+\section{Collaborative Filtering using Matrix Factorization}
+
+Here we discuss the collaborative filtering using matrix factorization,
+which uses latent factor models.
+There are two types of latent factors; one for customers and one for items.
+
+The customer latent factors represent customers' taste or tendency.
+In psychological perspective, even customers themselves may not realize these,
+but they implicitly express these by their activities.
+They can be
+\begin{itemize}
+\item the degree of pursuing economical life
+\item the degree of interest in tableware
+\item the degree of caring children
+\item the degree of interest in books
+\item the degree of putting values on family
+\end{itemize}
+
+On the other hand, the item latent factors represent items' attributes.
+Again, customers may not realize these, but they tend to click on some menus or items
+according items attributes and their inclination.
+They can be
+\begin{itemize}
+\item the probability of leading to inexpensive items
+\item the probability of leading to tableware
+\item the probability of leading to items related to children
+\item the probability of leading to book purchase
+\item the probability of leading to items related to family
+\end{itemize}
+
+We will discuss how we can utilize these latent factors to design our collaborative filtering below.
+Note, however, that it is generally impossible to identify the actual latent factors
+a ML algorithm yields with any of the aforementioned factors.
+These latent factors are \emph{not predefined or decided apriori},
+but are learned or revealed through the values coming out of the algorithms.
+What's more important is that these methods work very well in practice.
+
+We will also describe different types of problem formulations
+and different approaches to solve them,
+\eg,
+stochastic gradient descent (SGD) method,
+alternating SGD,
+and alternating least squares (ALS).
+
+
+\subsection{Problem definition and formulations}
+
+
+As before, suppose that there are \numcus\ customers and \numitem\ items.
+We assume that we have a (sparse) rating matrix,
+$\ratmat \in (\reals\cup\{\nan\})^{\numcus \times \numitem}$, in (\ref{eq:rating-matrix}).
+Sometimes we need to deal with the aggregate rating matrix, $
+\ratmataggr(t) \in (\reals\cup\{\nan\})^{\numcus \times \numitem}$, in (\ref{eq:ratmat-aggr}).
+To simplify notations, we will refer to both types of rating matrix as \ratmat.
+
+Now we assume that there are \numfactors\ latent factors.
+This means that every customer \numfactors\ latent factors and every item has \numfactors\ latent factors.
+
+Let $x_i \in \reals^\numfactors$ be a column vector representing \numfactors\ latent factors for the $i$th customer
+and let $y_j \in \reals^\numfactors$ be a column vector representing \numfactors\ latent factors for the $j$th item
+with
+\begin{equation}
+x_i = \begin{my-matrix}{c} x_{i,1} \\ \vdots \\ x_{i,\numfactors} \end{my-matrix}
+\in\reals^\numfactors
+\end{equation}
+and
+\begin{equation}
+y_j = \begin{my-matrix}{c} y_{j,1} \\ \vdots \\ y_{j,\numfactors} \end{my-matrix}
+\in\reals^\numfactors.
+\end{equation}
+Then $x_{i,1}, \ldots, x_{i,\numfactors}$ are the \numfactors\ tendency or taste factors of the $i$th customer
+and let $y_{j,1}, \ldots, y_{j,\numfactors}$ are the \numfactors\ attributes of the $j$th item.
+
+Then we assume that the rating of the $j$ item by the $i$ customer can be inferenced (or estimated)
+by the sum of the corresponding factors,
+\ie,
+\begin{equation}
+\label{eq:dixk}
+\ratmat_{i,j} \simeq \hat{\ratmat}_{i,j} = x_{i,1} y_{j,1} + \cdots + x_{i,\numfactors} y_{j,\numfactors}.
+\end{equation}
+\emph{This is the most critical assumption in the matrix factorization.}
+
+The purpose of the collaborative filtering is to find these latent factors so as to make these inference
+as accurate as possible,
+\ie,
+to solve the following optimization problem
+\begin{equation}
+\label{eq:mat-fac-form-1}
+\begin{array}{ll}
+\mbox{minimize} & \sum_{1\leq i\leq \numcus, 1\leq j\leq \numitem:\ratmat_{i,j} \in \reals} \lfcn({\ratmat}_{i,j}, \hat{\ratmat}_{i,j})
+\end{array}
+\end{equation}
+where the $\numfactors(\numcus + \numitem)$ optimization variables are $x_{i,k}$ and $y_{j,k}$
+for $1\leq i\leq \numcus$, $1\leq j\leq \numitem$, and $1\leq k\leq \numfactors$,
+and $l:\reals\times\reals\to\preals$ is a loss function measuring the distance between the true value and the estimate,
+hoping that $\hat{\ratmat}_{i,j}$ can accurately predict the rating for $1\leq i\leq \numcus$ and $1\leq j\leq \numitem$
+where $\ratmat_{i,j}$ is not given.
+
+In most cases, we use squared loss for \lfcn, so we will also sue the squared loss (except some special cases).
+\begin{equation}
+\lfcn(y_1, y_2) = (y_1 - y_2)^2.
+\end{equation}
+
+Now let us come up with more compact notation to describe our problem.
+Let $X \in\reals^{\numcus\times\numfactors}$ be the customer latent factor matrix whose $i$th row is $x_i^T$, \ie,
+\begin{equation}
+X = \begin{my-matrix}{c}
+x_1^T \\ \vdots \\ x_\numcus^T
+\end{my-matrix}
+= \begin{my-matrix}{cccc}
+x_{1,1} & x_{1,2} & \cdots & x_{1,\numfactors}
+\\
+x_{2,1} & x_{2,2} & \cdots & x_{2,\numfactors}
+\\
+\vdots & \vdots & \ddots & \vdots
+\\
+x_{\numcus,1} & x_{\numcus,2} & \cdots & x_{\numcus,\numfactors}
+\end{my-matrix}
+\in
+\reals^{\numcus\times\numfactors}.
+\end{equation}
+Likewise, let $Y \in\reals^{\numitem\times\numfactors}$ be the item latent factor matrix whose $j$th row is $y_j^T$, \ie,
+\begin{equation}
+Y = \begin{my-matrix}{c}
+y_1^T \\ \vdots \\ y_\numitem^T
+\end{my-matrix}
+= \begin{my-matrix}{cccc}
+y_{1,1} & y_{1,2} & \cdots & y_{1,\numfactors}
+\\
+y_{2,1} & y_{2,2} & \cdots & y_{2,\numfactors}
+\\
+\vdots & \vdots & \ddots & \vdots
+\\
+y_{\numitem,1} & y_{\numitem,2} & \cdots & y_{\numitem,\numfactors}
+\end{my-matrix}
+\in
+\reals^{\numitem\times\numfactors}.
+\end{equation}
+Note that these two matrices are extremely skinny meaning that we have much more rows then columns in general
+since \numcus\ could be hundreds of millions and \numitem\ could be hundreds of thousands,
+but \numfactors\ is $100$ or so at most.
+
+Now using this notation, we can say
+\begin{equation}
+\hat{\ratmat} = XY^T,
+\end{equation}
+which is mathematically equivalent to
+\begin{equation}
+\hat{\ratmat}_{i,j} = x_i^T y_j = x_{i,1} y_{j,1} + \cdots + x_{i,\numfactors} y_{j,\numfactors},
+\end{equation}
+which again is equivalent to (\ref{eq:dixk}).
+
+Then the optimization problem (\ref{eq:mat-fac-form-1}) can be rewritten as
+\begin{equation}
+\label{eq:mat-fac-form-2}
+\begin{array}{ll}
+\mbox{minimize} & \sum_{1\leq i\leq \numcus, 1\leq j\leq \numitem:\ratmat_{i,j} \in \reals} \lfcn({\ratmat}_{i,j}, x_i^Ty_j)
+\end{array}
+\end{equation}
+where the optimization variables are
+$X\in\reals^{\numcus\times\numfactors}$
+and
+$Y\in\reals^{\numitem\times\numfactors}$.
+
+If we use the squared loss for \lfcn, then we can write this equation more compactly as follows.
+\begin{equation}
+\label{eq:mat-fac-form-3}
+\begin{array}{ll}
+\mbox{minimize} & \|\ratmat - XY^T\|_{F,\ratmat}^2
+\end{array}
+\end{equation}
+where $\|Z\|_{F,\ratmat}$ refers to \href{http://mathworld.wolfram.com/FrobeniusNorm.html}{Frobenius norm}
+calculated for those entries $Z_{i,j}$ with $\ratmat_{i,j} \in\reals$.
+
+Note that the number of real variables we need to optimize is the same for all the formulations
+(\ref{eq:mat-fac-form-1}),
+(\ref{eq:mat-fac-form-2}),
+and
+(\ref{eq:mat-fac-form-3}) (because they are equivalent optimization problems).
+
+
+\subsection{Solution methods}
+
+\subsubsection{Matrix factorization via singular value decomposition (SVD)}
+
+
+First we discuss obtaining the latent factors, \ie, $X$ and $Y$,
+using sparse singular value decomposition (SVD).
+
+For any rank-$k$ matrix $A\in\reals^{m\times n}$, we always have a SVD
+\begin{equation}
+A = U \Sigma V^T
+\end{equation}
+where
+$U\in\reals^{m\times k}$,
+$V\in\reals^{n\times k}$,
+and
+$\Sigma\in\reals^{k\times k}$.
+(Refer to \S\ref{subsubsec:svd}.)
+The basic idea of obtaining the latent factors using SVD is
+to apply SVD to the rating matrix.
+
+However, the matrix $\ratmat \in (\reals\cup\{\nan\})^{\numcus \times \numitem}$ can have many unknown values,
+hence we cannot apply SVD directly.
+Instead, we employ a certain type of missing data imputation to replace the unknowns with real values,
+then apply SVD to the matrix.
+There can be many options for the missing data imputation.
+Here we list some oft them.
+\begin{itemize}
+\item replacing every unknown with zeros
+\item replacing unknowns with global item average ratings
+\item replacing unknowns with global customer average ratings
+\item use some model based methods (\eg, the item-based collaborative filtering itself can be considered as such a method)
+\end{itemize}
+
+
+Now suppose that $\tilde{\ratmat}$ is \ratmat\ with missing values replaced by proper real values.
+We compute the largest \numfactors\ singular values with corresponding singular vectors.
+Then we can obtain the approximation of $\tilde{\ratmat}$ by
+\begin{equation}
+\label{eq:voxa}
+\tilde{\ratmat} \simeq U_\numfactors \Sigma_{\numfactors} V_\numfactors^T
+\end{equation}
+where
+\begin{equation}
+U_\numfactors = \rowvecthree{u_1}{\cdots}{u_\numfactors} \in \reals^{\numcus\times \numfactors}
+\end{equation}
+\begin{equation}
+V_\numfactors = \rowvecthree{v_1}{\cdots}{v_\numfactors} \in \reals^{\numitem\times \numfactors}
+\end{equation}
+and
+\begin{equation}
+\Sigma_\numfactors = \diag(\sigma_1, \cdots, \sigma_\numfactors) \in \reals^{\numfactors\times \numfactors}.
+\end{equation}
+Refer to \S\ref{subsubsec:svd} for more details.
+This approximation is the best approximation to $\tilde{\ratmat}$
+in Frobenius norm sense. (Refer to \S\ref{subsubsec:svd-approx} for further details.)
+
+
+
+Now since (\ref{eq:voxa}) can be rewritten as
+\begin{equation}
+\tilde{\ratmat} \simeq U_\numfactors \Sigma_{\numfactors} V_\numfactors^T
+= U_\numfactors \Sigma_{\numfactors}^{1/2} \Sigma_{\numfactors}^{1/2} V_\numfactors^T
+= (U_\numfactors \Sigma_{\numfactors}^{1/2}) (V_\numfactors \Sigma_{\numfactors}^{1/2})^T
+\end{equation}
+where
+\begin{equation}
+\Sigma_\numfactors^{1/2} = \diag(\sigma_1^{1/2}, \cdots, \sigma_\numfactors^{1/2}) \in \reals^{\numfactors\times \numfactors}
+\end{equation}
+we can obtain the customer and item latent factor matrices as follows.
+\begin{equation}
+\Xsvd = U_\numfactors \Sigma_{\numfactors}^{1/2} = \rowvecthree{\sigma_1^{1/2} u_1}{\cdots}{\sigma_\numfactors^{1/2} u_\numfactors}
+\in\reals^{\numcus\times \numfactors}
+\end{equation}
+\begin{equation}
+\Ysvd = V_\numfactors \Sigma_{\numfactors}^{1/2} = \rowvecthree{\sigma_1^{1/2} v_1}{\cdots}{\sigma_\numfactors^{1/2} v_\numfactors}
+\in\reals^{\numcus\times \numfactors}
+\end{equation}
+
+\subsubsection{Matrix factorization via gradient descent (GD) method}
+
+One obvious way to obtain the latent factor matrices is to directly apply
+\href{https://en.wikipedia.org/wiki/Gradient_descent}{gradient descent method}
+to the following optimization problem directly.
+\begin{equation}
+\label{eq:mat-fac-form-4}
+\begin{array}{ll}
+\mbox{minimize} & f(X,Y) = \sum_{i, j:\ratmat_{i,j} \in \reals} \lfcn({\ratmat}_{i,j}, x_i^T y_j)
+\end{array}
+\end{equation}
+which is equivalent to (\ref{eq:mat-fac-form-2}).
+Here we denote the objective function of the optimization problem by
+$f:\reals^{\numcus \times \numfactors}
+\times
+\reals^{\numitem \times \numfactors}
+\to
+\preals$.
+
+In order to apply gradient descent, we need to evaluate the partial derivative of the objective function
+with respect to
+\begin{itemize}
+\item $x_{i,k}$ for all $1\leq k\leq \numfactors$ and all $i \in \set{1\leq i\leq \numcus}{\ratmat_{i,j} \in\reals \mbox{ for some } 1\leq j\leq \numitem}$
+\item $y_{j,k}$ for all $1\leq k\leq \numfactors$ and all $j \in \set{1\leq j\leq \numitem}{\ratmat_{i,j} \in\reals \mbox{ for some } 1\leq i\leq \numcus}$
+\end{itemize}
+For simplicity of the equation derivation,
+let us assume that
+\begin{eqnarray}
+\set{1\leq i\leq \numcus}{\ratmat_{i,j} \in\reals \mbox{ for some } 1\leq j\leq \numitem}
+&=&
+\{1,\ldots, \numcus\}
+\\
+\set{1\leq j\leq \numitem}{\ratmat_{i,j} \in\reals \mbox{ for some } 1\leq i\leq \numcus}
+&=&
+\{1,\ldots, \numitem\}
+\end{eqnarray}
+\ie,
+every item has at least one rating and every customer has at least one rating.
+
+
+Now the gradient of $f(X,Y)$ with respect to each $x_i$ is
+\begin{equation}
+\label{eq:mat-fac-grad-x}
+\nabla_{x_i}  f(X,Y)
+= \sum_{j:\ratmat_{i,j}\in\reals} \frac{\partial}{\partial y_2} \lfcn(\ratmat_{i,j}, x_i^T y_j) y_j \in\reals^\numfactors
+\mbox{ for } 1\leq i\leq \numcus
+\end{equation}
+and that with respect to $y_j$ is
+\begin{equation}
+\label{eq:mat-fac-grad-y}
+\nabla_{y_j}  f(X,Y)
+= \sum_{i:\ratmat_{i,j}\in\reals} \frac{\partial}{\partial y_2} \lfcn(\ratmat_{i,j}, x_i^T y_j) x_i \in\reals^\numfactors
+\mbox{ for } 1\leq j\leq \numitem
+\end{equation}
+
+If we use the squared loss for \lfcn,
+the optimization problem becomes
+\begin{equation}
+\label{eq:mat-fac-form-5}
+\begin{array}{ll}
+\mbox{minimize} & f(X,Y) = \|\ratmat - XY^T\|_{F,\ratmat}^2
+\end{array}
+\end{equation}
+which is equivalent to (\ref{eq:mat-fac-form-3}).
+Then (\ref{eq:mat-fac-grad-x}) and (\ref{eq:mat-fac-grad-y})
+imply that the gradients of $f(X,Y)$ can be calculated by
+\begin{equation}
+\label{eq:mat-fac-sq-grad-x}
+\nabla_{x_i}  f(X,Y)
+= - \sum_{j:\ratmat_{i,j}\in\reals} (\ratmat_{i,j} -x_i^T y_j) y_j \in\reals^\numfactors
+\mbox{ for } 1\leq i\leq \numcus
+\end{equation}
+and that with respect to $y_j$ is
+\begin{equation}
+\label{eq:mat-fac-sq-grad-y}
+\nabla_{y_j}  f(X,Y)
+= - \sum_{i:\ratmat_{i,j}\in\reals} (\ratmat_{i,j}- x_i^T y_j) x_i \in\reals^\numfactors
+\mbox{ for } 1\leq j\leq \numitem
+\end{equation}
+For notational convenience, we stack these vectors to form derivative matrices as below.
+
+If $\ratmat\in\reals^{\numcus \times \numitem}$,
+\ie, there are no missing values,
+we can write the gradients more compact form,
+\ie, as the derivatives of $X$ and $Y$.
+\begin{equation}
+\label{eq:mat-fac-sq-deriv-x}
+D_X f(X,Y) = -2 (\ratmat-XY^T) Y
+\in\reals^{\numcus\times\numfactors}
+\end{equation}
+and
+\begin{equation}
+\label{eq:mat-fac-sq-deriv-x}
+D_Y f(X,Y) = -2 (\ratmat^T-YX^T) X
+\in\reals^{\numitem\times\numfactors}
+\end{equation}
+
+
+Finally, we describe the gradient descent method.
+
+\begin{itemize}
+\item choose learning rate strategy $\eta_k>0$
+\item choose initial $\initX$ and $\initY$
+\item let $\XX{0}:=\initX$ and $\YY{0}:=\initY$
+\item let $k:=0$
+\item for each iteration, update $X$ and $Y$
+\begin{eqnarray}
+    \XX{k+1} &=& \XX{k} - \eta_k D_X f(\XX{k},\YY{k})
+\\
+\label{eq:btai}
+    \YY{k+1} &=& \YY{k} - \eta_k D_Y f(\XX{k},\YY{k})
+\end{eqnarray}
+\item stops if certain stopping criterion is satisfied
+\item update $k:=k+1$ and repeat iterations
+\end{itemize}
+
+\subsubsection{Matrix factorization via alternating gradient descent (GD) method}
+
+Instead of updating $X$ and $Y$ simultaneously,
+we can update $X$ and $Y$ after the other is updated.
+The algorithm can be described as follows.
+
+\begin{itemize}
+\item choose learning rate strategy $\eta_k>0$
+\item choose initial $\initX$ and $\initY$
+\item let $\XX{0}:=\initX$ and $\YY{0}:=\initY$
+\item let $k:=0$
+\item for each iteration, update $X$ and $Y$
+\begin{eqnarray}
+    \XX{k+1} &=& \XX{k} - \eta_k D_X f(\XX{k},\YY{k})
+\\
+\label{eq:bhio}
+    \YY{k+1} &=& \YY{k} - \eta_k D_Y f(\XX{k+1},\YY{k})
+\end{eqnarray}
+\item stops if certain stopping criterion is satisfied
+\item update $k:=k+1$ and repeat iterations
+\end{itemize}
+
+Note the difference in (\ref{eq:btai}) and (\ref{eq:bhio}).
+This method updates $Y$ with most recent $X$ values.
+
+\subsubsection{Matrix factorization via stochastic gradient descent (SGD) method}
+
+Theoretically both GD and alternating GD converge (to local minima) with proper learning rate strategies.
+However, the purpose of the collaborative filtering is not minimize (the sum of) errors (or loss function values),
+but accurately predict missing ratings, \ie, the ratings that a customer has never given,
+or sometimes accurately predict the ranking of the items.
+In this case, what we want to achieve is the solution to the following stochastic optimization problem.
+\begin{equation}
+\label{eq:mat-fac-form-stoch}
+\begin{array}{ll}
+\mbox{minimize} & \Expect \sum_{i,j:\ratmat_{i,j} = \nan} \lfcn(\tilde{\ratmat}_{i,j}, \x_i^T y_j)
+\end{array}
+\end{equation}
+where $\Expect(\cdot)$ denotes the expected value (or mean/average) of a random variable
+and $\tilde{\ratmat}_{i,j}$ denotes the rating that the $i$th customer would give to $j$th item in the future.
+
+Unfortunately there is no direct way to solve this problem
+because this stochastic optimization problem is not (exactly) solvable.
+Most importantly, we do not have the future data (some of them would be never available).
+Therefore solving (\ref{eq:mat-fac-form-4}) is not what we want.
+
+There is also another problem with solving (\ref{eq:mat-fac-form-4}); computational cost per iteration.
+The gradient evaluation takes $3\numfactors \numrating$ multiplications and $3\numfactors \numrating$ additions
+where \numrating\ refers to the number of known ratings.
+Thus if the density of \ratmat\ is $\alpha$, the number of multiplications and additions required to evaluate the gradient
+is $3\alpha \numfactors \numcus \numitem$.
+Therefore, when \numcus\ or \numitem\ or both are huge, the cost for the gradient calculation can be huge.
+
+
+To resolve these two problems at the same time, we can use stochastic gradient descent (SGD) method with mini-batch methods.
+The mini-batch method is to use fixed size of training sets for each gradient descent iteration.
+This can save the computational cost considerably while approximately solving the stochastic optimization problem (\ref{eq:mat-fac-form-stoch}).
+
+
+
+\subsubsection{Matrix factorization via alternating least-squares (ALS)}
+
+When we use the squared loss, we solve the problem (\ref{eq:mat-fac-form-5}).
+The objective function of this problem is
+\begin{equation}
+\label{eq:vuwj}
+f(X,Y) = \|\ratmat - XY^T\|_{F,\ratmat}^2
+\end{equation}
+
+This is a quadratic function of a \href{https://en.wikipedia.org/wiki/Bilinear_map}{bilinear function} of $X$ and $Y$.
+Unfortunately, it is not a convex function. If it were a convex function, probably we would not need to use (stochastic) gradient descent method
+because we have much more efficient methods to solve it (\eg, Newton's method).
+And if it were a convex function, we would be able to obtain the global minimum (even with gradient descent method).
+
+
+However, if we fix either $X$ or $Y$, it becomes the convex function of the other. Indeed, the problem (\ref{eq:mat-fac-form-5}) becomes
+a \href{https://en.wikipedia.org/wiki/Least_squares}{least-squares} problem when one of $X$ and $Y$ is fixed,
+which leads to the alternating least-squares algorithm.
+
+\begin{itemize}
+\item choose initial $\initX$ and $\initY$
+\item let $\XX{0}:=\initX$ and $\YY{0}:=\initY$
+\item let $k:=0$
+\item for each iteration, update $X$ and $Y$
+\begin{eqnarray}
+\label{eq:als-1}
+    \XX{k+1} &=& \argmin_X \|\ratmat-X{\YY{k}}^T\|_{F,\ratmat}
+\\
+\label{eq:als-2}
+    \YY{k+1} &=& \argmin_Y \|\ratmat-\XX{k+1}Y^T\|_{F,\ratmat}
+\end{eqnarray}
+\item stops if certain stopping criterion is satisfied
+\item update $k:=k+1$ and repeat iterations
+\end{itemize}
+
+The ALS is named so since solving (\ref{eq:als-1}) or (\ref{eq:als-2}) is equivalent to solving a least-squares problem.
+Note that the functions in (\ref{eq:als-1}) and (\ref{eq:als-2}) can be separated by $x_i$s or $y_j$s,
+\eg, the function in (\ref{eq:als-1}) is
+\begin{equation}
+\label{eq:bian}
+f_Y(X) = \|\ratmat - XY^T\|_{F,\ratmat}^2
+= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i^T-x_i^T Y^T\|_{F,\tilde{\ratvec}_i^T}^2
+= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i-Yx_i\|_{F,\tilde{\ratvec}_i}^2
+\end{equation}
+where $\tilde{r}_i \in\reals^\numitem$ are the row vectors of \ratmat,
+thus solving (\ref{eq:als-1}) is equivalent to solving \numcus\ uncorrelated problems separately.
+This is another great advantage of ALS since we can use parallelism to save the training time considerably.
+For example, if we have $N$ processing units, the training time per iteration would be equivalent to
+that for solving each (small) least-squares $\numcus/N$ times.
+Note that we cannot separate the objective function in (\ref{eq:vuwj}) when we consider $X$ and $Y$ simultaneously
+since each of \numrating\ terms in (\ref{eq:vuwj}) are intertwined through $x_i$s and $y_j$s.
+
+When $\ratmat\in\reals^{\numcus\times\numitem}$, it can be easily shown that
+\begin{equation}
+x_i^\ast =  Y^\dagger \tilde{\ratvec}_i
+\end{equation}
+where
+\begin{equation}
+\label{eq:pseudo-inverse-y}
+Y^\dagger = (Y^TY)^{-1}Y^T
+\end{equation}
+is the pseudo-inverse of $Y$.
+Thus (\ref{eq:als-1}) becomes
+\begin{equation}
+\label{eq:als-1-sol}
+\XX{k+1} = \ratmat {{\YY{k}}^\dagger}^T
+= \ratmat {\YY{k}} \left({\YY{k}}^T{\YY{k}} \right)^{-1}.
+\end{equation}
+Likewise, (\ref{eq:als-2}) becomes
+\begin{equation}
+\label{eq:als-2-sol}
+\YY{k+1} = \ratmat^T {{\XX{k+1}}^\dagger}^T
+= \ratmat^T {\XX{k+1}} \left({\XX{k+1}}^T{\XX{k+1}} \right)^{-1}.
+\end{equation}
+
+Note that in practice, we do not evaluate the pseudo-inverse as in (\ref{eq:pseudo-inverse-y})
+because it causes catastrophic numerical instability especially when the matrix is huge
+(as in most recommendation system cases).
+Instead, we use \href{https://en.wikipedia.org/wiki/QR_decomposition}{QR decomposition},
+\ie, if $Y = QR$ is the QR decomposition of $Y$, $Y^\dagger = R^{-1} Q^T$.
+
+We now discuss the interpretation of (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}).
+Let $X^\ast$ and $Y^\ast$ be the optimal solutions for the problem (\ref{eq:mat-fac-form-3}).
+Then these should satisfy (\ref{eq:als-1}) and (\ref{eq:als-2}),
+\ie,
+\begin{eqnarray}
+X^\ast &=& \argmin_{X} \|\ratmat - X{Y^\ast}^T \|_{F,\ratmat}
+\\
+Y^\ast &=& \argmin_{Y} \|\ratmat - X^\ast Y^T\|_{F,\ratmat}
+\end{eqnarray}
+Then (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}) imply that
+\begin{eqnarray}
+X^\ast {Y^\ast}^T &=& \ratmat Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T = \ratmat \Ysim
+\\
+&=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\ratmat = \Xsim \ratmat
+\end{eqnarray}
+where
+$\Xsim$
+and
+$\Ysim$
+\begin{eqnarray}
+\Xsim &=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\in \reals^{\numcus \times \numcus}
+\\
+\Ysim &=& Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T\in \reals^{\numitem \times \numitem}
+\end{eqnarray}
+
+These yield very interesting interpretations for \Xsim\ and \Ysim.
+These equations imply that the optimal prediction for the rating of the $j$th item by the $i$th customer is
+\begin{eqnarray}
+\label{eq:als-item-simil}
+{x_i^\ast}^T y_j^\ast &=& \sum_{k=1}^\numitem \Ysim_{k,j} \ratmat_{i,k}
+\\
+\label{eq:als-cust-simil}
+&=& \sum_{k=1}^\numcus \Xsim_{i,k} \ratmat_{k,j}
+\end{eqnarray}
+
+The equation (\ref{eq:als-item-simil}) tells us that
+the optimal prediction is the weighted sum of the $i$th customer's ratings
+where the weights are determined by \Ysim.
+This is \emph{exactly the same as the prediction by item-based collaborative filtering}
+where item-to-item similarity matrix is given by \Ysim.
+On the other hand,
+the equation (\ref{eq:als-cust-simil}) tells us that
+the optimal prediction is the weighted sum of the $j$th item ratings
+where the weights are determined by \Xsim.
+This is \emph{exactly the same as the prediction by user-based collaborative filtering}
+where user-to-user similarity matrix is given by \Xsim
+(which we have not covered in this document).
+
+
+
+\subsubsection{Weighted matrix factorization via alternating least-squares (ALS)}
+
+Here we consider the weighted norm for the objective function.
+\begin{equation}
+\label{eq:vuwj}
+f_W(X,Y) = \|W\bullet(\ratmat - XY^T)\|_{F,\ratmat}^2
+\end{equation}
+where $W\in\preals^{\numcus\times\numitem}$
+and $\bullet$ denotes the component-wise multiplication.
+
+This is also a quadratic function of a \href{https://en.wikipedia.org/wiki/Bilinear_map}{bilinear function} of $X$ and $Y$,
+thus not a convex function.
+Therefore, as before, we can use ALS as follows.
+
+\begin{itemize}
+\item choose initial $\initX$ and $\initY$
+\item let $\XX{0}:=\initX$ and $\YY{0}:=\initY$
+\item let $k:=0$
+\item for each iteration, update $X$ and $Y$
+\begin{eqnarray}
+\label{eq:als-1}
+    \XX{k+1} &=& \argmin_X \|\ratmat-X{\YY{k}}^T\|_{F,\ratmat}
+\\
+\label{eq:als-2}
+    \YY{k+1} &=& \argmin_Y \|\ratmat-\XX{k+1}Y^T\|_{F,\ratmat}
+\end{eqnarray}
+\item stops if certain stopping criterion is satisfied
+\item update $k:=k+1$ and repeat iterations
+\end{itemize}
+
+The ALS is named so since solving (\ref{eq:als-1}) or (\ref{eq:als-2}) is equivalent to solving a least-squares problem.
+Note that the functions in (\ref{eq:als-1}) and (\ref{eq:als-2}) can be separated by $x_i$s or $y_j$s,
+\eg, the function in (\ref{eq:als-1}) is
+\begin{equation}
+\label{eq:bian}
+f_Y(X) = \|\ratmat - XY^T\|_{F,\ratmat}^2
+= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i^T-x_i^T Y^T\|_{F,\tilde{\ratvec}_i^T}^2
+= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i-Yx_i\|_{F,\tilde{\ratvec}_i}^2
+\end{equation}
+where $\tilde{r}_i \in\reals^\numitem$ are the row vectors of \ratmat,
+thus solving (\ref{eq:als-1}) is equivalent to solving \numcus\ uncorrelated problems separately.
+This is another great advantage of ALS since we can use parallelism to save the training time considerably.
+For example, if we have $N$ processing units, the training time per iteration would be equivalent to
+that for solving each (small) least-squares $\numcus/N$ times.
+Note that we cannot separate the objective function in (\ref{eq:vuwj}) when we consider $X$ and $Y$ simultaneously
+since each of \numrating\ terms in (\ref{eq:vuwj}) are intertwined through $x_i$s and $y_j$s.
+
+When $\ratmat\in\reals^{\numcus\times\numitem}$, it can be easily shown that
+\begin{equation}
+x_i^\ast =  Y^\dagger \tilde{\ratvec}_i
+\end{equation}
+where
+\begin{equation}
+\label{eq:pseudo-inverse-y}
+Y^\dagger = (Y^TY)^{-1}Y^T
+\end{equation}
+is the pseudo-inverse of $Y$.
+Thus (\ref{eq:als-1}) becomes
+\begin{equation}
+\label{eq:als-1-sol}
+\XX{k+1} = \ratmat {{\YY{k}}^\dagger}^T
+= \ratmat {\YY{k}} \left({\YY{k}}^T{\YY{k}} \right)^{-1}.
+\end{equation}
+Likewise, (\ref{eq:als-2}) becomes
+\begin{equation}
+\label{eq:als-2-sol}
+\YY{k+1} = \ratmat^T {{\XX{k+1}}^\dagger}^T
+= \ratmat^T {\XX{k+1}} \left({\XX{k+1}}^T{\XX{k+1}} \right)^{-1}.
+\end{equation}
+
+Note that in practice, we do not evaluate the pseudo-inverse as in (\ref{eq:pseudo-inverse-y})
+because it causes catastrophic numerical instability especially when the matrix is huge
+(as in most recommendation system cases).
+Instead, we use \href{https://en.wikipedia.org/wiki/QR_decomposition}{QR decomposition},
+\ie, if $Y = QR$ is the QR decomposition of $Y$, $Y^\dagger = R^{-1} Q^T$.
+
+
+We now discuss the interpretation of (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}).
+Let $X^\ast$ and $Y^\ast$ be the optimal solutions for the problem (\ref{eq:mat-fac-form-3}).
+Then these should satisfy (\ref{eq:als-1}) and (\ref{eq:als-2}),
+\ie,
+\begin{eqnarray}
+X^\ast &=& \argmin_{X} \|\ratmat - X{Y^\ast}^T \|_{F,\ratmat}
+\\
+Y^\ast &=& \argmin_{Y} \|\ratmat - X^\ast Y^T\|_{F,\ratmat}
+\end{eqnarray}
+Then (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}) imply that
+\begin{eqnarray}
+X^\ast {Y^\ast}^T &=& \ratmat Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T = \ratmat \Ysim
+\\
+&=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\ratmat = \Xsim \ratmat
+\end{eqnarray}
+where
+$\Xsim$
+and
+$\Ysim$
+\begin{eqnarray}
+\Xsim &=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\in \reals^{\numcus \times \numcus}
+\\
+\Ysim &=& Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T\in \reals^{\numitem \times \numitem}
+\end{eqnarray}
+
+These yield very interesting interpretations for \Xsim\ and \Ysim.
+These equations imply that the optimal prediction for the rating of the $j$th item by the $i$th customer is
+\begin{eqnarray}
+\label{eq:als-item-simil}
+{x_i^\ast}^T y_j^\ast &=& \sum_{k=1}^\numitem \Ysim_{k,j} \ratmat_{i,k}
+\\
+\label{eq:als-cust-simil}
+&=& \sum_{k=1}^\numcus \Xsim_{i,k} \ratmat_{k,j}
+\end{eqnarray}
+
+The equation (\ref{eq:als-item-simil}) tells us that
+the optimal prediction is the weighted sum of the $i$th customer's ratings
+where the weights are determined by \Ysim.
+This is \emph{exactly the same as the prediction by item-based collaborative filtering}
+where item-to-item similarity matrix is given by \Ysim.
+On the other hand,
+the equation (\ref{eq:als-cust-simil}) tells us that
+the optimal prediction is the weighted sum of the $j$th item ratings
+where the weights are determined by \Xsim.
+This is \emph{exactly the same as the prediction by user-based collaborative filtering}
+where user-to-user similarity matrix is given by \Xsim
+(which we have not covered in this document).
+
+
+
+
+
+\iffalse
+
+\subsection{Regularization}
+
+XXX: to be filled soon
+
+\subsection{Generalized loss function}
+
+XXX: to be filled soon
+
+
+\subsection{Training, validation, and test strategy}
+
+XXX: to be filled soon
+
+
+\fi
+
+
+\subsection{Collaborative filtering for implicit feedback dataset}
+
+\begin{itemize}
+
+\item binarized variables
+
+\begin{equation}
+\binvar_{i,j} = \left\{\begin{array}{ll}
+1 & \ratmat_{i,j} \in \reals
+\\
+0 & \ratmat_{i,j} \not\in \reals
+\end{array}\right.
+\end{equation}
+
+\item confidence variables
+
+\begin{equation}
+\confvar_{i,j} = 1 + \alpha \ratmat_{i,j}
+\end{equation}
+or
+\begin{equation}
+\confvar_{i,j} = 1 + \alpha \log(1 + \ratmat_{i,j}/\epsilon)
+\end{equation}
+
+\item objective function
+
+\begin{equation}
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2
++ \lambda_X \|X\|_F^2
++ \lambda_Y \|Y\|_F^2
+\end{equation}
+where $\lambda = (\lambda_X, \lambda_Y) \in \ppreals^2$
+is the coefficient for the regularization.
+
+\item gradients
+
+\begin{eqnarray}
+\nonumber
+\nabla_{x_i} f(X,Y; \lambda)
+&=& -2 \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j) y_j + 2 \lambda_X x_i
+\\
+\nonumber
+&=& 2 \left( \left(
+\sum_{j=1}^\numitem \confvar_{i,j} y_j y_j^T + \lambda_X I_\numfactors\right)x_i  - \sum_{j=1}^\numitem \confvar_{i,j} \binvar_{i,j} y_j
+\right)
+\\
+\label{eq:implicit-grad-x}
+&=& 2 \left(\left( Y^T \diag(\tilde{\confvar}_i)Y + \lambda_X I_\numfactors \right) x_i - Y^T \diag(\tilde{\confvar}_i) \tilde{\binvar}_i \right)
+\end{eqnarray}
+
+Likewise,
+\begin{equation}
+\label{eq:implicit-grad-x}
+\nabla_{y_j} f(X,Y; \lambda)
+= 2 \left(\left( X^T \diag(\confvar_j)X + \lambda_Y I_\numfactors \right) y_i - X^T \diag(\confvar_j)  \binvar_j \right)
+\end{equation}
+
+Here $\tilde{\confvar}_i \in \reals^\numitem$ and $\confvar_j \in \reals^\numcus$
+are the $i$th row vector and the $j$th column vector of $\confmat\in\reals^{\numcus\times\numitem}$
+respectively,
+and
+$\tilde{\binvar}_i \in \reals^\numitem$ and $\binvar_j \in \reals^\numcus$
+are the $i$th row vector and the $j$th column vector of $\binmat\in\reals^{\numcus\times\numitem}$
+respectively,
+\ie,
+\begin{eqnarray}
+\confmat
+&=& \colvecfour
+{\tilde{\confvar}_1}
+{\tilde{\confvar}_2}
+{\vdots}
+{\tilde{\confvar}_\numcus}
+= \rowvecfour
+{{\confvar}_1}
+{{\confvar}_2}
+{\cdots}
+{{\confvar}_\numcus}
+\in\reals^{\numcus\times\numitem}
+\\
+\binmat
+&=& \colvecfour
+{\tilde{\binvar}_1}
+{\tilde{\binvar}_2}
+{\vdots}
+{\tilde{\binvar}_\numcus}
+= \rowvecfour
+{{\binvar}_1}
+{{\binvar}_2}
+{\cdots}
+{{\binvar}_\numcus}
+\in\reals^{\numcus\times\numitem}
+\end{eqnarray}
+
+
+\end{itemize}
+
+
+\subsubsection{Regularization coefficient conversion}
+
+\begin{equation}
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2
++ \lambda_X \|X\|_F^2
++ \lambda_Y \|Y\|_F^2
+\end{equation}
+where $\lambda = (\lambda_X, \lambda_Y) \in \preals^2$.
+
+Suppose that $(X_\lambda^\ast, Y_\lambda^\ast)$ is the optimal solution for the following problem:
+\begin{equation}
+\label{eq:als-min-prob-diff-reg}
+\begin{array}{ll}
+\mbox{minimize} &
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2 + \lambda_X \|X\|_F^2 + \lambda_Y \|Y\|_F^2
+\end{array}
+\end{equation}
+for some $\lambda$.
+Since for any $X$, $Y$, and $a\neq0$,
+\begin{equation}
+f(aX, (1/a) Y; (1/a^2) \lambda_X, a^2\lambda_Y)
+= f(X, Y; \lambda_X, \lambda_Y),
+\end{equation}
+for any $X$ and $Y$,
+\begin{eqnarray*}
+\lefteqn{
+f(aX_\lambda^\ast, (1/a) Y_\lambda^\ast; (1/a^2) \lambda_X, a^2\lambda_Y)
+= f(X_\lambda^\ast, Y_\lambda^\ast; \lambda_X, \lambda_Y)
+}
+\\
+&\leq& f((1/a)X, aY; \lambda_X, \lambda_Y)
+= f(X, Y; (1/a^2) \lambda_X, a^2\lambda_Y).
+\end{eqnarray*}
+Therefore 
+$(aX_\lambda^\ast, (1/a) Y_\lambda^\ast)$ is the optimal solution for the following problem:
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & f(X,Y; (1/a^2) \lambda_X, a^2\lambda_Y)
+\end{array}
+\end{equation}
+
+Therefore if we obtain an optimal solution for a certain $(\tilde{\lambda}_X, \tilde{\lambda}_Y)$, we have readily obtained optimal solutions
+for all $(\lambda_X, \lambda_Y)$ pairs such that $\lambda_X \lambda_Y = \tilde{\lambda}_X \tilde{\lambda}_Y$.
+
+Therefore solving the problem (\ref{eq:als-min-prob-diff-reg}) is equivalent to solving the following optimization problem:
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} &
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2 + \sqrt{\lambda_X \lambda_Y} (\|X\|_F^2 + \|Y\|_F^2)
+\end{array}
+\end{equation}
+
+
+Now if assume that we have an optimal regularization coefficient $\lambda\in\preals$ for the following ML problem:
+\begin{equation}
+\label{eq:nefk}
+\begin{array}{ll}
+\mbox{minimize} &
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2 + \lambda (\|X\|_F^2 + \|Y\|_F^2)
+\end{array}
+\end{equation}
+
+If we consider the normalization of each of the three terms in the objective function,
+we can formulate the problem as follows.
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} &
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2 / {\numcus\numitem}
++ \lambda (\|X\|_F^2/{\numcus\numfactors} + \|Y\|_F^2/{\numitem \numfactors})
+\end{array}
+\end{equation}
+which is equivalent to
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} &
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2
++ \lambda ((\numitem/\numfactors)\|X\|_F^2 + (\numcus / \numfactors) \|Y\|_F^2)
+\end{array}
+\end{equation}
+which again is equivalent to
+\begin{equation}
+\label{eq:buysjh}
+\begin{array}{ll}
+\mbox{minimize} &
+f(X,Y; \lambda) = \sum_{i=1}^\numcus \sum_{j=1}^\numitem \confvar_{i,j} (\binvar_{i,j} - x_i^Ty_j)^2
++ (\lambda \sqrt{\numcus \numitem} / \numfactors) ( \|X\|_F^2 + \|Y\|_F^2)
+\end{array}
+\end{equation}
+
+
+
+Now assume that $\lambda^\ast(\numcus, \numitem, \numfactors)$
+is the optimal values for $\lambda$ in (\ref{eq:nefk}) (which, for example, can be approximately obtained
+by hyperparameter optimization with the formulation (\ref{eq:nefk})).
+Then, for some other values $(\numcus', \numitem', \numfactors')$,
+(\ref{eq:buysjh}) implies that the approximate optimal $\lambda$ can be found by
+\begin{eqnarray*}
+&&
+\lambda^\ast(\numcus, \numitem, \numfactors) \sqrt{\numcus \numitem} / \numfactors
+= \lambda^\ast(\numcus', \numitem', \numfactors') \sqrt{\numcus' \numitem'} / \numfactors'
+\\
+&\Leftrightarrow&
+\lambda^\ast(\numcus', \numitem', \numfactors')
+= \lambda^\ast(\numcus, \numitem, \numfactors) \numfactors' \sqrt{\numcus \numitem} / \numfactors\sqrt{\numcus' \numitem'} 
+\end{eqnarray*}
+
+So for example, if we have $\numitem = \numitem'$ and $\numfactors = \numfactors'$,
+then
+\begin{equation}
+\lambda^\ast(\numcus', \numitem', \numfactors')
+= \sqrt{\frac{\numcus}{\numcus'}} \lambda^\ast(\numcus, \numitem, \numfactors).
+\end{equation}
+
+
+
+
+
+
+
+\newpage
+\section{Appendix}
+
+\subsection{Linear algebra}
+
+\subsubsection{Singular value decomposition (SVD)}
+\label{subsubsec:svd}
+
+For any rank-$k$ matrix $A\in\reals^{m\times n}$,
+there exist three matrix
+$U\in\reals^{m\times k}$,
+$\Sigma\in\reals^{k\times k}$,
+and
+$V\in\reals^{n\times k}$,
+such that
+\begin{equation}
+A = U \Sigma V^T
+\end{equation}
+where
+the columns of $U$ are orthonormal,
+the columns of $V$ are orthonormal,
+and
+$\Sigma$ is a diagonal matrix with nonincreasing positive diagonal entries,
+\ie,
+\begin{equation}
+U^T U = V^T V = I_k
+\in\reals^{k\times k}
+\end{equation}
+and
+\begin{equation}
+\Sigma = \diag(\sigma_1, \ldots, \sigma_k) =
+\bigmat
+{\sigma_1}
+{0}
+{0}
+{0}
+{\sigma_2}
+{0}
+{0}
+{0}
+{\sigma_k}
+\in\reals^{k\times k}
+\end{equation}
+with
+\begin{equation}
+\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_k > 0
+\end{equation}
+where $I_k$ referst to $k$-by-$k$ identity matrix.
+
+If we let $u_1, \ldots, u_k \in\reals^n$ be the $k$ column vectors of $U$,
+\ie,
+\begin{equation}
+U = \rowvecthree{u_1}{\cdots}{u_k} \in \reals^{n\times k},
+\end{equation}
+$U^T U =I_k$ holds if and only if
+\begin{equation}
+u_i^T u_j = \delta_{i,j} = \left\{\begin{array}{ll}
+1 & \mbox{if } i=j
+\\
+0 & \mbox{otherwise}
+\end{array}\right.
+\end{equation}
+where $\delta_{i,j}$ denotes the \href{https://en.wikipedia.org/wiki/Kronecker_delta}{Kronecker delta},
+which means the length of each $u_i$ is $1$
+and all of them are orthogonal to each other.
+Likewise,
+if we let $v_1, \ldots, v_k \in\reals^m$ be the $k$ column vectors of $V$,
+\ie,
+\begin{equation}
+V = \rowvecthree{v_1}{\cdots}{v_k} \in \reals^{m\times k},
+\end{equation}
+$V^T V =I_k$ holds if and only if
+\begin{equation}
+v_i^T v_j = \delta_{i,j}
+\end{equation}
+which means the length of each $v_i$ is $1$
+and all of them are orthogonal to each other.
+Note that
+\begin{itemize}
+\item $\sigma_1, \ldots, \sigma_k$ are called \emph{singular values} of $A$.
+\item $u_1, \ldots, u_k$ are called \emph{left singular vectors} of $A$.
+\item $v_1, \ldots, v_k$ are called \emph{right singular vectors} of $A$.
+\end{itemize}
+
+Note also that $A$ can be expressed as
+\begin{equation}
+A = \sum_{i=1}^k \sigma_i u_i v_i^T,
+\end{equation}
+\ie, $A$ can be express as a linear combination of $k$ rank-$1$ matrices.
+
+
+
+\subsubsection{Singular value decomposition as rank-$k$ approximation}
+\label{subsubsec:svd-approx}
+
+Given a matrix $A\in\reals^{m\times n}$
+where $\rank(A)=k$,
+consider the following optimization problem with $r\leq k$.
+\begin{equation}
+\label{eq:prob:norm-min-prob}
+\begin{array}{ll}
+\mbox{minimize} & \|A-B\|_F
+\\
+\mbox{subject to} & \rank(B) = r
+\end{array}
+\end{equation}
+where the optimization variable is $B\in\reals^{m\times n}$
+and $\|\cdot\|_F$ denotes the \href{http://mathworld.wolfram.com/FrobeniusNorm.html}{Frobenius norm}.
+
+It turns out that
+\begin{equation}
+B^\ast = U_r \Sigma_r V_r^T
+= \sum_{i=1}^r \sigma_i u_i v_i^T,
+\end{equation}
+is an optimal solution for the problem (\ref{eq:prob:norm-min-prob}),
+\ie,
+\begin{equation}
+\|A- U_r \Sigma_r V_r^T\|_F \leq \|A-B\|_F
+\end{equation}
+for every $B$ with $\rank(B) = r$
+where
+$U_r \in \reals^{m\times r}$,
+$V_r \in \reals^{n\times r}$,
+and
+$\Sigma_r \in \reals^{r\times r}$
+are defined as
+\begin{eqnarray}
+U_r &=& \rowvecthree{u_1}{\cdots}{u_r} \in \reals^{n\times r}
+\\
+V_r &=& \rowvecthree{v_1}{\cdots}{v_r} \in \reals^{m\times r}
+\\
+\Sigma_r &=& \diag(\sigma_1, \ldots, \sigma_r) \in \reals^{r\times r}
+\end{eqnarray}
+
+
+This means the close rank-$r$ matrix to $A$ (in Frobenius norm sense) can be obtained
+with $k$ largest singular values together with corresponding $k$ left and right singular vectors.

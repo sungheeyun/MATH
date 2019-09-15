@@ -1,0 +1,421 @@
+\newcommand{\optdomain}{\mathcal{D}}
+
+\chapter{Convex Optimization}
+\section{Mathematical optimization problem}
+
+A mathematical optimization problem can be expressed as
+\begin{equation}
+\label{eq:opt-prob}
+\begin{array}{ll}
+\mbox{minimize} & f_0(x)
+\\
+\mbox{subject to} & f_i(x) \leq 0 \mbox{ for } i = 1, \ldots, m
+\\
+& h_i(x) = 0 \mbox{ for } i = 1, \ldots, p
+\end{array}
+\end{equation}
+where
+$x\in\reals^n$ is the optimization variable,
+$f_0:\reals^n\to\reals$ is the objective function,
+$f_i:\reals^n\to\reals$ for $i=1,\ldots,n$ are the inequality constraint functions,
+and
+$h_i:\reals^n\to\reals$ for $i=1,\ldots,p$ are the equality constraint functions.
+
+The conditions, $f_i(x) \leq 0$ for $ i = 1, \ldots, m$, are called inequality constraints
+and the conditions, $ h_i(x) = 0 $ for $ i = 1, \ldots, p$ are called equation constraints.
+
+Note that this formulation covers pretty much every single-objective optimization problem.
+For example,
+consider the following optimization problem.
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{maximize} & f(x_1,x_2)
+\\
+\mbox{subject to} & x_1 \geq x_2
+\\
+& x_1 + x_2 = 2
+\end{array}
+\end{equation}
+This problem can be cast into an equivalent problem as follows.
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & -f(x_1,x_2)
+\\
+\mbox{subject to} & - x_1 + x_2 \leq 0
+\\
+& x_1 + x_2 - 2 = 0
+\end{array}
+\end{equation}
+
+
+The feasible set for (\ref{eq:opt-prob}) is defined by the set of $x\in\reals^n$ which satisfies all the contraints.
+Also, the optimal value for (\ref{eq:opt-prob}) is the infimum of $f_0(x)$ while $x$ is in the feasible set.
+When the infimum is achievable, we define the optimal solution set as the set of all feasible $x$ achieving
+the infimum value.
+These are defined in mathematically rigorous terms below.
+
+\begin{itemize}
+
+\item
+The feasible set for (\ref{eq:opt-prob}) is defined by
+\begin{equation}
+\feasibleset
+=
+\set{x\in \mathcal{D}}
+{ f_i(x)\leq 0 \mbox{ for } i =0, \ldots, m,\ h_j(x) = 0 \mbox{ for } j = 1,\ldots,p}
+\subseteq \reals^n
+\end{equation}
+where
+\begin{equation}
+\mathcal{D} = \left( \bigcap_{0\leq i\leq m} \dom f_i \right) \cap \left( \bigcap_{1\leq i\leq p} \dom h_i \right).
+\end{equation}
+
+\item
+The optimal value for (\ref{eq:opt-prob}) is defined by
+\begin{equation}
+p^\ast = \inf_{x\in\feasibleset} f_0(x)
+\end{equation}
+
+We use the conventions that $p^\ast = -\infty$ if $f_0(x)$ is unbounded below for $x\in \feasibleset$
+and that $p^\ast = \infty$ if $\feasibleset = \emptyset$.
+
+\item
+The optimal solution set for (\ref{eq:opt-prob}) is defined by
+\begin{equation}
+\optsolset = \set{x\in\feasibleset}{f_0(x) = p^\ast}.
+\end{equation}
+
+
+\end{itemize}
+
+
+\section{Convex optimization problem}
+
+A mathematical optimization problem is called a convex optimization problem
+if the objective function and all the inequality constraint functions are convex functions
+and all the equality constraint functions are affine functions.
+
+Hence, a convex optimization problem can be expressed as
+\begin{equation}
+\label{eq:cvx-opt-prob}
+\begin{array}{ll}
+\mbox{minimize} & f_0(x)
+\\
+\mbox{subject to} & f_i(x) \leq 0 \mbox{ for } i = 1, \ldots, m
+\\
+& A x = b
+\end{array}
+\end{equation}
+where
+$x\in\reals^n$ is the optimization variable,
+$f_i:\reals^n\to\reals$ for $i=0,\ldots,n$ are convex functions,
+$h_i:\reals^n\to\reals$ for $i=1,\ldots,p$ are the equality constraint functions,
+$A \in \reals^{p\times n}$, and $b\in\reals^p$.
+
+A function, $f:\reals^n \to \reals$, is called a convex function if
+$\dom f \subseteq \reals^n$ is a convex set
+and
+for all $x, y\in\dom f$
+and all $0\leq \lambda \leq 1$,
+\begin{equation}
+    f( \lambda x + (1-\lambda) y) \leq
+    \lambda f(x) + (1-\lambda) f(y)
+\end{equation}
+where $\dom f \subseteq \reals^n$ denotes the domain of $f$.
+
+A convex optimization enjoys a number of nice theoretical and practical properties.
+
+\begin{itemize}
+\item A local minimum of a convex optimization problem is a global minimum,
+\ie,
+if for some $R>0$ and $x_0\in\feasibleset$, $\|x-x_0\|<R$ and $x\in\feasibleset$ imply $f_0(x_0) \leq f_0(x)$,
+then $f_0(x_0) \leq f_0(x)$ for all $x\in\feasibleset$.
+\begin{proof}
+Assume that $x_0\in\feasibleset$ is a local minimum, \ie,
+for some $R>0$, $\|x-x_0\|<R$ and $x\in\feasibleset$ imply $f_0(x_0) \leq f_0(x)$.
+
+Now assume that $x_0$ is not a global minimum, \ie, there exists $y\in\feasibleset$
+such that $y\neq x_0$ and $f_0(y) < f_0(x_0)$.
+Then for $z = \lambda y + (1-\lambda) x_0$ with $\lambda = \min\{ R/\|y-x_0\|, 1\}/2$,
+the convexity of $f_0$ implies
+\begin{equation}
+\label{eq:4}
+f_0(z) \leq \lambda f_0(y) + (1-\lambda) f_0(x_0)
+\end{equation}
+since $0 < \lambda \leq 1/2 < 1$.
+Furthermore
+\begin{equation}
+\|z - x_0\| = \lambda \|y-x_0\| \leq R/2,
+\end{equation}
+hence $f_0(z) \geq f_0(x_0)$, which together with (\ref{eq:4}) implies
+\begin{equation}
+f_0(x_0) \leq f_0(z)
+\leq \lambda f_0(y) + (1-\lambda) f_0(x_0)
+< \lambda f_0(x_0) + (1-\lambda) f_0(x_0)
+= f_0(x_0),
+\end{equation}
+which is a contradiction.
+Therefore there is no $y\in\feasibleset$ such that $y\neq x_0$ and $f_0(y) < f_0(x_0)$.
+Therefore $x_0$ is a global minimum.
+\end{proof}
+
+
+
+\item For a unconstrained problem, \ie, the problem (\ref{eq:cvx-opt-prob}) with $m=p=0$, with differentiable objective function,
+$x\in\dom f_0$ is an optimal solution if and only if $\grad f_0(x)= 0 \in \reals^n$.
+
+\begin{proof}
+The Taylor theorem implies that for any $x,y\in\dom f_0$,
+\begin{equation}
+\label{eq:second-order-taylor}
+f_0(y) = f(x) + \grad f_0(x) ^T (y-x) + \frac{1}{2} (y-x)^T \grad^2 f_0(z) (y-x)
+\end{equation}
+for some $z$ on the line segment having $x$ and $y$ as its end points,
+\ie, $z = \alpha x + (1-\alpha) y$ for some $0\leq \alpha \leq 1$.
+Since $\grad^2 f(x) \succeq0$ for any $z \in \dom f_0$, we have
+\begin{equation}
+f_0(y) \geq f_0(x) + \grad f_0(x) ^T (y-x)
+\end{equation}
+
+Thus, if for some $x_0 \in \reals^n$, $\grad f_0(x_0) = 0$, for any $x\in\dom f_0$,
+\begin{equation}
+f_0(x) \geq f_0(x_0) + \grad f_0(x_0) ^T (x-x_0) = f_0(x_0),
+\end{equation}
+
+hence $x_0$ is an optimal solution.
+Now assume that $x_0$ is an optimal solution, but $\grad f_0(x_0) \neq 0$.
+Then for any $k>0$, if we let $x=x_0$ and $y = x_0 - k \grad f_0(x_0) $,
+(\ref{eq:second-order-taylor}) becomes
+\begin{eqnarray*}
+\lefteqn{
+f_0(y) = f(x_0) + \grad f_0(x_0) ^T (-k \grad f_0(x_0)) + \frac{k^2}{2} \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0)
+}
+\\
+&=&
+f(x_0) - k \|\grad f_0(x_0)\|^2 + \frac{k^2}{2} \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0)
+\end{eqnarray*}
+for all $y = x_0 - k \grad f_0(x_0) \in \dom f_0$.
+
+Since for $k< 2 \|\grad f_0(x_0)\|^2 / \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0)$,
+$-k \|\grad f_0(x_0)\|^2 + \frac{k^2}{2} \grad f_0(x_0) ^T \grad^2 f_0(z) \grad f_0(x_0) < 0$,
+thus
+$f_0(y) < f(x_0)$,
+hence the constradiction.
+Therefore, if $x_0$ is an optimal solution for the unconstrained problem, $\grad f_0(x_0) = 0$.
+
+\end{proof}
+\end{itemize}
+
+\section{Duality}
+
+\subsection{The Lagrange dual problem}
+
+\subsubsection{Examples}
+
+\paragraph{Standard form LP}
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & c^T x
+\\
+\mbox{subject to} & Ax = b
+\\
+& x \succeq 0
+\end{array}
+\end{equation}
+
+The Lagrange dual problem is
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{maximize} & -b^T \nu
+\\
+\mbox{subject to} & A^T \nu + c \geq0
+\end{array}
+\end{equation}
+
+\paragraph{Inequality form LP}
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & c^T x
+\\
+\mbox{subject to} & Ax \preceq b
+\end{array}
+\end{equation}
+
+The Lagrange dual problem is
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{maximize} & -b^T \lambda
+\\
+\mbox{subject to} & A^T \lambda + c = 0
+\\
+& \lambda \succeq 0
+\end{array}
+\end{equation}
+
+
+\paragraph{Least-squares solution of linear equations}
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & (1/2) x^T x
+\\
+\mbox{subject to} & Ax = b
+\end{array}
+\end{equation}
+
+The Lagrange dual problem is
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{maximize} & -(1/2) \nu^T A A^T \nu - b^T \nu
+\end{array}
+\end{equation}
+
+
+
+\paragraph{Entropy maximization}
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & \sum_{i=1}^n x_i \log x_i
+\\
+\mbox{subject to} & Ax = b
+\\
+& \ones^T x = 1
+\end{array}
+\end{equation}
+with domain $\mathcal{D} = \reals^n_+$
+
+The Lagrange dual problem is
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{maximize} & - b^T \lambda - \log \left( \sum_{i=1}^n \exp(-a_i^T \lambda) \right)
+\\
+\mbox{subject to} & \lambda  \succeq 0
+\end{array}
+\end{equation}
+
+
+
+\subsection{Interpretations}
+
+\subsubsection{Max-min characterization of weak and strong duality}
+
+We first note that for any $f: X \times Y \to \reals$, we have
+\begin{equation}
+\sup_{y\in Y} \inf_{x\in X} f(x,y)
+\leq \inf_{x\in X} \sup_{y\in Y} f(x,y).
+\end{equation}
+This inequality is called \emph{max-min inequality}.
+
+We can prove this as follows.
+Let $g:Y\to\reals$ be a function defined by $g(y) = \inf_{x \in X} f(x,y)$ and
+let $h:X\to\reals$ be a function defined by $h(x) = \sup_{y \in Y} f(x,y)$.
+Then we have that for any $x\in X$ and $y\in Y$
+\begin{equation}
+g(y) = \inf_{x\in X} f(x,y) \leq f(x,y),
+\end{equation}
+which implies that for any $x\in X$
+\begin{equation}
+\sup_{y\in Y} g(y) \leq \sup_{y\in Y} f(x,y) = h(x).
+\end{equation}
+This again implies that
+\begin{equation}
+\sup_{y\in Y} g(y) \leq \inf_{x\in X} h(x),
+\end{equation}
+hence the proof.
+
+
+
+
+\subsubsection{Saddle-point interpretation}
+
+Suppose $f:X\times Y \to \reals$.
+We refer a point $(\tilde{x}, \tilde{y}) \in X\times Y$ a \emph{saddle-point}
+for $f$ (and $X$ and $Y$) if
+\begin{equation}
+f(\tilde{x},y) \leq f(\tilde{x},\tilde{y}) \leq f(x, \tilde{y})
+\end{equation}
+for all $x \in X$ and $y\in Y$.
+
+Now if $x^\ast$ and $\lambda^\ast$
+are primal and dual optimal points for a problem in which strong duality obtains,
+the form a saddle-point for the Lagrangian.
+Conversely, if $(x,\lambda)$ is a saddle-point of the Lagragian, then $x$ is primal optimal, $\lambda$ is dual optimal,
+and the optimal duality gap is zero.
+
+To prove these, assume that $x^\ast\in\optdomain$ and $(\lambda^\ast, \nu^\ast) \in \reals^m_+ \times \reals^p$
+are primal and dual optimal points for a problem in which strong duality obtains.
+Then for any $x\in\optdomain$ and $(\lambda, \nu) \in \reals^m_+ \times \reals^p$,
+we have
+\begin{equation}
+L(x^\ast, \lambda, \nu) =
+f_0(x^\ast) + \sum_{i=1}^m \lambda_i f_i(x^\ast) + \sum_{i=1}^p \nu_i h_i(x^\ast)
+\leq
+f_0(x^\ast) = g(\lambda^\ast, \nu^\ast) \leq L(x,\lambda^\ast, \nu^\ast)
+\end{equation}
+where the left inequality comes from the fact that $\lambda_i f_i(x^\ast) \leq 0$ for all $i=1,\ldots, m$
+and $h_i(x^\ast)=0$ for all $i=1,\ldots, p$
+and the right inequality comes from the definition of (Lagrange) dual function.
+Now from the complementary slackness we know that $\lambda_i f_i(x^\ast) = 0$ for all $i=1,\ldots, m$.
+Therefore
+\begin{equation}
+L(x^\ast,\lambda^\ast, \nu^\ast) = f_0(x^\ast),
+\end{equation}
+thus we have
+\begin{equation}
+L(x^\ast, \lambda, \nu)
+\leq L(x^\ast, \lambda^\ast, \nu^\ast)
+\leq L(x, \lambda^\ast, \nu^\ast),
+\end{equation}
+hence the proof.
+
+Now suppose that $\tilde{x}\in\optdomain$ and $(\tilde{\lambda}, \tilde{\nu}) \in \reals^m_+ \times \reals^p$
+are the saddle-point of the Lagrangian, \ie,
+for all $x\in\optdomain$ and $(\lambda, \nu) \in \reals^m_+ \times \reals^p$,
+\begin{equation}
+\label{eq:vbusidk}
+L(\tilde{x}, \lambda, \nu)
+\leq L(\tilde{x}, \tilde{\lambda}, \tilde{\nu})
+\leq L(x, \tilde{\lambda}, \tilde{\nu}).
+\end{equation}
+First we show that $\tilde{x}$ is a feasible point.
+The left inequality says that for all $(\lambda, \nu) \in \reals^m_+ \times \reals^p$,
+\begin{equation}
+L(\tilde{x}, \lambda, \nu)=
+f_0(\tilde{x}) + \sum_{i=1}^m \lambda_i f_i(\tilde{x}) + \sum_{i=1}^p \nu_i h_i(\tilde{x})
+\leq L(\tilde{x}, \tilde{\lambda}, \tilde{\nu})
+\end{equation}
+If $f_i(\tilde{x})>0$ for some $i\in\{1,\ldots,m\}$ or
+$h_i(\tilde{x})\neq 0$ for some $i\in\{1,\ldots,p\}$,
+$L(\tilde{x}, \lambda, \nu)$ is unbounded above and the above inequality cannot hold.
+Therefore $f_i(\tilde{x})\leq0$ for all $i\in\{1,\ldots,m\}$ and $h_i(\tilde{x})= 0$ for all $i\in\{1,\ldots,p\}$,
+\ie, $\tilde{x}$ is primal feasible.
+Since the inequality must hold when $\lambda = 0$ and $\nu =0$,
+we have
+\begin{equation}
+\label{eq:cidkshx}
+f(\tilde{x}) \leq L(\tilde{x}, \tilde{\lambda}, \tilde{\nu}).
+\end{equation}
+The right inequality
+of (\ref{eq:vbusidk})
+implies that
+\begin{equation}
+\label{eq:vydsuxk}
+L(\tilde{x}, \tilde{\lambda}, \tilde{\nu})
+\leq g(\tilde{\lambda}, \tilde{\nu}) = \inf_{x\in\optdomain} L({x}, \tilde{\lambda}, \tilde{\nu}),
+\end{equation}
+which implies that $f_0(\tilde{x}) \leq g(\tilde{\lambda}, \tilde{\nu})$.
+Since $g(\lambda, \nu)$ is an underestimator of $f_0(x)$ for any feasible $x\in\optdomain$ and $(\tilde{\lambda}, \tilde{\nu}) \in \reals^m_+ \times \reals^p$,
+\ie, $g(\tilde{\lambda}, \tilde{\nu}) \leq f_0(\tilde{x})$, thus
+$g(\tilde{\lambda}, \tilde{\nu}) = f_0(\tilde{x})$.
+Therefore $\tilde{x}$ is an optimal solution for the primal problem
+and $(\tilde{\lambda}, \tilde{\nu})$  is an optimal solution for the dual problem,
+hence the proof.
+

@@ -1,0 +1,231 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+
+\input{/Users/sunyun/mytex/mydefs}
+
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+%SetFonts
+
+%SetFonts
+
+
+\title{Sunghee's Statistics}
+\author{Sunghee Yun}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section{Probability density function transformation}
+
+Assume two random variables, $X\in\reals$ and $Y\in\reals$, which are related by
+a smooth function $g:\reals \to \reals$
+such that
+\begin{equation}
+\label{eq:1}
+Y = g(X).\footnote{We assume that $g\in C^1$.}
+\end{equation}
+
+If $f_X:\reals\to\preals$ is the probability density function (PDF), what would be the PDF of $Y$?
+
+First note that we should have
+\begin{equation}
+        f_X(x) \Delta x \sim f_Y(y) \Delta y
+\end{equation}
+for $x$ and $y$ such that $y=g(x)$
+where $g(x)$ is increasing at $x$.
+
+Suppose that $g$ is an injective function (or one-to-one function).
+Then for every $y \in g(\mathcal{D})$ where $\mathcal{D}$ is the domain of $g$,
+if we make $\Delta x$ or $\Delta y$ infinitesimally small,
+(\ref{eq:1}) becomes
+\begin{equation}
+\label{eq:pdf-transform}
+f_Y(y)
+= \lim_{\Delta x \to 0}\frac{\Delta x}{\Delta y} f_X(x)
+= \frac{1}{\lim_{\Delta x \to 0} \frac{\Delta y}{\Delta x}} f_X(x)
+= \frac{1}{g'(x)} f_X(x).
+\end{equation}
+
+This equation can be generalized for any smooth function $g$
+and any $y\in g(\mathcal{D})$,
+\begin{equation}
+f_Y(y) = \sum_{g(x)=y} \frac{1}{|g'(x)|} f_X(x)
+\end{equation}
+
+\section{Log-normal distribution}
+
+ We say $Y$ is log-normally distributed, if, for $X\sim\mathcal{N}(\mu_X,\sigma_X^2)$,
+ \begin{equation}
+ Y = \exp(X).
+ \end{equation}
+
+Then (\ref{eq:pdf-transform}) implies that
+\begin{eqnarray}
+f_Y(y) &=& \frac{1}{\exp(\log(y))} \cdot \frac{1}{\sqrt{2\pi} \sigma_X}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\nonumber
+\\
+&=& \frac{1}{\sqrt{2\pi} \sigma_X y}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right).
+\label{eq:log-normal-pdf}
+\end{eqnarray}
+
+
+\subsection{Some statistics}
+
+The definition of the expected value implies
+\begin{eqnarray*}
+\lefteqn{
+\Expect Y = \int_{0}^{\infty} y f_Y(y) \, dy
+= \int_{0}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right) dy
+}
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}\right) \exp(x) \, dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}+x\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{x^2 - 2(\mu_X +\sigma_X^2)x + \mu_X^2}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 + \mu_X^2 -(\mu_X+\sigma_X^2)^2}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 - 2\mu_X\sigma_X^2 - \sigma_X^4}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 - \sigma_X^2(2\mu_X+ \sigma_X^2)}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\exp\left(\frac{2\mu_X+ \sigma_X^2}{2}\right)
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 }{2\sigma_X^2}\right) dx
+\\
+&=& 
+\exp\left(\frac{2\mu_X+ \sigma_X^2}{2}\right)
+\end{eqnarray*}
+since $dy = \exp(x) dx$
+and $\frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +\sigma_X^2))^2 }{2\sigma_X^2}\right)$
+is the PDF of a random variable $\sim$ $\mathcal{N}(\mu_X+\sigma_X^2,\sigma_X^2)$,
+thus
+\begin{equation}
+\label{eq:log-normal-mean}
+\mu_Y
+= \Expect Y = \exp\left(\frac{2\mu_X+ \sigma_X^2}{2}\right).
+\end{equation}
+
+Similarly,
+\begin{eqnarray*}
+\lefteqn{
+\Expect Y^2 = \int_{0}^{\infty} y^2 f_Y(y) \, dy
+= \int_{0}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  y \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right) dy
+}
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp(x) \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}\right) \exp(x) \, dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x-\mu_X)^2}{2\sigma_X^2}+2x\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{x^2 - 2(\mu_X +2\sigma_X^2)x + \mu_X^2}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 + \mu_X^2 -(\mu_X+2\sigma_X^2)^2}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 - 4\mu_X\sigma_X^2 - 4\sigma_X^4}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 - 4\sigma_X^2(\mu_X+ \sigma_X^2)}{2\sigma_X^2}\right) dx
+\\
+&=& 
+\exp\left({2(\mu_X+ \sigma_X^2)}\right)
+\int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi} \sigma_X }  \exp\left(-\frac{(x - (\mu_X +2\sigma_X^2))^2 }{2\sigma_X^2}\right) dx
+\\
+&=& 
+\exp\left({2(\mu_X+ \sigma_X^2)}\right),
+\end{eqnarray*}
+thus
+\begin{equation}
+\label{eq:log-normal-var}
+\sigma_Y^2 =
+\Var(Y) = \Expect Y^2 - (\Expect Y)^2 = \exp(2(\mu_X+\sigma_X^2)) - \exp(2\mu_X+\sigma_X^2)
+= (\exp(\sigma_X^2)-1) \exp(2\mu_X+\sigma_X^2)).
+\end{equation}
+
+Note that (\ref{eq:log-normal-mean}) implies that
+\begin{equation}
+\mu_Y^2
+= \exp(2\mu_X+\sigma_X^2)),
+\end{equation}
+hence
+\begin{equation}
+\sigma_Y^2
+= (\exp(\sigma_X^2)-1) \mu_Y^2.
+\end{equation}
+This multiplicative dependency of the standard deviation on the expected value
+is attributed to the fact that $\log(Y) \sim \mathcal{N}(\mu_X,\sigma_X^2)$,
+\ie,
+the log-scale of $Y$ follows the normal distribution.
+
+Now if we differentiate the PDF with respect to $y$,
+(\ref{eq:log-normal-pdf}) implies that
+\begin{eqnarray*}
+\lefteqn{
+\frac{d}{dy} f_Y(y)
+= \frac{d}{dy} \left(\frac{1}{\sqrt{2\pi} \sigma_X y}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)\right)
+}
+\\
+&=&
+-\frac{1}{\sqrt{2\pi} \sigma_X y^2}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\\
+&&
++
+\frac{1}{\sqrt{2\pi} \sigma_X y}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\left(-\frac{(\log(y)-\mu_X)}{\sigma_X^2}\right)
+\frac{1}{y}
+\\
+&=&
+-\frac{1}{\sqrt{2\pi} \sigma_X y^2}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\left(1+\frac{(\log(y)-\mu_X)}{\sigma_X^2} \right)
+\\
+&=&
+-\frac{1}{\sqrt{2\pi} \sigma_X^3 y^2}  \exp\left(-\frac{(\log(y)-\mu_X)^2}{2\sigma_X^2}\right)
+\left(\log(y)-(\mu_X-\sigma_X^2) \right).
+\end{eqnarray*}
+Equating the derivative to zero yields
+\begin{equation}
+y = \exp(\mu_X-\sigma_X^2),
+\end{equation}
+which is the mode of $Y$.
+
+
+\subsection{Parameter estimation}
+
+Now assume that we have a log-normally distributed random variable, $Y\in\ppreals$,
+with $\mu_Y$ and $\sigma_Y^2$ as its mean and variance.
+We derived the parameters of the source distribution, $\mu_X$ and $\sigma_X$.
+
+The two equations, (\ref{eq:log-normal-mean}) and (\ref{eq:log-normal-var}), imply
+\begin{eqnarray*}
+\mu_Y &=& \exp(\mu_X+\sigma_X^2/2),
+\\
+\sigma_Y^2 &=& (\exp(\sigma_X^2)-1)\exp(2\mu_X+\sigma_X^2) = (\exp(\sigma_X^2)-1) \mu_Y^2,
+\end{eqnarray*}
+thus
+\begin{eqnarray*}
+\sigma_X^2 &=& \log(1+{\sigma_Y^2}/{\mu_Y^2}),
+\\
+\mu_X &=& \log(\mu_Y) - \sigma_X^2/2 = \log(\mu_Y) - \log(1+{\sigma_Y^2}/{\mu_Y^2})/2
+= \frac{1}{2} \log\left(\frac{\mu_Y^2}{1+{\sigma_Y^2}/{\mu_Y^2}}\right).
+\end{eqnarray*}
+
+
+\end{document}  
