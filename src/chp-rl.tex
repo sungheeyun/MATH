@@ -1,5 +1,4 @@
 
-
 \newcommand{\pol}{\ensuremath{\pi}}
 \newcommand{\optpol}{\ensuremath{{\pol}_\ast}}
 \newcommand{\polset}{\ensuremath{\Pi}}
@@ -13,7 +12,7 @@
 \newcommand{\condsetbig}[2]{\left\{\left.#1\right|#2\right\}}
 \newcommand{\condprobbig}[2]{p\left(\left.#1\right|#2\right)}
 \newcommand{\Condprobbig}[2]{P\left(\left.#1\right|#2\right)}
-\newcommand{\df}{\gamma}
+\newcommand{\df}{\ensuremath{\gamma}}
 \newcommand{\condprobb}[2]{p(#1|#2)}
 \newcommand{\suppk}[1]{\ensuremath{\mathcal{#1}}}
 \newcommand{\suppx}{\suppk{X}}
@@ -22,6 +21,7 @@
 \renewcommand{\Expect}{\mathbf{E}}
 
 \newcommand{\stateset}{\ensuremath{\mathcal{S}}}
+\newcommand{\nonterminalstateset}{{\stateset'}}
 \newcommand{\actionset}{\ensuremath{\mathcal{A}}}
 
 \newcommand{\assign}{\leftarrow}
@@ -35,17 +35,18 @@
 \newcommand{\nstepqreturn}[2]{G^{Q}_{{#1}:{#2}}}
 \newcommand{\tdparam}{\ensuremath{\lambda}}
 \newcommand{\ldreturn}[1]{G^{\tdparam}_{#1}}
-\newcommand{\stepsize}[1]{\alpha_{#1}}
+\newcommand{\stepsize}[1]{\ensuremath{\alpha_{#1}}}
 \newcommand{\tderror}[1]{\ensuremath{\delta_{#1}}}
 \newcommand{\tderrorvar}[1]{\ensuremath{\delta'_{#1}}}
 
 \newcommand{\et}[1]{\ensuremath{z_{#1}}}
-\newcommand{\wvec}{w}
-\newcommand{\wvector}[1]{\ensuremath{\wvec_{#1}}}
+\newcommand{\wvector}[1]{\ensuremath{w_{#1}}}
 
 \newcommand{\defeq}{\coloneqq}
 
 \newcommand{\valappr}{\hat{v}}
+
+\newcommand{\wvectdim}{d}
 
 
 
@@ -332,7 +333,6 @@ and the equation (\ref{eq:bellman:opt:action}) is called \emph{Bellman optimalit
 
 
 %\newpage
-ㅓ
 \section{Dynamic programming}
 
 The term dynamic programming (DP)
@@ -1349,8 +1349,8 @@ What eligibility traces offer beyond these is an elegant algorithmic mechanism
 with significant computational advantages.
 
 The mechanism is a short-term memory vector,
-the \emph{eligibility trace} $\et{t} \in \reals^d$
-that parallels the long-term weight vector $\wvector{t} \in \reals^d$.
+the \emph{eligibility trace} $\et{t} \in \reals^\wvectdim$
+that parallels the long-term weight vector $\wvector{t} \in \reals^\wvectdim$.
 The rough idea is that when a component of \wvector{t}\ participates in producing an estimated value,
 then the corresponding component of \et{t}\ is bumped up and then begins to fade away.
 Learning will then occur in that component of \wvector{t}\
@@ -1376,6 +1376,7 @@ each appropriately discounted.
 The general form of that equation,
 for any parameterized function approximator, is
 \begin{equation}
+\label{eq:nstep-return}
 \nstepreturn{t}{t+n}
 =
 \reward{t+1} + \df \reward{t+2} + \df^2 \reward{t+3} + \cdots + \df^{n-1} \reward{t+n}
@@ -1410,10 +1411,11 @@ and is normalized (to ensure that the weights sum to $1$).
 The resulting update is toward a return, called the \tdparam-return , defined in its state-based form by
 
 \begin{equation}
+\label{eq:lambda-return}
 \ldreturn{t} = (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} \nstepreturn{t}{t+n}
 \end{equation}
 where $(1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} = 1$.
-If the episode termintes at $t=T$,
+If the episode terminates at $t=T$,
 then $\nstepreturn{t}{t+n} = \nstepreturn{t}{T} = \return{t}$ for all $n \geq T-t$,
 thus,
 \begin{equation}
@@ -1441,9 +1443,10 @@ to the semi-gradient method
 using the \tdparam-return as the target.
 The update rule of this method is
 \begin{equation}
+\label{eq:off-line-lambda-return-update}
 \wvector{t+1} = \wvector{t}
 + \stepsize{t} \left( \ldreturn{t} - \valappr(\state{t}, \wvector{t})
-\right) \nabla_\wvec \valappr(\state{t}, \wvector{t})
+\right) \nabla_{\wvector{}} \valappr(\state{t}, \wvector{t})
 \end{equation}
 for $t=0,\ldots, T-1$.
 The \tdparam-return gives us
@@ -1460,7 +1463,7 @@ TD(\tdparam) is one of the oldest and most widely used algorithms in reinforceme
 It was the first algorithm for which a formal relationship was shown between a more theoretical forward view
 and a more computationally congenial backward view using eligibility traces.
 Here we will show empirically that it approximates the off-line \tdparam-return algorithm
-presented in the previous section. 
+presented in the previous section.
 
 TD(\tdparam) improves over the off-line \tdparam-return algorithm in three ways.
 \begin{itemize}
@@ -1473,27 +1476,349 @@ thus its estimates is updated sooner (and may be better sooner).
 The semi-gradient version of TD(\tdparam) with function approximation
 will be shown below.
 
-The \emph{eligibility trace} is a vector $\et{t} \in \reals^d$
+The \emph{eligibility trace} is a vector $\et{t} \in \reals^\wvectdim$
 where the number of components of \et{t}\ is the same as that of \wvector{t}.
 Whereas the \emph{weight vector}, \wvector{t}, is a long-term memory
 accumulating over the lifetime of the system,
 the eligibility trace is a short-term memory,
-which typically lasts less time than the length of an episode.
+which typically lasts shorter than the length of an episode.
 Eligibility traces assist in the learning process;
 their only consequence is that they affect the weight vector,
-and then the weight vector determines the estimated value. 
+and then the weight vector determines the estimated value.
+At the same time, the eligibility traces plays a critical role
+since that is what propagates future reward to the current one,
+or equivalently, current reward back to the past states.
 
-%In TD(), the eligibility trace vector is initialized to zero at the beginning of the episode, is incremented on each time step by the value gradient, and then fades away by γλ : where γ is the discount rate and λ is the parameter introduced in the previous section, which we henceforth call the trace-decay parameter. The eligibility trace keeps track of which components of the weight vector have contributed, positively or negatively, to recent state valuations, where “recent” is defined in terms of γλ . (Recall that in linear function approx., ∇ ( S t , w t ) is just the feature vector, x t , in which case the eligibility trace vector is just a sum of past, fading, input vectors.) The trace is said to indicate the eligibility of each component of the weight vector for undergoing learning changes should a reinforcing event occur. The reinforcing events we are concerned with are the moment-by-moment one-step TD errors. The TD error for state-value prediction is 
+In TD(\tdparam),
+the eligibility trace vector is initialized to zero at the beginning of the episode,
+is incremented on each time step by the value gradient,
+and then fades away by $\df \tdparam$
+additively,
+\ie,
+\begin{eqnarray}
+\nonumber
+\et{t-1} &\assign& 0
+\\
+\et{t} &\assign& \df \tdparam \et{t-1} + \nabla_{\wvector{}} \valappr(\state{t}, \wvector{t}),
+\ 0 \leq t \leq T
+\label{eq:et:et-update}
+\end{eqnarray}
+where \df\ is the \emph{discount rate} and \tdparam\ is the \emph{trace-decay parameter}.
+
+The eligibility trace keeps track of which components of the weight vector have contributed, positively or negatively,
+to recent state valuations,
+where ``recent'' is defined in terms of $\df \tdparam$.
+The trace indicates the eligibility of each component of the weight vector for undergoing learning changes
+should a reinforcing event occur where
+the reinforcing events are the moment-by-moment one-step TD errors.
+The TD error for state-value prediction is
+\begin{equation}
+\label{eq:et:td-error}
+\tderror{t} \assign \reward{t+1} + \df \valappr(\state{t+1}, \wvector{t}) - \valappr(\state{t}, \wvector{t})
+\end{equation}
+Finally, the weight vector is updated on each step
+proportionally to all three factors;
+the step size,
+the TD error,
+and the eligibility trace,
+\ie,
+\begin{equation}
+\label{eq:et:weight-vector-update}
+\wvector{t+1} \assign \wvector{t} + \stepsize{t} \tderror{t} \et{t}.
+\end{equation}
+
+\tablename~\ref{tab:alg:et:semi-gradient} described the \emph{semi-gradient TD(\tdparam) algorithm} for estimating $\valappr \sim v_\pol$
+using
+(\ref{eq:et:et-update}),
+(\ref{eq:et:td-error}),
+and
+(\ref{eq:et:weight-vector-update}).
+
+\begin{table}
+\beginalg
+Inputs:\\
+\> \pol\ to be evaluated
+\\
+\> differential function $\valappr: \nonterminalstateset \times \reals^\wvectdim \to \reals$
+	such that $\valappr(\mathrm{terminal}, \cdot) = 0$
+\\\\
+Algorithm parameters:
+\\
+\> trace-decay parameter, $\tdparam \in [0,1]$, and step size, $\stepsize{t}>0$
+\\\\
+Initialize:
+\\\\
+\> Initialize value-function weights \wvector{}\ arbitrarily
+\\\\
+Loop for each episode:\\
+\> Initialize \state\
+\\
+\> $\et{} \assign 0$
+\\
+\> Loop for each step of episode:
+\\
+\> \> Choose $\action{} \sim \pol(\cdot|\state{})$\\
+\> \> Take action \action, observe \reward{}, $\state{}'$\\
+%\> \> $\et{} \assign \df \tdparam \et{} + \nabla_{\wvector{}} \valappr(\state{}, \wvector{})$\\
+\> \> $\tderror{} \assign \reward{} + \df \valappr(\state{}', \wvector{}) - \valappr(\state{}, \wvector{})$\\
+\> \> $\wvector{} \assign \wvector{} + \stepsize{t} \tderror{} \et{}$\\
+\> \> $\state{} \assign \state{}'$
+\\
+\> until $S'$ is terminal
+\endalg
+\caption{Semi-gradient TD(\tdparam) algorithm for estimating $\valappr \sim v_\pol$.}
+\label{tab:alg:et:semi-gradient}
+\end{table}
 
 
+\subsection{Why TD(\tdparam) approximates the off-line \tdparam-return algorithm?}
 
+Here we examine why TD(\tdparam) approximates the off-line \tdparam-return algorithm.
 
+In this section, we drop the subscript $t$ from \wvector{t}.
+Because of this, we can only prove thet TD(\tdparam) is \emph{approximately} the same as the off-line \tdparam-return algorithm.
+In fact, they are different.
 
+First, the $n$-step return at $t$ can be rewritten in terms of that at $t+1$ as follows.
+\begin{eqnarray*}
+\nstepreturn{t}{t+n}
+&=& \reward{t+1} + \df \reward{t+2} + \df^2 \reward{t+3} + \cdots + \df^{n-1} \reward{t+n}
++ \df^n \valappr(\state{t+n}, \wvector{})
+\\
+&=& \reward{t+1} + \df \reward{t+2} + \df^2 \reward{t+3} + \cdots + \df^{n-1} \reward{t+n}
+\\
+&& + \df \valappr(\state{t+1}, \wvector{}) - \valappr(\state{t}, \wvector{})
+\\
+&& + \df(\df \valappr(\state{t+2}, \wvector{}) - \valappr(\state{t+1}, \wvector{}))
+\\
+&& + \cdots
+\\
+&& + \df^{n-1} (\df \valappr(\state{t+n}, \wvector{}) - \valappr(\state{t+n-1}, \wvector{}))
+\\
+&& + \valappr(\state{t}, \wvector{})
+\\
+&=& \reward{t+1} + \df \valappr(\state{t+1}, \wvector{}) - \valappr(\state{t}, \wvector{})
+\\
+&& + \df(\reward{t+2} + \df \valappr(\state{t+2}, \wvector{}) - \valappr(\state{t+1}, \wvector{}))
+\\
+&& + \cdots
+\\
+&& + \df^{n-1} (\reward{t+n} + \df \valappr(\state{t+n}, \wvector{}) - \valappr(\state{t+n-1}, \wvector{}))
+\\
+&& + \valappr(\state{t}, \wvector{}),
+\end{eqnarray*}
+thus, (\ref{eq:et:td-error}) implies
+\begin{equation}
+\label{eq:nusl}
+\nstepreturn{t}{t+n}
+= \tderror{t} + \df \tderror{t+1} +  \cdots + \df^{n-1} \tderror{t+n-1} + \valappr(\state{t}, \wvector{})
+\end{equation}
 
+\iffalse
+\begin{eqnarray}
+\nonumber
+\nstepreturn{t}{t+n}
+&=& \reward{t+1} + \df \reward{t+2} + \df^2 \reward{t+3} + \cdots + \df^{n-1} \reward{t+n}
++ \df^n \valappr(\state{t+n}, \wvector{})
+\\
+\nonumber
+&=& \reward{t+1} + \df \reward{t+2} + \df^2 \reward{t+3} + \cdots + \df^{n-1} \reward{t+n}
++ \df^{n} \reward{t+n+1}
++ \df^{n+1} \valappr(\state{t+n+1}, \wvector{})
+\\
+\nonumber
+&&
++ \df^n \valappr(\state{t+n}, \wvector{})
+- \df^{n} \reward{t+n+1}
+- \df^{n+1} \valappr(\state{t+n+1}, \wvector{})
+\\
+\nonumber
+&=& \reward{t+1} + \df \left(\reward{t+2} + \df \reward{t+3} + \cdots + \df^{n-2} \reward{t+n}
++ \df^{n-1} \reward{t+n+1}
++ \df^{n} \valappr(\state{t+n+1}, \wvector{})
+\right)
+\\
+\nonumber
+&&
++ \df^n \valappr(\state{t+n}, \wvector{})
+- \df^{n} \reward{t+n+1}
+- \df^{n+1} \valappr(\state{t+n+1}, \wvector{})
+\\
+\nonumber
+&=& \reward{t+1} + \df \nstepreturn{t+1}{t+n+1}
+- \df^n \left( \reward{t+n+1} + \df \valappr(\state{t+n+1}, \wvector{}) - \valappr(\state{t+n}, \wvector{}) \right)
+\\
+&=& \reward{t+1} + \df \nstepreturn{t+1}{t+n+1} - \df^n \tderror{t+n}
+\label{eq:difkc}
+\end{eqnarray}
+where
+(\ref{eq:nstep-return}) and (\ref{eq:et:td-error}) are used.
+\fi
 
+Now (\ref{eq:nusl}) together with (\ref{eq:lambda-return}) implies that
+\begin{eqnarray*}
+\ldreturn{t} &=& (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} \nstepreturn{t}{t+n}
+\\
+&=& (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1}
+\left( \tderror{t} + \df \tderror{t+1} +  \cdots + \df^{n-1} \tderror{t+n-1} + \valappr(\state{t}, \wvector{}) \right)
+\\
+&=& (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1}
+\left(\sum_{k=0}^{n-1} \df^k \tderror{t+k} + \valappr(\state{t}, \wvector{}) \right)
+\\
+&=& (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1}
+\left(\sum_{k=0}^{n-1} \df^k \tderror{t+k} \right)
++ (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} \valappr(\state{t}, \wvector{})
+\\
+&=& (1-\tdparam) \sum_{n=1}^{\infty} \sum_{k=0}^{n-1} \tdparam^{n-1} \df^k \tderror{t+k}
++ (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} \valappr(\state{t}, \wvector{})
+\\
+&=& (1-\tdparam) \sum_{k=0}^{\infty} \sum_{n=k+1}^\infty \tdparam^{n-1} \df^k \tderror{t+k}
++ (1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} \valappr(\state{t}, \wvector{})
+\\
+&=& (1-\tdparam) \sum_{k=0}^{\infty} \df^k \tderror{t+k} \sum_{n=k+1}^\infty \tdparam^{n-1}
++ \valappr(\state{t}, \wvector{})
+\\
+&=& \sum_{k=0}^{\infty} (\df \tdparam)^k \tderror{t+k} + \valappr(\state{t}, \wvector{})
+\end{eqnarray*}
+since $(1-\tdparam) \sum_{n=1}^\infty \tdparam^{n-1} = 1$,
+thus
+\begin{equation}
+\ldreturn{t} - \valappr(\state{t}, \wvector{}) = \sum_{k=0}^{\infty} (\df \tdparam)^k \tderror{t+k}.
+\end{equation}
+If an episode ends at $t=T$, then \tderror{t}\ for $t\geq T$,
+hence
+\begin{equation}
+\label{eq:bysig}
+\ldreturn{t} - \valappr(\state{t}, \wvector{}) = \sum_{k=0}^{T-t-1} (\df \tdparam)^k \tderror{t+k}.
+\end{equation}
 
+Now we derived a formula for \et{t+n}\ using summation notation from the recursive formula (\ref{eq:et:et-update}).
+\begin{eqnarray*}
+\et{t+n} &=& \df \tdparam \et{t+n-1} + \nabla_{\wvector{}} \valappr(\state{t+n},\wvector{})
+\\
+&=& \df \tdparam \left(
+\df \tdparam \et{t+n-2} + \nabla_{\wvector{}} \valappr(\state{t+n-1},\wvector{})
+\right)
++ \nabla_{\wvector{}} \valappr(\state{t+n},\wvector{})
+\\
+&=& (\df \tdparam )^2 \et{t+n-2} + (\df \tdparam) \nabla_{\wvector{}} \valappr(\state{t+n-1},\wvector{})
++ \nabla_{\wvector{}} \valappr(\state{t+n},\wvector{})
+\\
+&\vdots&
+\\
+&=& (\df \tdparam )^{n} \nabla_{\wvector{}} \valappr(\state{t},\wvector{})
++ (\df \tdparam)^{n-1} \nabla_{\wvector{}} \valappr(\state{t+1},\wvector{})
+%+ (\df \tdparam)^{n-2} \nabla_{\wvector{}} \valappr(\state{t+2},\wvector{})
++ \cdots
++ (\df \tdparam) \nabla_{\wvector{}} \valappr(\state{t+n-1},\wvector{})
++ \nabla_{\wvector{}} \valappr(\state{t+n},\wvector{}),
+\end{eqnarray*}
+thus,
+\begin{equation}
+\label{eq:vyduf}
+\et{t+n} = \sum_{k=0}^n (\df \tdparam)^{n-k} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
+\end{equation}
+We can prove (\ref{eq:vyduf}) mathematically strictly using the mathematical induction.
 
+We also derive a formula for \wvector{t+n}\ using summation notation from the recursive formula (\ref{eq:et:weight-vector-update})
+and (\ref{eq:et:td-error}).
+\begin{eqnarray*}
+\wvector{t+n} &=& \stepsize{} \tderror{t+n-1} \et{t+n-1} + \wvector{t+n-1}
+\\
+&=& \stepsize{} \left( \tderror{t+n-1} \et{t+n-1} + \tderror{t+n-2} \et{t+n-2} \right) + \wvector{t+n-2}
+\\
+&=& \stepsize{} \left(
+\tderror{t+n-1} \et{t+n-1} + \tderror{t+n-2} \et{t+n-2} + \cdots + \tderror{t+1} \et{t+1} + \tderror{t} \et{t}
+\right)
++ \wvector{t}
+\end{eqnarray*}
+where we drop the subscript from the step size \stepsize{t}.
+Thus,
+\begin{equation}
+\label{eq:nuasdk}
+\wvector{t+n} = \stepsize{} \sum_{j=0}^{n-1}  \tderror{t+j} \et{t+j} + \wvector{t}.
+\end{equation}
 
+Now combining (\ref{eq:vyduf}) and (\ref{eq:nuasdk}) yields
+\begin{eqnarray*}
+\wvector{t+n} - \wvector{t}
+&=& \stepsize{} \sum_{j=0}^{n-1}  \tderror{t+j} \et{t+j}
+\\
+&=& \stepsize{} \sum_{j=0}^{n-1}  \tderror{t+j} 
+\sum_{k=0}^j (\df \tdparam)^{j-k} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
+\\
+&=& \stepsize{} \sum_{j=0}^{n-1} \sum_{k=0}^j (\df \tdparam)^{j-k}
+\tderror{t+j} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
+\\
+&=& \stepsize{} \sum_{k=0}^{n-1} \sum_{j=k}^{n-1} (\df \tdparam)^{j-k}
+\tderror{t+j} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
+\\
+&=& \stepsize{} \sum_{k=0}^{n-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
+\sum_{j=k}^{n-1} (\df \tdparam)^{j-k} \tderror{t+j}
+\\
+&=& \stepsize{} \sum_{k=0}^{n-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
+\sum_{j=0}^{n-k-1} (\df \tdparam)^{j} \tderror{t+k+j}
+\\
+&=& \stepsize{} \sum_{k=0}^{n-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
+\sum_{j=0}^{n+t-(t+k)-1} (\df \tdparam)^{j} \tderror{(t+k)+j}
+\end{eqnarray*}
+which together with (\ref{eq:bysig}) implies
+\begin{eqnarray}
+\nonumber
+\wvector{T} - \wvector{t}
+&=& \stepsize{} \sum_{k=0}^{T-t-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
+\sum_{j=0}^{T-(t+k)-1} (\df \tdparam)^{j} \tderror{(t+k)+j}
+\\
+\nonumber
+&=& \stepsize{} \sum_{k=0}^{T-t-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
+\left( \ldreturn{t+k} - \valappr(\state{t+k}, \wvector{}) \right)
+\\
+\nonumber
+&=& \stepsize{} \sum_{k=0}^{T-t-1}
+\left( \ldreturn{t+k} - \valappr(\state{t+k}, \wvector{}) \right)
+\nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
+\\
+&=& \stepsize{} \sum_{k=t}^{T-1}
+\left( \ldreturn{k} - \valappr(\state{k}, \wvector{}) \right)
+\nabla_{\wvector{}} \valappr(\state{k},\wvector{}).
+\label{eq:ishfg}
+\end{eqnarray}
+
+Now observer that the update rule for off-line \tdparam-return algorithm
+(\ref{eq:off-line-lambda-return-update}) implies that
+\begin{eqnarray}
+\nonumber
+\wvector{T}
+&=& \stepsize{} \left( \ldreturn{T-1} - \valappr(\state{T-1}, \wvector{}) \right) \nabla_{\wvector{}} \valappr(\state{T-1}, \wvector{})
++ \wvector{T-1}
+\\
+\nonumber
+&=&
+\stepsize{} \left( \ldreturn{T-1} - \valappr(\state{T-1}, \wvector{}) \right) \nabla_{\wvector{}} \valappr(\state{T-1}, \wvector{})
++ \stepsize{} \left( \ldreturn{T-2} - \valappr(\state{T-2}, \wvector{}) \right) \nabla_{\wvector{}} \valappr(\state{T-2}, \wvector{})
++ \wvector{T-2}
+\\
+\nonumber
+&\vdots&
+\\
+\nonumber
+&=&
+\stepsize{} \left( \ldreturn{T-1} - \valappr(\state{T-1}, \wvector{}) \right) \nabla_{\wvector{}} \valappr(\state{T-1}, \wvector{})
++ \cdots
++ \stepsize{} \left( \ldreturn{t} - \valappr(\state{t}, \wvector{}) \right) \nabla_{\wvector{}} \valappr(\state{t}, \wvector{})
++ \wvector{t}
+\\
+&=& \stepsize{} \sum_{k=t}^{T-1}
+\left( \ldreturn{k} - \valappr(\state{k}, \wvector{}) \right)
+\nabla_{\wvector{}} \valappr(\state{k},\wvector{})
++ \wvector{t}
+\label{eq:gudif}
+\end{eqnarray}
+assuming that $\stepsize{t} = \stepsize{}$ and $\wvector{t}=\wvector{}$ for all $t$.
+Comparing (\ref{eq:ishfg}) with (\ref{eq:gudif}) tells that
+the off-line \tdparam-return algorithm and TD(\tdparam) are equivalent
+when we drop $t$ from \wvector{t} and \stepsize{t}.
+Therefore we have shown that TD(\tdparam) approximates the off-line \tdparam-return algorithm.
 
 
 
