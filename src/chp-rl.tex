@@ -23,6 +23,7 @@
 \newcommand{\stateset}{\ensuremath{\mathcal{S}}}
 \newcommand{\nonterminalstateset}{{\stateset'}}
 \newcommand{\actionset}{\ensuremath{\mathcal{A}}}
+\newcommand{\numstates}{{|\stateset|}}
 
 \newcommand{\assign}{\leftarrow}
 \newcommand{\epsgreedy}{$\epsilon$-greedy}
@@ -40,13 +41,15 @@
 \newcommand{\tderrorvar}[1]{\ensuremath{\delta'_{#1}}}
 
 \newcommand{\et}[1]{\ensuremath{z_{#1}}}
-\newcommand{\wvector}[1]{\ensuremath{w_{#1}}}
+\newcommand{\wvector}[1]{\ensuremath{{w_{#1}}}}
 
 \newcommand{\defeq}{\coloneqq}
 
-\newcommand{\valappr}{\hat{v}}
+\newcommand{\valappr}{\ensuremath{\hat{v}}}
 
 \newcommand{\wvectdim}{d}
+
+\newcommand{\indexstatemapping}{\ensuremath{\phi}}
 
 
 
@@ -1685,7 +1688,7 @@ thus
 \begin{equation}
 \ldreturn{t} - \valappr(\state{t}, \wvector{}) = \sum_{k=0}^{\infty} (\df \tdparam)^k \tderror{t+k}.
 \end{equation}
-If an episode ends at $t=T$, then \tderror{t}\ for $t\geq T$,
+If an episode ends at $t=T$, then $tderror{t}=0$ for $t\geq T$,
 hence
 \begin{equation}
 \label{eq:bysig}
@@ -1718,7 +1721,7 @@ thus,
 \label{eq:vyduf}
 \et{t+n} = \sum_{k=0}^n (\df \tdparam)^{n-k} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
 \end{equation}
-We can prove (\ref{eq:vyduf}) mathematically strictly using the mathematical induction.
+(We can prove (\ref{eq:vyduf}) mathematically strictly using the mathematical induction.)
 
 We also derive a formula for \wvector{t+n}\ using summation notation from the recursive formula (\ref{eq:et:weight-vector-update})
 and (\ref{eq:et:td-error}).
@@ -1740,29 +1743,37 @@ Thus,
 \end{equation}
 
 Now combining (\ref{eq:vyduf}) and (\ref{eq:nuasdk}) yields
-\begin{eqnarray*}
+\begin{eqnarray}
+\nonumber
 \wvector{t+n} - \wvector{t}
 &=& \stepsize{} \sum_{j=0}^{n-1}  \tderror{t+j} \et{t+j}
 \\
+\nonumber
 &=& \stepsize{} \sum_{j=0}^{n-1}  \tderror{t+j} 
 \sum_{k=0}^j (\df \tdparam)^{j-k} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
 \\
+\nonumber
 &=& \stepsize{} \sum_{j=0}^{n-1} \sum_{k=0}^j (\df \tdparam)^{j-k}
 \tderror{t+j} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{}).
 \\
+\nonumber
 &=& \stepsize{} \sum_{k=0}^{n-1} \sum_{j=k}^{n-1} (\df \tdparam)^{j-k}
 \tderror{t+j} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
 \\
+\nonumber
 &=& \stepsize{} \sum_{k=0}^{n-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
 \sum_{j=k}^{n-1} (\df \tdparam)^{j-k} \tderror{t+j}
 \\
+\nonumber
 &=& \stepsize{} \sum_{k=0}^{n-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
 \sum_{j=0}^{n-k-1} (\df \tdparam)^{j} \tderror{t+k+j}
 \\
+\label{eq:bgusdf}
 &=& \stepsize{} \sum_{k=0}^{n-1} \nabla_{\wvector{}} \valappr(\state{t+k},\wvector{})
-\sum_{j=0}^{n+t-(t+k)-1} (\df \tdparam)^{j} \tderror{(t+k)+j}
-\end{eqnarray*}
-which together with (\ref{eq:bysig}) implies
+\sum_{j=0}^{n+t-(t+k)-1} (\df \tdparam)^{j} \tderror{(t+k)+j}.
+\end{eqnarray}
+Now if we substitute $T-t$ for $n$ in (\ref{eq:bgusdf}),
+(\ref{eq:bysig}) implies
 \begin{eqnarray}
 \nonumber
 \wvector{T} - \wvector{t}
@@ -1784,7 +1795,7 @@ which together with (\ref{eq:bysig}) implies
 \label{eq:ishfg}
 \end{eqnarray}
 
-Now observer that the update rule for off-line \tdparam-return algorithm
+Now observer that the semi-gradient update rule for off-line \tdparam-return algorithm
 (\ref{eq:off-line-lambda-return-update}) implies that
 \begin{eqnarray}
 \nonumber
@@ -1815,14 +1826,91 @@ Now observer that the update rule for off-line \tdparam-return algorithm
 \label{eq:gudif}
 \end{eqnarray}
 assuming that $\stepsize{t} = \stepsize{}$ and $\wvector{t}=\wvector{}$ for all $t$.
-Comparing (\ref{eq:ishfg}) with (\ref{eq:gudif}) tells that
+(We can prove (\ref{eq:gudif}) in a mathematically strict way using the mathematical induction.)
+Comparing (\ref{eq:ishfg}) with (\ref{eq:gudif}) implies that
 the off-line \tdparam-return algorithm and TD(\tdparam) are equivalent
 when we drop $t$ from \wvector{t} and \stepsize{t}.
 Therefore we have shown that TD(\tdparam) approximates the off-line \tdparam-return algorithm.
 
 
+\subsection{Tabular TD(\tdparam)}
 
-\newpage
+In the previous sections, we describe TD(\tdparam) for function approximation cases.
+Since the tabular case is a special case of the function approximation,
+we can readily derived TD(\tdparam) algorithm for the tabular case.
+
+Suppose that the set of all the states, \stateset, is finite
+and there is a one-to-one mapping $\indexstatemapping: \{1,\ldots, \numstates\} \to \stateset$
+which maps an (integer) index to a state.
+Let $\wvector{} \in \reals^{\numstates}$
+be the weight vector such that
+$\wvector{i} = V(\indexstatemapping(i))$,
+\ie, \wvector{i}\ represents the state value function for the $i$th state
+(where the order is defined by \indexstatemapping).
+Then we have
+\begin{equation}
+\label{eq:appr-val-fcn-tabular-case}
+\valappr(\state{}, \wvector{}) = w_{\indexstatemapping^{-1}(\state{})}.
+\end{equation}
+
+Now we apply (\ref{eq:appr-val-fcn-tabular-case}) to each of the three update rule for TD(\tdparam);
+(\ref{eq:et:et-update}),
+(\ref{eq:et:td-error}),
+and
+(\ref{eq:et:weight-vector-update}).
+We first derived the gradient of $\valappr(\state{}, \wvector{})$ with respect to \wvector{}
+for each $\state{} \in \stateset$.
+Note that
+\begin{equation}
+\frac{\partial}{\partial \wvector{i}} \valappr(\state{}, \wvector{})
+= \delta_{\indexstatemapping^{-1}(\state{}), i}
+= \left\{\begin{array}{ll}
+	1 & \mbox{if } \indexstatemapping(i)= \state{}
+	\\
+	0 & \mbox{otherwise}
+\end{array}\right.
+\end{equation}
+where $\delta_{\cdot, \cdot}$ is the Kronecker delta function
+defined by
+\begin{equation}
+\delta_{i,j}
+= \left\{\begin{array}{ll}
+	1 & \mbox{if } i=j,
+	\\
+	0 & \mbox{otherwise.}
+\end{array}\right.
+\end{equation}
+Therefore the gradient is
+\begin{equation}
+\label{eq:viskgjh}
+\nabla_\wvector{} \valappr(\state{}, \wvector{}) = e_{\indexstatemapping^{-1}(\state{})}
+\end{equation}
+where $e_i\in\reals^\numstates$ is the $i$th unit vector 
+whose entries are all zero except the $i$th entry which is $1$.
+
+
+Now let us apply (\ref{eq:viskgjh}) to (\ref{eq:et:et-update}), (\ref{eq:et:td-error}),
+and (\ref{eq:et:weight-vector-update}).
+First, the eligibility trace update (\ref{eq:et:et-update}) becomes
+\begin{eqnarray}
+\nonumber
+\et{} \assign 0 \in \reals^\numstates
+\\
+\et{t} &\assign& \df \tdparam \et{t-1} + \nabla_{\wvector{}} \valappr(\state{t}, \wvector{t}),
+\ 0 \leq t \leq T
+\end{eqnarray}
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Appendix: conditional probability and expected value}
 \label{sec:rl-app}
 
