@@ -1335,7 +1335,34 @@ XXX
 
 \section{Off-policy Methods with Approximation}
 
-XXX
+\begin{table}
+\beginalg
+Algorithm parameters:\\
+\> step size strategy $\stepsize{t} \in (0, 1]$\\
+\> epsilon strategy: $\epsilon_t>0$\\
+\\
+Inputs:\\
+\> Modeling function: $Q: \stateset \times \actionset \times \reals^n \to \reals$\\
+\\
+Initialize:\\
+\> Initialize $\theta$ arbitrarily (or from the previous learning for transfer learning)\\
+\\
+Loop for each episode:\\
+\> Initialize $S$\\
+\> Loop for each step of episode:\\
+\> \> Choose \action{}\ from \state{}\ using policy derived from $Q$ (\eg, \epsgreedy)\\
+\> \> Take action \action{}, observe \reward{}, $\state{}'$:\\
+\> \> \> $\return{} \assign \reward{} + \df \max_{\cura\in\actionset(S')}Q(\state{}',\action{}; \theta)$\\
+\> \> Update using gradient descent:\\
+\> \> \> $\theta \assign  \theta + \stepsize{t} \left(\return{} - Q(\state{}, \action{}; \theta) \right) \nabla_\theta Q(\state{}, \action{}; \theta)$\\
+\> \> $S \assign S'$\\
+\> until $S$ is terminal\\
+Until a certain criterion is satisfied
+\endalg
+\caption{Off-policy Q-learning}
+\label{tab:alg:fcn-approx-q-learning}
+\end{table}
+
 
 \section{Eligibility Traces}
 
