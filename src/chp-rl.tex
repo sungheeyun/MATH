@@ -389,7 +389,7 @@ Initialize $V(\curs) \in \reals$ for all $\curs \in \stateset$ except that $V(\m
  \> \> $\Delta \assign \max\{\Delta, |v-V(s)|\}$ \\
  until $\Delta < \theta$
 \endalg
-\caption{Iterative Policy Evaluation for estimating $V \sim v_\pol$}
+\caption{Iterative Policy Evaluation for estimating $V \sim v_\pol$.}
 \label{tab:alg:policy-evaluation}
 \end{table}
 
@@ -464,7 +464,7 @@ until $\Delta < \theta$\\
 Output: deterministic policy $\pol$ such that\\
 \> $\pol(\curs) = \argmax_{\cura\in\actionset(\curs)} \sum_{\nexts, r} p(\nexts, r|\curs,\cura) \left( r + \df V(\nexts) \right)$
 \endalg
-\caption{Value Iteration for estimating $\pol \sim \optpol$}
+\caption{Value Iteration for estimating $\pol \sim \optpol$.}
 \label{tab:alg:value-iteration}
 \end{table}
 
@@ -538,7 +538,7 @@ Loop: \\
 \> \> \> $V(\state{t}) \assign R(\state{t}){\tt .average()}$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{First-visit MC prediction for estimating $V \sim v_\pol$}
+\caption{First-visit MC prediction for estimating $V \sim v_\pol$.}
 \label{tab:alg:first-visti-mc-prediction}
 \end{table}
 
@@ -583,7 +583,7 @@ Loop: \\
 \> \> \> $\pol(\state{t}) \assign \argmax_{\cura\in\actionset(\state{t})} Q(\state{t}, \cura)$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{MC ES (exploring starts) for estimating $\pol \sim \optpol$}
+\caption{MC ES (exploring starts) for estimating $\pol \sim \optpol$.}
 \label{tab:alg:mc-es-control}
 \end{table}
 
@@ -636,7 +636,7 @@ Loop: \\
 \end{array}\right.$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{On-policy first-visit MC control (for \epssoft\ policies) for estimating $\pol \sim \optpol$}
+\caption{On-policy first-visit MC control (for \epssoft\ policies) for estimating $\pol \sim \optpol$.}
 \label{tab:alg:on-pol-ms-control}
 \end{table}
 
@@ -715,7 +715,7 @@ Loop for each episode:\\
 \> until $S$ is terminal\\
 Until a certain criterion is satisfied
 \endalg
-\caption{TD(0) for estimating $v_\pol$}
+\caption{TD(0) for estimating $v_\pol$.}
 \label{tab:alg:td-0}
 \end{table}
 
@@ -821,7 +821,7 @@ Loop for each episode:\\
 \> until $S$ is terminal\\
 Until a certain criterion is satisfied
 \endalg
-\caption{Sarsa (on-policy TD control) for estimating $Q\sim q_\ast$}
+\caption{Sarsa (on-policy TD control) for estimating $Q\sim q_\ast$.}
 \label{tab:alg:sarsa}
 \end{table}
 
@@ -878,7 +878,7 @@ Loop for each episode:\\
 \> until $S$ is terminal\\
 Until a certain criterion is satisfied
 \endalg
-\caption{Q-learning (off-policy TD control) for estimating $\pol \sim \optpol$}
+\caption{Q-learning (off-policy TD control) for estimating $\pol \sim \optpol$.}
 \label{tab:alg:q-learning}
 \end{table}
 
@@ -1017,7 +1017,7 @@ Loop for each episode:\\
 \> while $\tau<T-1$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{$n$-step TD for estimating $V\sim v_\pol$}
+\caption{$n$-step TD for estimating $V\sim v_\pol$.}
 \label{tab:alg:n-step-td-prediction}
 \end{table}
 
@@ -1056,7 +1056,7 @@ Loop for each episode:\\
 \> while $t-n+1 < {\tt len(R\_list)-1}$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{$n$-step TD for estimating $V\sim v_\pol$ (Pythonic style)}
+\caption{$n$-step TD for estimating $V\sim v_\pol$ (Pythonic style).}
 \label{tab:alg:n-step-td-prediction-python-style}
 \end{table}
 
@@ -1193,7 +1193,7 @@ Loop for each episode:\\
 \> while $\tau<T-1$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{$n$-step Sarsa for estimating $Q\sim q_\ast \mbox{ or } q_\pol$}
+\caption{$n$-step Sarsa for estimating $Q\sim q_\ast \mbox{ or } q_\pol$.}
 \label{tab:alg:n-step-sarsa}
 \end{table}
 
@@ -1278,7 +1278,7 @@ a sample next reward, $R$, and a sample next state, $S'$\\
 \> \> $Q(S,A) \assign (1-\alpha) Q(S,A) + \alpha \left( R + \df \max_{\cura\in\actionset(S)}Q(S',\cura) \right)$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{Random sample one-step tabular Q-learning}
+\caption{Random sample one-step tabular Q-learning.}
 \label{tab:alg:ran-sam-one-step-q-learning}
 \end{table}
 
@@ -1320,7 +1320,7 @@ Loop:\\
 \> \> Update Q-function: $Q(S,A) \assign (1-\alpha) Q(S,A) + \alpha \left( R + \df \max_{\cura\in\actionset(S)}Q(S',\cura) \right)$\\
 Until a certain criterion is satisfied
 \endalg
-\caption{Tabular Dyna-Q}
+\caption{Tabular Dyna-Q.}
 \label{tab:alg:tabular-dyna-q}
 \end{table}
 
@@ -1359,7 +1359,7 @@ Loop for each episode:\\
 \> until $S$ is terminal\\
 Until a certain criterion is satisfied
 \endalg
-\caption{Off-policy Q-learning}
+\caption{Off-policy Q-learning.}
 \label{tab:alg:fcn-approx-q-learning}
 \end{table}
 
@@ -1856,8 +1856,10 @@ the off-line \tdparam-return algorithm and TD(\tdparam) are equivalent
 when we drop $t$ from \wvector{t} and \stepsize{t}.
 Therefore we have shown that TD(\tdparam) approximates the off-line \tdparam-return algorithm.
 
+\subsection{Sarsa(\tdparam)}
 
-\subsection{Tabular TD(\tdparam)}
+
+\subsection{Tabular methods using eligibility traces}
 
 In the previous sections, we describe TD(\tdparam) for function approximation cases.
 Since the tabular case is a special case of the function approximation,
@@ -1941,7 +1943,11 @@ However, (\ref{eq:et:weight-vector-update}) remains the same.
 
 Now we note that we would better express this in terms of $V_t: \stateset \to \reals$ and $\et{t}: \stateset \to \reals$.
 Thus, if we plug (\ref{eq:et:et-update-tabular-1}), (\ref{eq:et:td-error-tabular-1}), and (\ref{eq:et:weight-vector-update-tabular-1}) in \tablename~\ref{tab:alg:et:semi-gradient} using $V_t$ and \et{t},
-we have \tablename~\ref{tab:alg:et:tabular}.
+we have \tablename~\ref{tab:alg:et:tabular-td}.
+
+
+\newcommand{\tstate}{\tilde{\state{}}}
+\newcommand{\taction}{\tilde{\action{}}}
 
 \begin{table}
 \beginalg
@@ -1957,22 +1963,84 @@ Initialize:
 \\
 Loop for each episode:\\
 \> Initialize \state{}\\
-\> $\et{}(\state{}) \assign 0$ for all $\state{}\in\stateset$\\
+\> $\et{}({\state{}}) \assign 0$ for all ${\state{}}\in\stateset$\\
 \> Loop for each step of episode:
 \\
 \> \> Choose $\action{} \sim \pol(\cdot|\state{})$\\
 \> \> Take action \action, observe \reward{}, $\state{}'$\\
 \> \> $\tderror{} \assign \reward{} + \df V(\state{}') - V (\state{})$\\
 \> \> $\et{}(\state{}) \assign \et{}(\state{}) + 1$\\
-\> \> For all $\tilde{\state{}} \in \stateset$:\\
-\> \> \> $V(\tilde{\state{}}) \assign V(\tilde{\state{}}) + \stepsize{t} \tderror{} \et{}(\tilde{\state{}})$\\
-\> \> \> $\et{}(\tilde{\state{}}) \assign \df \tdparam \et{}(\tilde{\state{}})$\\
+\> \> For all $\tstate \in \stateset$:\\
+\> \> \> $V(\tstate) \assign V(\tstate) + \stepsize{t} \tderror{} \et{}(\tstate)$\\
+\> \> \> $\et{}(\tstate) \assign \df \tdparam \et{}(\tstate)$\\
 \> \> $\state{} \assign \state{}'$
 \\
 \> until $S'$ is terminal
 \endalg
 \caption{Tabular TD(\tdparam) algorithm for estimating $\valappr \sim v_\pol$.}
-\label{tab:alg:et:tabular}
+\label{tab:alg:et:tabular-td}
+\end{table}
+
+
+\begin{table}
+\beginalg
+Algorithm parameters:\\
+\> trace-decay parameter, $\tdparam \in [0,1]$, and step size, $\stepsize{t}>0$\\
+\\
+Initialize:
+\\
+\> Initialize $Q(\state{}, \action{})$ for all $\state{}\in\stateset$, $\action{}\in\actionset$\\
+\\
+Loop for each episode:\\
+\> $\et{}(\state{}, \action{}) \assign 0$ for all ${\state{}}\in\stateset$, $\action{}\in\actionset$\\
+\> Initialize \state{}\\
+\> Choose \action{}\ from \state{}\ using policy derived from $Q$ (\eg, \epsgreedy)\\
+\> Loop for each step of episode:\\
+\> \> Take action \action, observe \reward{}, $\state{}'$\\
+\> \> Choose $\action{}'$ from $\state{}'$ using policy derived from $Q$ (\eg, \epsgreedy)\\
+\> \> $\tderror{} \assign \reward{} + \df Q(\state{}', \action{}') - Q (\state{}, \action{})$\\
+\> \> $\et{}(\state{}, \action{}) \assign \et{}(\state{}, \action{}) + 1$\\
+\> \> For all $\tstate \in \stateset$ and $\taction \in \actionset$:\\
+\> \> \> $Q(\tstate, \taction) \assign Q(\tstate, \taction) + \stepsize{t} \tderror{} \et{}(\tstate, \taction)$\\
+\> \> \> $\et{}(\tstate, \taction) \assign \df \tdparam \et{}(\tstate, \taction)$\\
+\> \> $\state{} \assign \state{}'$, $\action{} \assign \action{}'$\\
+\> until $S'$ is terminal
+\endalg
+\caption{Tabular SARSA(\tdparam) algorithm for estimating $Q\sim q_\ast$.}
+\label{tab:alg:et:tabular-sarsa}
+\end{table}
+
+
+\begin{table}
+\beginalg
+Algorithm parameters:\\
+\> trace-decay parameter, $\tdparam \in [0,1]$, and step size, $\stepsize{t}>0$\\
+\\
+Initialize:
+\\
+\> Initialize $Q(\state{}, \action{})$ for all $\state{}\in\stateset$, $\action{}\in\actionset$\\
+\\
+Loop for each episode:\\
+\> $\et{}(\state{}, \action{}) \assign 0$ for all ${\state{}}\in\stateset$, $\action{}\in\actionset$\\
+\> Initialize \state{}\\
+\> Choose \action{}\ from \state{}\ using policy derived from $Q$ (\eg, \epsgreedy)\\
+\> Loop for each step of episode:\\
+\> \> Take action \action, observe \reward{}, $\state{}'$\\
+\> \> Choose $\action{}'$ from $\state{}'$ using policy derived from $Q$ (\eg, \epsgreedy)\\
+\> \> $\action{}^\ast \assign  \argmin_{\taction} Q(\state{}', \taction)$\\
+\> \> $\tderror{} \assign \reward{} + \df Q(\state{}', \action{}^\ast) - Q (\state{}, \action{})$\\
+\> \> $\et{}(\state{}, \action{}) \assign \et{}(\state{}, \action{}) + 1$\\
+\> \> For all $\tstate \in \stateset$ and $\taction \in \actionset$:\\
+\> \> \> $Q(\tstate, \taction) \assign Q(\tstate, \taction) + \stepsize{t} \tderror{} \et{}(\tstate, \taction)$\\
+\> \> \> If $\taction = \action{}^\ast$:\\
+\> \> \> \> $\et{}(\tstate, \taction) \assign \df \tdparam \et{}(\tstate, \taction)$\\
+\> \> \> else:\\
+\> \> \> \> $\et{}(\tstate, \taction) \assign 0$\\
+\> \> $\state{} \assign \state{}'$, $\action{} \assign \action{}'$\\
+\> until $S'$ is terminal
+\endalg
+\caption{Tabular version of Watkins's $Q(\tdparam)$ algorithm for estimating $Q\sim q_\ast$.}
+\label{tab:alg:et:tabular-q}
 \end{table}
 
 
