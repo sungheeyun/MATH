@@ -1,0 +1,222 @@
+\section{Vector space}
+
+Cauchy–Schwarz inequality: for $a,b\in\complexes^n$,
+\begin{equation}
+|a^H b| \leq \|a\|_2 \|b\|_2.
+\end{equation}
+
+The generalized form:
+for $f:[0,1] \to \complexes$ and $g:[0,1] \to \complexes$,
+\begin{equation}
+\left|\int_{0}^1 \overline{f(t)} g(t) \, dt \right|
+\leq
+\left(\int_0^1 |f(t)|^2 dt \, \right)^{1/2}
+\left(\int_0^1 |g(t)|^2 dt \, \right)^{1/2}.
+\end{equation}
+
+H\"older's inequality: for $a,b\in\complexes^n$, $p>1$, and $q>1$ such that $1/p+1/q=1$,
+\begin{equation}
+|a^H b| \leq \|a\|_p \|b\|_q.
+\end{equation}
+
+The generalized form:
+for $f:[0,1] \to \complexes$, $g:[0,1] \to \complexes$,
+$p>1$, and $q>1$ such that $1/p+1/q=1$,
+\begin{equation}
+\left|\int_{0}^1 \overline{f(t)} g(t) \, dt \right|
+\leq
+\left(\int_0^1 |f(t)|^p dt \, \right)^{1/p}
+\left(\int_0^1 |g(t)|^q dt \, \right)^{1/q}.
+\end{equation}
+
+When $b=\ones$, the Cauchy-Schwarz inequality implies
+\begin{equation}
+\|a\|_1 \leq n \|a\|_2
+\end{equation}
+
+
+
+\section{Eigenvalues}
+
+\subsection{Basic definitions}
+
+Given a square matrix $A\in\reals^{n\times n}$,
+if there exist $\lambda \in \complexes$ and nonzero $v \in \complexes^n$ such that
+\begin{equation}
+        A v = \lambda v
+\end{equation}
+then $\lambda$ is called an eigenvalue of $A$ and $v$ is called an eigenvector associated with $\lambda$.
+
+If there exist $n$ linearly independent eigenvectors, we have
+\begin{equation}
+A \begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix}
+= \begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix} \diag(\lambda_1,\ldots,\lambda_n)
+\end{equation}
+or
+\begin{equation}
+\label{eq:v8dy}
+A V = V \Lambda
+\end{equation}
+where
+\begin{equation}
+V = \begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix}
+\in\complexes^{n\times n}
+\end{equation}
+and
+\begin{equation}
+\Lambda = \diag(\lambda_1,\ldots,\lambda_n)
+= \begin{my-matrix}{cccc}
+\lambda_1 & 0 & \cdots & 0
+\\
+0 & \lambda_2 & \cdots & 0
+\\
+\vdots & \vdots & \ddots & \vdots
+\\
+0 & 0 & \cdots & \lambda_n
+\end{my-matrix}
+\in\complexes^{n\times n}.
+\end{equation}
+In this case, $A$ is said to be diagonalizable.
+
+Since $V$ is nonsingular, \ie, invertible, we can rewrite (\ref{eq:v8dy}) as
+\begin{equation}
+\label{eq:2}
+A = V \Lambda V^{-1} \Leftrightarrow V^{-1} A V = \Lambda.
+\end{equation}
+
+
+\subsection{Symmetric matrices}
+
+Given a symmetric matrix $A = A^T\in\reals^{n\times n}$,
+all the eigenvalues are real and we can choose $n$ real orthonormal eigenvectors,
+\ie,
+we can find $n$ eigenvectors $v_1, \ldots, v_n\in\reals^n$
+associated with $n$ eigenvectors, $\lambda_1, \ldots, \lambda_n \in \reals$
+such that
+\begin{equation}
+    \|v_i\| = 1
+\end{equation}
+for $i=1,\ldots,n$
+and
+\begin{equation}
+    v_i^T v_j = 0
+\end{equation}
+for $1\leq i\neq j\leq n$.
+Thus, all symmetric matrices are diagonalizable.
+
+Now (\ref{eq:2}) becomes
+\begin{equation}
+\label{eq:sym-eigen-decomp}
+A = V \Lambda V^T \Leftrightarrow V^T A V = \Lambda
+\end{equation}
+since
+\begin{equation}
+V^T V = I_n
+\end{equation}
+where $I_n\in\reals^{n\times n}$ is the indentity matrix.
+We can rewrite (\ref{eq:sym-eigen-decomp}) as
+\begin{equation}
+\label{eq:sym-eigen-decomp-1}
+A =
+\begin{my-matrix}{ccc} v_1 & \cdots & v_n \end{my-matrix}
+\diag(\lambda_1,\ldots,\lambda_n)
+\begin{my-matrix}{c} v_1^T \\ \vdots \\ v_n^T \end{my-matrix}
+= \sum_{i=1}^n \lambda_i v_i v_i^T.
+\end{equation}
+
+\section{Positive definiteness}
+
+\begin{itemize}
+
+\item
+A symmetric matrix $A=A^T\in\reals^{n\times n}$ is called positive semidefinite if for all $x\in\reals^n$,
+\begin{equation}
+x^T A x \geq 0.
+\end{equation}
+
+\item
+A symmetric matrix $A=A^T\in\reals^{n\times n}$ is called positive definite if for all nonzero $x\in\reals^n$,
+\begin{equation}
+x^T A x > 0.
+\end{equation}
+
+\item The set of all the $n$-by-$n$ positive semidefinite matrices is (sometimes) denoted by $\possemidefset{n}$,
+\ie,
+\begin{equation}
+\possemidefset{n} = \set{A=A^T\in\reals^{n\times n}}{x^T A x \geq 0 \mbox{ for all } x \in \reals^n}.
+\end{equation}
+
+\item The set of all the $n$-by-$n$ positive definite matrices is (sometimes) denoted by $\posdefset{n}$,
+\ie,
+\begin{equation}
+\posdefset{n} = \set{A=A^T\in\reals^{n\times n}}{x^T A x > 0 \mbox{ for all nonzero } x \in \reals^n}.
+\end{equation}
+
+\item $A=A^T\in\reals^{n\times n}$ is positive semidefinite if and only if all the eigenvalues of $A$ are nonnegative.
+
+\item $A=A^T\in\reals^{n\times n}$ is positive definite if and only if all the eigenvalues of $A$ are positive.
+
+\begin{proof}
+For symmetric $A=A^T$, there exist orthgonal $V\in\reals^{n\times n}$ and diagonal $\Lambda\in\reals^{n\times n}$
+such that
+\[
+A = V \Lambda V^T = \sum_{i=1}^n \lambda_i v_i v_i^T,
+\]
+thus for any $x\in\reals^n$,
+\[
+x^T A x = x^T \left(\sum_{i=1}^n \lambda_i v_i v_i^T \right) x
+= \sum_{i=1}^n \lambda_i x^T v_i v_i^T x
+= \sum_{i=1}^n \lambda_i (v_i^T x)^2.
+\]
+Therefore if all $\lambda_i$ are nonnegative, $x^T A x\geq0$ for any $x\in\reals^n$, hence $A\in\possemidefset{n}$.
+Now assume $A\in\possemidefset{n}$, but $\lambda_j < 0$ for some $j\in\{1,\ldots,n\}$.
+Then
+\begin{equation}
+v_j^T A v_j
+= \sum_{i=1}^n \lambda_i (v_i^T v_j)^2
+= \sum_{i=1}^n \lambda_i \delta_{i,j}
+= \lambda_j < 0
+\end{equation}
+since $v_1$, \ldots, $v_n$ are orthonormal
+where
+$\delta_{i,j}$ is the \href{https://en.wikipedia.org/wiki/Kronecker_delta}{Kronecker delta function},
+hence $A\not \in \possemidefset{n}$.
+Therefore if $A\in\possemidefset{n}$, all $\lambda_i$ are nonnegative.
+
+Therefore $A\in\possemidefset{n}$ if and only if all $\lambda_i$ are nonnegative.
+
+Now assume that all $\label_i$ are positive.
+Then for all nonzero $x\in\reals^n$,
+there exists $i\in\{1,\ldots,n\}$ such tat $v_i^Tx$
+since if $v_i^Tx=0$ for all $i$, then
+$V^T x = 0$, hence $x=0$ since $V^T$ is nonnsigular.
+Therefore
+\begin{equation}
+x^T A x = \sum_{i=1}^n \lambda_i (v_i^T x)^2
+\geq \lambda_j (v_j^T x)^2 > 0.
+\end{equation}
+Thus, $A\in\posdefset{n}$.
+
+Now assume that $A\in\posdefset{n}$.
+If $\lambda_j \leq 0$ for some $j\in\{1,\ldots,n\}$,
+then
+\begin{equation}
+v_j^T A v_j
+= \sum_{i=1}^n \lambda_i \delta_{i,j}
+= \lambda_j \leq 0,
+\end{equation}
+hence $A\not\in\posdefset{n}$. Therefore if $A\in\posdefset{n}$, all $\lambda_i$ are positive.
+
+Therefore $A\in\posdefset{n}$ if and only if all $\lambda_i$ are positive.
+
+\end{proof}
+
+\end{itemize}
+
+\section{Matrix norms}
+
+\begin{equation}
+\mathbf{dist}( C_\mathrm{org 1}, C_\mathrm{org 2} ) = 
+\|C_\mathrm{org 1} - C_\mathrm{org 2} \|
+= |\lambda_\mathrm{max}(C_\mathrm{org 1} - C_\mathrm{org 2})|
+\end{equation}

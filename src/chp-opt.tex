@@ -1,6 +1,5 @@
 \newcommand{\optdomain}{\mathcal{D}}
 
-\chapter{Convex Optimization}
 \section{Mathematical optimization problem}
 
 A mathematical optimization problem can be expressed as
@@ -418,4 +417,114 @@ $g(\tilde{\lambda}, \tilde{\nu}) = f_0(\tilde{x})$.
 Therefore $\tilde{x}$ is an optimal solution for the primal problem
 and $(\tilde{\lambda}, \tilde{\nu})$  is an optimal solution for the dual problem,
 hence the proof.
+
+
+\section{Unconstrained minimization}
+\subsection{Gradient descent method}
+
+\subsubsection{Examples}
+
+\paragraph{A quadratic problem in $\reals^2$}
+
+We consider the quadratic objective function on $\reals^2$
+\begin{equation}
+f(x) = \frac{1}{2} (x_1^2 + \gamma x_2^2)
+\end{equation}
+where $\gamma > 0$.
+
+We apply the gradient descent method with exact line search.
+The gradient of $f$ is
+\begin{equation}
+\nabla f(x) = \begin{my-matrix}{c} x_1 \\ \gamma x_2 \end{my-matrix}
+\end{equation}
+
+Let $\tilde{f}: \preals \to \reals$ defined by $\tilde{f}(t) = f(x - t\nabla f(x))$.
+Now
+\begin{equation}
+\tilde{f}(t)
+=
+f\left(
+\begin{my-matrix}{c}
+(1-t)x_1
+\\
+(1-\gamma t )x_2
+\end{my-matrix}
+\right)
+=
+\frac{1}{2}
+\left(
+(1-t)^2 x_1^2
++ \gamma (1-\gamma t)^2 x_2^2
+\right)
+\end{equation}
+and
+\begin{equation}
+\frac{d}{d t} \tilde{f} (t) = -(1-t) x_1^2 - \gamma ^2 (1-\gamma t) x_2^2 = 0
+\end{equation}
+implies
+\begin{equation}
+t = \frac{x_1^2 + \gamma^2 x_2^2}{x_1^2 + \gamma^3 x_2^2}
+\end{equation}
+minimizes $\tilde{f}(t)$.
+Since
+\begin{equation}
+1 - t = \frac{\gamma^2 (\gamma-1) x_2^2}{x_1^2 + \gamma^3 x_2^2}
+\end{equation}
+and
+\begin{equation}
+1 - \gamma t = \frac{(1-\gamma) x_1^2}{x_1^2 + \gamma^3 x_2^2}
+\end{equation}
+Thus
+Thus the exact line search yields
+\begin{equation}
+x^+
+= 
+\frac{(1-\gamma) x_1 x_2}{x_1^2 + \gamma^3 x_2^2}
+\begin{my-matrix}{c}
+-\gamma^2 x_2
+\\
+x_1
+\end{my-matrix}.
+\end{equation}
+
+If $x = \alpha [\gamma\ 1]^T$, then
+\begin{equation}
+x^+ 
+=
+\frac{\alpha^3(1-\gamma)\gamma}{\alpha^2 \gamma^2 (1+\gamma)}
+\begin{my-matrix}{c}
+-\gamma^2
+\\
+\gamma
+\end{my-matrix}
+=
+\alpha
+\frac{1-\gamma}{1+\gamma}
+\begin{my-matrix}{c}
+-\gamma
+\\
+1
+\end{my-matrix}.
+\end{equation}
+
+If $x = \alpha [-\gamma\ 1]^T$, then
+\begin{equation}
+x^+ 
+=
+-\frac{\alpha^3(1-\gamma)\gamma}{\alpha^2 \gamma^2 (1+\gamma)}
+\begin{my-matrix}{c}
+-\gamma^2
+\\
+-\gamma
+\end{my-matrix}
+=
+\alpha
+\frac{1-\gamma}{1+\gamma}
+\begin{my-matrix}{c}
+\gamma
+\\
+1
+\end{my-matrix}.
+\end{equation}
+
 

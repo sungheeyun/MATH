@@ -1,0 +1,147 @@
+\section{Problem formulation}
+
+Suppose that we have $n$ assets to invest on
+and that the return of each asset per unit invest is modeled by random variables $R_i$ for $i=1,\ldots,n$.
+Then we want to decide the amount of investment on each asset, $x_i\in\reals$ for $i=1,\ldots,n$,
+so that it optimizes the overall investment (in certain senses).
+
+For formulization, we use the following definitions.
+
+\begin{itemize}
+\item Define a vector random variable $R\in\reals^n$ such that
+\begin{equation}
+R = \begin{my-matrix}{c}
+R_1
+\\
+\vdots
+\\
+R_n
+\end{my-matrix}
+\in\reals^n.
+\end{equation}
+
+\item Let $r\in\reals^n$ be the expected value of $R$,
+\ie,
+\begin{equation}
+r
+= \Expect(R)
+= \begin{my-matrix}{c}
+\Expect(R_1)
+\\
+\vdots
+\\
+\Expect(R_n)
+\end{my-matrix}
+= \begin{my-matrix}{c}
+r_1
+\\
+\vdots
+\\
+r_n
+\end{my-matrix}
+\in\reals^n.
+\end{equation}
+
+\item Define a vector $x\in\reals$ which is an aggregate of the investments:
+\begin{equation}
+x = \begin{my-matrix}{c}
+x_1
+\\
+\vdots
+\\
+x_n
+\end{my-matrix}
+\in\reals^n.
+\end{equation}
+
+\item Define a feasible set $\mathcal{X}\subseteq \reals^n$ for $x$.
+For example, if we have a limit on the total investment,
+\begin{equation}
+\label{eq:cnst-on-cost}
+\mathcal{X} = \set{x\in\reals^n}{\sum_{i=1}^n c_i x_i \leq c_\mathrm{max}},
+\end{equation}
+or if we have the minimum and maximum amount to invest for each asset,
+we'd have
+\begin{equation}
+\label{eq:cnst-on-each-amount}
+\mathcal{X} = \set{x\in\reals^n}{d_\mathrm{min} \leq x_i \leq d_\mathrm{max} \mbox{ for } i=1,\ldots,n}.
+\end{equation}
+Generally, we'd prefer $\mathcal{X}$ to be a convex set, \ie,
+for any $x,y\in\mathcal{X}$ and $0\leq \lambda \leq 1$,
+\begin{equation}
+\lambda x + (1-\lambda) y \in \mathcal{X}.
+\end{equation}
+
+\end{itemize}
+
+\subsection{A portfolio optimization problem}
+
+A portfolio optimization problem can be formulized by
+\begin{equation}
+\label{eq:opt-port-prob}
+\begin{array}{ll}
+\mbox{maximize} & f(x) = \Expect(Z)
+\\
+\mbox{minimize} & g(x) = \Var(Z)
+\\
+\mbox{subject to} & x \in \mathcal{X}
+\end{array}
+\end{equation}
+where the optimization variable is $x\in\reals^n$
+and
+\begin{equation}
+Z = \sum_{i=1}^n x_i R_i = x^T R
+\end{equation}
+where $\Expect(\cdot)$ and $\Var(\cdot)$ refer to the expected value and the variance operators respectively.
+
+This problem formulation tries to \emph{maximize the expected return}
+while \emph{minimizing the variance or uncertainty or risk}, which generally makes sense.
+
+(\ref{eq:cnst-on-cost})
+(\ref{eq:cnst-on-each-amount})
+
+
+Note that
+\begin{equation}
+\Expect(Z)
+= \Expect(x^T R)
+= \Expect \left(\sum_{i=1}^n x_i R_i \right)
+= \sum_{i=1}^n x_i \Expect(R_i)
+= \sum_{i=1}^n x_i r_i
+= r^T x
+\end{equation}
+and
+\begin{eqnarray*}
+\lefteqn{
+\Var(Z) = \Expect(Z-\Expect(Z))^2 = \Expect \left(x^TR-x^Tr \right)^2
+}
+\\
+&=&
+\Expect \left(x^T(R-r) \right)^2
+= \Expect \left(x^T(R-r)(R-r)^T x \right)
+\\
+&=&
+x^T \Expect(R-r)(R-r)^T x
+=
+x^T \covmat{R} x
+\end{eqnarray*}
+where $\covmat{R} = \Expect(R-r)(R-r)^T$ is the \href{https://en.wikipedia.org/wiki/Covariance_matrix}{covariance matrix} of $R$.
+Note that $\covmat{R}\in\possemidefset{n}$
+since for any $y\in\reals^n$,
+\begin{equation}
+y^T \covmat{R} y = y^T \Expect(R-r)(R-r)^T y = \Expect(x^T(R-r))^2 \geq 0.
+\end{equation}
+
+
+
+Thus, (\ref{eq:opt-port-prob}) can be rewritten as
+\begin{equation}
+\label{eq:opt-port-prob-vec}
+\begin{array}{ll}
+\mbox{maximize} & f(x) = r^T x
+\\
+\mbox{minimize} & g(x) = x^T \covmat{R} x
+\\
+\mbox{subject to} & x \in \mathcal{X}.
+\end{array}
+\end{equation}

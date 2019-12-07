@@ -796,7 +796,7 @@ D_X f(X,Y) = -2 (\ratmat-XY^T) Y
 \end{equation}
 and
 \begin{equation}
-\label{eq:mat-fac-sq-deriv-x}
+\label{eq:mat-fac-sq-deriv-y}
 D_Y f(X,Y) = -2 (\ratmat^T-YX^T) X
 \in\reals^{\numitem\times\numfactors}
 \end{equation}
@@ -855,7 +855,7 @@ In this case, what we want to achieve is the solution to the following stochasti
 \begin{equation}
 \label{eq:mat-fac-form-stoch}
 \begin{array}{ll}
-\mbox{minimize} & \Expect \sum_{i,j:\ratmat_{i,j} = \nan} \lfcn(\tilde{\ratmat}_{i,j}, \x_i^T y_j)
+\mbox{minimize} & \Expect \sum_{i,j:\ratmat_{i,j} = \nan} \lfcn(\tilde{\ratmat}_{i,j}, x_i^T y_j)
 \end{array}
 \end{equation}
 where $\Expect(\cdot)$ denotes the expected value (or mean/average) of a random variable
@@ -1015,126 +1015,125 @@ where user-to-user similarity matrix is given by \Xsim
 
 Here we consider the weighted norm for the objective function.
 \begin{equation}
-\label{eq:vuwj}
 f_W(X,Y) = \|W\bullet(\ratmat - XY^T)\|_{F,\ratmat}^2
 \end{equation}
 where $W\in\preals^{\numcus\times\numitem}$
 and $\bullet$ denotes the component-wise multiplication.
 
-This is also a quadratic function of a \href{https://en.wikipedia.org/wiki/Bilinear_map}{bilinear function} of $X$ and $Y$,
-thus not a convex function.
-Therefore, as before, we can use ALS as follows.
-
-\begin{itemize}
-\item choose initial $\initX$ and $\initY$
-\item let $\XX{0}:=\initX$ and $\YY{0}:=\initY$
-\item let $k:=0$
-\item for each iteration, update $X$ and $Y$
-\begin{eqnarray}
-\label{eq:als-1}
-    \XX{k+1} &=& \argmin_X \|\ratmat-X{\YY{k}}^T\|_{F,\ratmat}
-\\
-\label{eq:als-2}
-    \YY{k+1} &=& \argmin_Y \|\ratmat-\XX{k+1}Y^T\|_{F,\ratmat}
-\end{eqnarray}
-\item stops if certain stopping criterion is satisfied
-\item update $k:=k+1$ and repeat iterations
-\end{itemize}
-
-The ALS is named so since solving (\ref{eq:als-1}) or (\ref{eq:als-2}) is equivalent to solving a least-squares problem.
-Note that the functions in (\ref{eq:als-1}) and (\ref{eq:als-2}) can be separated by $x_i$s or $y_j$s,
-\eg, the function in (\ref{eq:als-1}) is
-\begin{equation}
-\label{eq:bian}
-f_Y(X) = \|\ratmat - XY^T\|_{F,\ratmat}^2
-= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i^T-x_i^T Y^T\|_{F,\tilde{\ratvec}_i^T}^2
-= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i-Yx_i\|_{F,\tilde{\ratvec}_i}^2
-\end{equation}
-where $\tilde{r}_i \in\reals^\numitem$ are the row vectors of \ratmat,
-thus solving (\ref{eq:als-1}) is equivalent to solving \numcus\ uncorrelated problems separately.
-This is another great advantage of ALS since we can use parallelism to save the training time considerably.
-For example, if we have $N$ processing units, the training time per iteration would be equivalent to
-that for solving each (small) least-squares $\numcus/N$ times.
-Note that we cannot separate the objective function in (\ref{eq:vuwj}) when we consider $X$ and $Y$ simultaneously
-since each of \numrating\ terms in (\ref{eq:vuwj}) are intertwined through $x_i$s and $y_j$s.
-
-When $\ratmat\in\reals^{\numcus\times\numitem}$, it can be easily shown that
-\begin{equation}
-x_i^\ast =  Y^\dagger \tilde{\ratvec}_i
-\end{equation}
-where
-\begin{equation}
-\label{eq:pseudo-inverse-y}
-Y^\dagger = (Y^TY)^{-1}Y^T
-\end{equation}
-is the pseudo-inverse of $Y$.
-Thus (\ref{eq:als-1}) becomes
-\begin{equation}
-\label{eq:als-1-sol}
-\XX{k+1} = \ratmat {{\YY{k}}^\dagger}^T
-= \ratmat {\YY{k}} \left({\YY{k}}^T{\YY{k}} \right)^{-1}.
-\end{equation}
-Likewise, (\ref{eq:als-2}) becomes
-\begin{equation}
-\label{eq:als-2-sol}
-\YY{k+1} = \ratmat^T {{\XX{k+1}}^\dagger}^T
-= \ratmat^T {\XX{k+1}} \left({\XX{k+1}}^T{\XX{k+1}} \right)^{-1}.
-\end{equation}
-
-Note that in practice, we do not evaluate the pseudo-inverse as in (\ref{eq:pseudo-inverse-y})
-because it causes catastrophic numerical instability especially when the matrix is huge
-(as in most recommendation system cases).
-Instead, we use \href{https://en.wikipedia.org/wiki/QR_decomposition}{QR decomposition},
-\ie, if $Y = QR$ is the QR decomposition of $Y$, $Y^\dagger = R^{-1} Q^T$.
-
-
-We now discuss the interpretation of (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}).
-Let $X^\ast$ and $Y^\ast$ be the optimal solutions for the problem (\ref{eq:mat-fac-form-3}).
-Then these should satisfy (\ref{eq:als-1}) and (\ref{eq:als-2}),
-\ie,
-\begin{eqnarray}
-X^\ast &=& \argmin_{X} \|\ratmat - X{Y^\ast}^T \|_{F,\ratmat}
-\\
-Y^\ast &=& \argmin_{Y} \|\ratmat - X^\ast Y^T\|_{F,\ratmat}
-\end{eqnarray}
-Then (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}) imply that
-\begin{eqnarray}
-X^\ast {Y^\ast}^T &=& \ratmat Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T = \ratmat \Ysim
-\\
-&=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\ratmat = \Xsim \ratmat
-\end{eqnarray}
-where
-$\Xsim$
-and
-$\Ysim$
-\begin{eqnarray}
-\Xsim &=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\in \reals^{\numcus \times \numcus}
-\\
-\Ysim &=& Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T\in \reals^{\numitem \times \numitem}
-\end{eqnarray}
-
-These yield very interesting interpretations for \Xsim\ and \Ysim.
-These equations imply that the optimal prediction for the rating of the $j$th item by the $i$th customer is
-\begin{eqnarray}
-\label{eq:als-item-simil}
-{x_i^\ast}^T y_j^\ast &=& \sum_{k=1}^\numitem \Ysim_{k,j} \ratmat_{i,k}
-\\
-\label{eq:als-cust-simil}
-&=& \sum_{k=1}^\numcus \Xsim_{i,k} \ratmat_{k,j}
-\end{eqnarray}
-
-The equation (\ref{eq:als-item-simil}) tells us that
-the optimal prediction is the weighted sum of the $i$th customer's ratings
-where the weights are determined by \Ysim.
-This is \emph{exactly the same as the prediction by item-based collaborative filtering}
-where item-to-item similarity matrix is given by \Ysim.
-On the other hand,
-the equation (\ref{eq:als-cust-simil}) tells us that
-the optimal prediction is the weighted sum of the $j$th item ratings
-where the weights are determined by \Xsim.
-This is \emph{exactly the same as the prediction by user-based collaborative filtering}
-where user-to-user similarity matrix is given by \Xsim
-(which we have not covered in this document).
+%This is also a quadratic function of a \href{https://en.wikipedia.org/wiki/Bilinear_map}{bilinear function} of $X$ and $Y$,
+%thus not a convex function.
+%Therefore, as before, we can use ALS as follows.
+%
+%\begin{itemize}
+%\item choose initial $\initX$ and $\initY$
+%\item let $\XX{0}:=\initX$ and $\YY{0}:=\initY$
+%\item let $k:=0$
+%\item for each iteration, update $X$ and $Y$
+%\begin{eqnarray}
+%\label{eq:als-1}
+%    \XX{k+1} &=& \argmin_X \|\ratmat-X{\YY{k}}^T\|_{F,\ratmat}
+%\\
+%\label{eq:als-2}
+%    \YY{k+1} &=& \argmin_Y \|\ratmat-\XX{k+1}Y^T\|_{F,\ratmat}
+%\end{eqnarray}
+%\item stops if certain stopping criterion is satisfied
+%\item update $k:=k+1$ and repeat iterations
+%\end{itemize}
+%
+%The ALS is named so since solving (\ref{eq:als-1}) or (\ref{eq:als-2}) is equivalent to solving a least-squares problem.
+%Note that the functions in (\ref{eq:als-1}) and (\ref{eq:als-2}) can be separated by $x_i$s or $y_j$s,
+%\eg, the function in (\ref{eq:als-1}) is
+%\begin{equation}
+%\label{eq:bian}
+%f_Y(X) = \|\ratmat - XY^T\|_{F,\ratmat}^2
+%= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i^T-x_i^T Y^T\|_{F,\tilde{\ratvec}_i^T}^2
+%= \sum_{i=1}^\numcus \|\tilde{\ratvec}_i-Yx_i\|_{F,\tilde{\ratvec}_i}^2
+%\end{equation}
+%where $\tilde{r}_i \in\reals^\numitem$ are the row vectors of \ratmat,
+%thus solving (\ref{eq:als-1}) is equivalent to solving \numcus\ uncorrelated problems separately.
+%This is another great advantage of ALS since we can use parallelism to save the training time considerably.
+%For example, if we have $N$ processing units, the training time per iteration would be equivalent to
+%that for solving each (small) least-squares $\numcus/N$ times.
+%Note that we cannot separate the objective function in (\ref{eq:vuwj}) when we consider $X$ and $Y$ simultaneously
+%since each of \numrating\ terms in (\ref{eq:vuwj}) are intertwined through $x_i$s and $y_j$s.
+%
+%When $\ratmat\in\reals^{\numcus\times\numitem}$, it can be easily shown that
+%\begin{equation}
+%x_i^\ast =  Y^\dagger \tilde{\ratvec}_i
+%\end{equation}
+%where
+%\begin{equation}
+%\label{eq:pseudo-inverse-y}
+%Y^\dagger = (Y^TY)^{-1}Y^T
+%\end{equation}
+%is the pseudo-inverse of $Y$.
+%Thus (\ref{eq:als-1}) becomes
+%\begin{equation}
+%\label{eq:als-1-sol}
+%\XX{k+1} = \ratmat {{\YY{k}}^\dagger}^T
+%= \ratmat {\YY{k}} \left({\YY{k}}^T{\YY{k}} \right)^{-1}.
+%\end{equation}
+%Likewise, (\ref{eq:als-2}) becomes
+%\begin{equation}
+%\label{eq:als-2-sol}
+%\YY{k+1} = \ratmat^T {{\XX{k+1}}^\dagger}^T
+%= \ratmat^T {\XX{k+1}} \left({\XX{k+1}}^T{\XX{k+1}} \right)^{-1}.
+%\end{equation}
+%
+%Note that in practice, we do not evaluate the pseudo-inverse as in (\ref{eq:pseudo-inverse-y})
+%because it causes catastrophic numerical instability especially when the matrix is huge
+%(as in most recommendation system cases).
+%Instead, we use \href{https://en.wikipedia.org/wiki/QR_decomposition}{QR decomposition},
+%\ie, if $Y = QR$ is the QR decomposition of $Y$, $Y^\dagger = R^{-1} Q^T$.
+%
+%
+%We now discuss the interpretation of (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}).
+%Let $X^\ast$ and $Y^\ast$ be the optimal solutions for the problem (\ref{eq:mat-fac-form-3}).
+%Then these should satisfy (\ref{eq:als-1}) and (\ref{eq:als-2}),
+%\ie,
+%\begin{eqnarray}
+%X^\ast &=& \argmin_{X} \|\ratmat - X{Y^\ast}^T \|_{F,\ratmat}
+%\\
+%Y^\ast &=& \argmin_{Y} \|\ratmat - X^\ast Y^T\|_{F,\ratmat}
+%\end{eqnarray}
+%Then (\ref{eq:als-1-sol}) and (\ref{eq:als-2-sol}) imply that
+%\begin{eqnarray}
+%X^\ast {Y^\ast}^T &=& \ratmat Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T = \ratmat \Ysim
+%\\
+%&=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\ratmat = \Xsim \ratmat
+%\end{eqnarray}
+%where
+%$\Xsim$
+%and
+%$\Ysim$
+%\begin{eqnarray}
+%\Xsim &=& X^\ast ({X^\ast}^T X^\ast)^{-1} {X^\ast}^T\in \reals^{\numcus \times \numcus}
+%\\
+%\Ysim &=& Y^\ast ({Y^\ast}^T Y^\ast)^{-1} {Y^\ast}^T\in \reals^{\numitem \times \numitem}
+%\end{eqnarray}
+%
+%These yield very interesting interpretations for \Xsim\ and \Ysim.
+%These equations imply that the optimal prediction for the rating of the $j$th item by the $i$th customer is
+%\begin{eqnarray}
+%\label{eq:als-item-simil}
+%{x_i^\ast}^T y_j^\ast &=& \sum_{k=1}^\numitem \Ysim_{k,j} \ratmat_{i,k}
+%\\
+%\label{eq:als-cust-simil}
+%&=& \sum_{k=1}^\numcus \Xsim_{i,k} \ratmat_{k,j}
+%\end{eqnarray}
+%
+%The equation (\ref{eq:als-item-simil}) tells us that
+%the optimal prediction is the weighted sum of the $i$th customer's ratings
+%where the weights are determined by \Ysim.
+%This is \emph{exactly the same as the prediction by item-based collaborative filtering}
+%where item-to-item similarity matrix is given by \Ysim.
+%On the other hand,
+%the equation (\ref{eq:als-cust-simil}) tells us that
+%the optimal prediction is the weighted sum of the $j$th item ratings
+%where the weights are determined by \Xsim.
+%This is \emph{exactly the same as the prediction by user-based collaborative filtering}
+%where user-to-user similarity matrix is given by \Xsim
+%(which we have not covered in this document).
 
 
 

@@ -1,0 +1,49 @@
+\section{Real-Time Anomaly Detection}
+
+\subsection{Computing Anomaly Likelihood}
+
+At every time step, we evaluate the moving sample means and the moving sample standard deviations:
+\begin{eqnarray}
+\mu(t) &=& \frac{1}{w} \sum_{i=0}^{w-1} s(t-i)
+\\
+\sigma(t) &=& \sqrt{\frac{1}{w-1} \sum_{i=0}^{w-1} (s(t-i)-\mu(t))^2}
+\end{eqnarray}
+Then compute a recent short term average of raw anomaly scores,
+and apply a threshold to the Gaussian tail probability (Q-function)
+to decided whether or not to declare an anomaly:
+\begin{equation}
+L(t) = 1 - Q\left(\frac{\tilde{\mu}(t) - \mu(t)}{\sigma(t)}\right)
+\end{equation}
+where the short-term moving sample mean is defined by
+\begin{equation}
+\tilde{\mu}(t) = \frac{1}{w'} \sum_{0}^{w'-1} s(t-i)
+\end{equation}
+and the Q-function is defined by
+\begin{equation}
+Q(x) = \frac{1}{\sqrt{2\pi}} \int_x^\infty \exp\left(-\frac{\tau^2}{2}\right)  d \tau.
+\end{equation}
+
+We threshold $L(t)$ and report an anomaly if it is very close to $1$:
+\begin{equation}
+L(t) > 1 - \epsilon.
+\end{equation}
+
+
+
+To take longer history data into considering while simutaneously emphasizing recent data more,
+we can consider the exponentially weighted moving sample mean and standard deviation:
+
+\begin{eqnarray}
+\mu(t) &=& (1-\gamma) \sum_{i=0}^{\infty} \gamma^i s(t-i)
+\\
+\sigma(t) &=& \sqrt{(1-\gamma) \sum_{i=0}^{\infty} \gamma^i (s(t-i)-\mu(t))^2}
+\end{eqnarray}
+
+To combine the advantages of finite window method and exponentially weighted method,
+we can consider the exponentially weighted moving sample mean and standard deviation with finite window
+as follows:
+\begin{eqnarray}
+\mu(t) &=& \frac{1}{\sum_{i=0}^{w-1} \gamma^i }\sum_{i=0}^{w-1} \gamma^i s(t-i)
+\\
+\sigma(t) &=& \sqrt{\frac{1}{\sum_{i=0}^{w-1} \gamma^i }\sum_{i=0}^{w-1} \gamma^i (s(t-i)-\mu(t))^2}
+\end{eqnarray}

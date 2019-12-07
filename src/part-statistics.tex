@@ -136,123 +136,123 @@ Following the very same argument as before will lead to (\ref{eq:pdf-rv-transfor
 
 \subsection{Multivariate random variable}
 
-Assume two random variables, $X\in\reals^n$ and $Y\in\reals^n$, which are related by
-a function $g:\reals^n \to \reals^n$
-such that
-\begin{equation}
-\label{eq:wnux-1}
-Y = g(X).
-\end{equation}
-Assume that $g$ is differentiable everywhere in $\dom g$,
-\ie, the Jacobian matrix defined in (\ref{eq:jacobian-matrix}) exists for all $x \in \dom g$.
-
-XXX
-
-Now we suppose that $g$ is a strictly increasing and invertible function.
-Then the definition of cumulative distribution function (CDF) of $Y$ implies that
-\begin{equation}
-\label{eq:wnux-2}
-    F_Y(y) = \Prob\{Y \preceq y\} = \Prob\{g(X) \preceq y\}
-\end{equation}
-for any $y\in\reals^n$ where $\preceq$ is the componentwise inequality.
-Since $g$ is an invertible and stricly increasing function, the inverse function $g^{-1}: g(\reals^n) \to \reals^n$
-exists and 
-(\ref{eq:wnux-2}) becomes
-\[
-    F_Y(y) = \Prob\{g(X) \preceq y\}
-    = \Prob\{X \preceq g^{-1}(y)\}
-    = F_X(g^{-1}(y))
-\]
-for any $y\in g(\reals^n)$.
-Thus, we can differentiate both sides to have
-\begin{equation}
-\label{eq:gnpz-1}
-    f_Y(y) = \frac{d}{dy} F_Y(y)
-    = \frac{d}{dy} F_X(g^{-1}(y))
-    = f_X(g^{-1}(y)) \frac{d}{dy} g^{-1}(y)
-    = \frac{1}{g'(g^{-1}(y))} f_X(g^{-1}(y)),
-\end{equation}
-since (\ref{theorem:chain-rule}) implies that
-\begin{equation}
-1
-= \frac{d}{dx} g(g^{-1}(x))
-= g'(g^{-1}(x)) \frac{d}{dx} g^{-1}(x),
-\end{equation}
-\ie, the derivative of the inverse function
-is the inverse of the derivative of the original function.
-
-Now if we assume that $g$ is a strictly decreasing function, we have
-\[
-    F_Y(y) = \Prob\{g(X) \leq y\}
-    = \Prob\{x \geq g^{-1}(y)\}
-    = 1 - F_X(g^{-1}(y))  + \Prob\{x = g^{-1}(y)\},
-\]
-and
-\begin{equation}
-\label{eq:gnpz-2}
-    f_Y(y) = \frac{d}{dy} F_Y(y)
-    = - \frac{d}{dy} F_X(g^{-1}(y))
-    = - f_X(g^{-1}(y)) \frac{d}{dy} g^{-1}(y)
-    = - \frac{1}{g'(g^{-1}(y))} f_X(g^{-1}(y)).
-\end{equation}
-Since $g'(y)>0$ for a strictly increasing function,
-and $g'(y)<0$ for a strictly decreasing function,
-(\ref{eq:gnpz-1}) and (\ref{eq:gnpz-2}) imply
-\begin{equation}
-\label{eq:pdf-rv-transform-1}
-    f_Y(y) = \frac{1}{|g'(g^{-1}(y))|} f_X(g^{-1}(y))
-\end{equation}
-for both cases.
-
-Now consider a general function, $g$, \ie, not necessarily a monotonic function.
-Suppose that $y\in g(\reals)$.
-Then for every $x\in\reals$ such that $f(x) = y$,
-if $f'(x)\neq0$, then $f(x)$ is locally strictly monotonic,
-\ie, there exists $\delta>0$ such that $f(x)$ is strictly monotonic for $x\in(x-\delta, x + \delta)$,
-hence (\ref{eq:pdf-rv-transform-1}) holds for such $x$.
-
-The probability around $y$ is a summation of the probabilities around such points,
-\ie, the probabilities around all $x$ such that $f(x) =y$ and $f'(x)\neq0$.
-Therefore, we have
-\begin{equation}
-\label{eq:pdf-rv-transform}
-    f_Y(y) = \sum_{x:g(x)=y}\frac{1}{|g'(x)|} f_X(x).
-\end{equation}
-
-There is another way to derive the same equation (in a less strict way)
-which helps get more insight.
-Let's again suppose that $g$ is a strictly increasing function.
-Then consider the probability that $X$ lies in $(x, x + \Delta x)$.
-The probability should be the same as $Y$ lies in $(y, y + \Delta y)$
-where $y=g(x)$ and $\Delta y = g(x+\Delta x) - g(x)$,
-\ie,
-\begin{eqnarray*}
-\lefteqn{
-f_X(x) \Delta x
-\approx
-\int_{x}^{x + \Delta x} f_X(x) \, dx
-=
-\Prob\{x\leq X\leq x + \Delta x\}
-}
-\\
-&=&
-\Prob\{y\leq Y\leq y + \Delta y\}
-=
-\int_{y}^{y + \Delta y} f_Y(y) \, dy
-\approx
-f_Y(y) \Delta y.
-\end{eqnarray*}
-The approximation becomes the equality when $\Delta x$ goes to $0$.
-Therefore we have
-\begin{equation}
-f_Y(y)
-= \lim_{\Delta x \to 0}\frac{\Delta x}{\Delta y} f_X(x)
-= \frac{1}{\lim_{\Delta x \to 0} \frac{g(x+\Delta x)-g(x)}{\Delta x}} f_X(x)
-= \frac{1}{g'(x)} f_X(x),
-\end{equation}
-which is equivalent to (\ref{eq:gnpz-1}).
-Following the very same argument as before will lead to (\ref{eq:pdf-rv-transform}),
-\ie, applying the same method to strictly decreasing case, \etc\
+%Assume two random variables, $X\in\reals^n$ and $Y\in\reals^n$, which are related by
+%a function $g:\reals^n \to \reals^n$
+%such that
+%\begin{equation}
+%\label{eq:wnux-1}
+%Y = g(X).
+%\end{equation}
+%Assume that $g$ is differentiable everywhere in $\dom g$,
+%\ie, the Jacobian matrix defined in (\ref{eq:jacobian-matrix}) exists for all $x \in \dom g$.
+%
+%XXX
+%
+%Now we suppose that $g$ is a strictly increasing and invertible function.
+%Then the definition of cumulative distribution function (CDF) of $Y$ implies that
+%\begin{equation}
+%\label{eq:wnux-2}
+%    F_Y(y) = \Prob\{Y \preceq y\} = \Prob\{g(X) \preceq y\}
+%\end{equation}
+%for any $y\in\reals^n$ where $\preceq$ is the componentwise inequality.
+%Since $g$ is an invertible and stricly increasing function, the inverse function $g^{-1}: g(\reals^n) \to \reals^n$
+%exists and 
+%(\ref{eq:wnux-2}) becomes
+%\[
+%    F_Y(y) = \Prob\{g(X) \preceq y\}
+%    = \Prob\{X \preceq g^{-1}(y)\}
+%    = F_X(g^{-1}(y))
+%\]
+%for any $y\in g(\reals^n)$.
+%Thus, we can differentiate both sides to have
+%\begin{equation}
+%\label{eq:gnpz-1}
+%    f_Y(y) = \frac{d}{dy} F_Y(y)
+%    = \frac{d}{dy} F_X(g^{-1}(y))
+%    = f_X(g^{-1}(y)) \frac{d}{dy} g^{-1}(y)
+%    = \frac{1}{g'(g^{-1}(y))} f_X(g^{-1}(y)),
+%\end{equation}
+%since (\ref{theorem:chain-rule}) implies that
+%\begin{equation}
+%1
+%= \frac{d}{dx} g(g^{-1}(x))
+%= g'(g^{-1}(x)) \frac{d}{dx} g^{-1}(x),
+%\end{equation}
+%\ie, the derivative of the inverse function
+%is the inverse of the derivative of the original function.
+%
+%Now if we assume that $g$ is a strictly decreasing function, we have
+%\[
+%    F_Y(y) = \Prob\{g(X) \leq y\}
+%    = \Prob\{x \geq g^{-1}(y)\}
+%    = 1 - F_X(g^{-1}(y))  + \Prob\{x = g^{-1}(y)\},
+%\]
+%and
+%\begin{equation}
+%\label{eq:gnpz-2}
+%    f_Y(y) = \frac{d}{dy} F_Y(y)
+%    = - \frac{d}{dy} F_X(g^{-1}(y))
+%    = - f_X(g^{-1}(y)) \frac{d}{dy} g^{-1}(y)
+%    = - \frac{1}{g'(g^{-1}(y))} f_X(g^{-1}(y)).
+%\end{equation}
+%Since $g'(y)>0$ for a strictly increasing function,
+%and $g'(y)<0$ for a strictly decreasing function,
+%(\ref{eq:gnpz-1}) and (\ref{eq:gnpz-2}) imply
+%\begin{equation}
+%\label{eq:pdf-rv-transform-1}
+%    f_Y(y) = \frac{1}{|g'(g^{-1}(y))|} f_X(g^{-1}(y))
+%\end{equation}
+%for both cases.
+%
+%Now consider a general function, $g$, \ie, not necessarily a monotonic function.
+%Suppose that $y\in g(\reals)$.
+%Then for every $x\in\reals$ such that $f(x) = y$,
+%if $f'(x)\neq0$, then $f(x)$ is locally strictly monotonic,
+%\ie, there exists $\delta>0$ such that $f(x)$ is strictly monotonic for $x\in(x-\delta, x + \delta)$,
+%hence (\ref{eq:pdf-rv-transform-1}) holds for such $x$.
+%
+%The probability around $y$ is a summation of the probabilities around such points,
+%\ie, the probabilities around all $x$ such that $f(x) =y$ and $f'(x)\neq0$.
+%Therefore, we have
+%\begin{equation}
+%\label{eq:pdf-rv-transform}
+%    f_Y(y) = \sum_{x:g(x)=y}\frac{1}{|g'(x)|} f_X(x).
+%\end{equation}
+%
+%There is another way to derive the same equation (in a less strict way)
+%which helps get more insight.
+%Let's again suppose that $g$ is a strictly increasing function.
+%Then consider the probability that $X$ lies in $(x, x + \Delta x)$.
+%The probability should be the same as $Y$ lies in $(y, y + \Delta y)$
+%where $y=g(x)$ and $\Delta y = g(x+\Delta x) - g(x)$,
+%\ie,
+%\begin{eqnarray*}
+%\lefteqn{
+%f_X(x) \Delta x
+%\approx
+%\int_{x}^{x + \Delta x} f_X(x) \, dx
+%=
+%\Prob\{x\leq X\leq x + \Delta x\}
+%}
+%\\
+%&=&
+%\Prob\{y\leq Y\leq y + \Delta y\}
+%=
+%\int_{y}^{y + \Delta y} f_Y(y) \, dy
+%\approx
+%f_Y(y) \Delta y.
+%\end{eqnarray*}
+%The approximation becomes the equality when $\Delta x$ goes to $0$.
+%Therefore we have
+%\begin{equation}
+%f_Y(y)
+%= \lim_{\Delta x \to 0}\frac{\Delta x}{\Delta y} f_X(x)
+%= \frac{1}{\lim_{\Delta x \to 0} \frac{g(x+\Delta x)-g(x)}{\Delta x}} f_X(x)
+%= \frac{1}{g'(x)} f_X(x),
+%\end{equation}
+%which is equivalent to (\ref{eq:gnpz-1}).
+%Following the very same argument as before will lead to (\ref{eq:pdf-rv-transform}),
+%\ie, applying the same method to strictly decreasing case, \etc\
 
 
 \subsection{Data Examples}

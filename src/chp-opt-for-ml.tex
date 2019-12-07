@@ -1,0 +1,36 @@
+
+\section{Gradient method}
+
+
+Suppose that $f:\reals^n\to\reals$. An unconstrained optimization problem is
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & f(x)
+\end{array}
+\end{equation}
+
+The gradient method is
+
+\begin{equation}
+x^{k+1} = x^{k} - \alpha^k \nabla f(x^k)
+\end{equation}
+
+
+\section{Stochastic gradient method}
+
+
+Suppose that $f_i:\reals^n\to\reals$ for $i=1,\ldots,n$. An unconstrained optimization problem is
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & \frac{1}{n} \sum_{i=1}^n f_i(x)
+\end{array}
+\end{equation}
+
+The gradient method is
+
+\begin{equation}
+x^{k+1} = x^{k} - \alpha^k \sum_{}^k \nabla f(x^k)
+\end{equation}
+

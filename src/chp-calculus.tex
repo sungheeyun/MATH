@@ -1,0 +1,168 @@
+
+\section{Basics}
+
+\begin{theorem}
+[L'H\^opital's rule]
+Let $f:\reals\to\reals$ and $f:\reals\to\reals$ be differentiable on an open interval $I\subseteq \reals$
+except possibly at $c\in I$.
+If $\lim_{x\to c} f(x) = \lim_{x\to c} g(x) = 0$ or $\pm \infty$,
+$g'(x)=0$ for all $x\in I\backslash \{c\}$,
+and $\lim_{x\to c} \frac{f'(x)}{g'(x)}$ exists,
+then
+\begin{equation}
+\label{eq:lhopital-rule}
+\lim_{x\to c} \frac{f(x)}{g(x)}
+= \lim_{x\to c} \frac{f'(x)}{g'(x)}.
+\end{equation}
+\end{theorem}
+
+\begin{definition}
+[Taylor polynomial]
+Let $n\in\integers$ be a positive integer and
+let $f:\reals\to\reals$ be $n$ times differentiable at $a\in\reals$.
+The $n$-th order Taylor polynomial is defined by
+\begin{eqnarray}
+T_{f,n}(x) &=& f(a) + f'(a)(x-a)
++ \frac{f''(a)}{2!}(x-a)^2
++ \cdots
++ \frac{f^{(n)}(a)}{n!}(x-a)^n
+\nonumber
+\\
+&=&
+\sum_{k=0}^n \frac{f^{(k)}(a)}{k!} (x-a)^k
+\label{eq:taylor-poly}
+\end{eqnarray}
+\end{definition}
+
+
+\begin{theorem}
+[Taylor's theorem]
+\label{theorem:taylor-peano}
+Let $n\in\integers$ be a positive integer and
+let $f:\reals\to\reals$ be $n$ times differentiable at $a\in\reals$.
+Then there exists a function $h_n:\reals\to\reals$ such that
+\begin{equation}
+\label{eq:taylor-peano}
+f(x) = T_{f,n}(x) + h_n(x) (x-a)^n
+\end{equation}
+and $\lim_{x\to a} h_n(x)=0$.
+The remainder is called the Peano form of the remainder.
+\end{theorem}
+
+\begin{theorem}
+[Taylor's theorem]
+\label{theorem:taylor-lagrange}
+Let $n\in\integers$ be a positive integer, $a,b\in\reals$,
+and $I_o = (a,b) \cup (b,a)$ and $I_c = [a,b] \cup [b,a]$.
+Let $f:\reals\to\reals$ be $n+1$ times differentiable on $I_o$
+and $f^{(n)}$ is continuous on $I_c$.
+Then for some $c \in I_o$,
+\begin{equation}
+\label{eq:taylor-lagrange}
+f(b) = T_{f,n}(b) + \frac{f^{(n+1)}(c)}{(n+1)!}(b-a)^{n+1}.
+\end{equation}
+The remainder is called the Peano form of the remainder.
+\end{theorem}
+
+
+\section{Multivariate functions}
+
+\begin{definition}[Jacobian matrix]
+Let $f:\reals^n \to \reals^m$ be a differentiable function,
+\ie, the partial derivative $\partial f_j(x) / \partial x_i$ exists for every $1\leq i\leq n$ and $1\leq j\leq m$.
+Then the Jacobian matrix of $f$ at $x$ is defined by the function $D_f:\reals^{n} \to \reals^{m \times n}$
+such that
+\begin{equation}
+\label{eq:jacobian-matrix}
+D_f(x) = \begin{my-matrix}{cccc}
+\partial f_1(x) / \partial x_1
+& \partial f_1(x) / \partial x_2
+& \cdots
+& \partial f_1(x) / \partial x_n
+\\
+\partial f_2(x) / \partial x_1
+& \partial f_2(x) / \partial x_2
+& \cdots
+& \partial f_2(x) / \partial x_n
+\\
+\vdots & \vdots & \ddots & \vdots
+\\
+\partial f_m(x) / \partial x_1
+& \partial f_m(x) / \partial x_2
+& \cdots
+& \partial f_m(x) / \partial x_n
+\end{my-matrix}
+\in\reals^{m \times n}.
+\end{equation}
+\end{definition}
+
+
+
+\section{Chain rule}
+
+\begin{theorem}
+\label{theorem:chain-rule}
+Let $f:\reals\to\reals^n$ and $g:\reals^n\to\reals$ be differentiable.
+Then $h:\reals\to\reals$ such that $h(t) = g(f(t))$ is also differentiable and
+\[
+h'(t) = \sum_{i=1}^n f_i'(t) \frac{\partial g}{\partial x_i} (f(t))
+= \nabla^T g(f(t))^T D_f (t)
+\]
+for all $t\in\dom f$.
+\end{theorem}
+
+\begin{corollary}
+\label{corollary:chain-rule-gen}
+Let $f:\reals^n\to\reals^m$ and $g:\reals^m\to\reals^p$ be differentiable.
+Then define a function $h:\reals^n\to\reals^p$ such that $h(x) = g(f(x))$ for all $x\in\dom f$.
+Then $h$ is differentiable and
+\begin{equation}
+\label{eq:chain-rule-gen}
+D h(x) = Dg(f(x)) Df(x)
+\end{equation}
+where
+$D f:\reals^n\to\reals^{m\times n}$,
+$D g:\reals^m\to\reals^{p\times m}$,
+and $D f:\reals^n\to\reals^{p\times n}$
+are the Jacobian matrix functions of $f$, $g$, and $h$ respectively.
+\end{corollary}
+
+\begin{corollary}
+\label{corollary:dixu}
+Let $f:\reals^n\to\reals$ be differentiable.
+Then for some $A\in\reals^{n\times m}$ and $b\in\reals^n$,
+define $g:\reals^m\to\reals$ such that $g(y) = f(Ay+b)$.
+Then
+\begin{equation}
+\label{eq:dixu}
+\nabla g(y) = A^T \nabla f(Ay+b).
+\end{equation}
+\end{corollary}
+
+
+\begin{corollary}
+\label{corollary:eicg}
+Let $f:\reals^n\to\reals$ be twice differentiable.
+Then for some $A\in\reals^{n\times m}$ and $b\in\reals^n$,
+define $g:\reals^m\to\reals$ such that $g(y) = f(Ay+b)$.
+Then
+\begin{equation}
+\label{eq:eicg}
+\nabla^2 g(y) = A^T \nabla^2 f(Ay+b)A.
+\end{equation}
+\end{corollary}
+
+\section{Integration}
+
+
+\begin{lemma}
+Let $A\in\reals^{n\times n}$ be a nonsingular matrix. Suppose that the following integral exists for some $C\subseteq \reals^n$.
+\begin{equation}
+\int_{C} f(x) dx
+\end{equation}
+\end{lemma}
+
+
+
+
+

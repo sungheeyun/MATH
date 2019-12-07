@@ -1,0 +1,287 @@
+\section{Convex function}
+
+A function $f:\reals^n\to\reals$ is a convex function if, for all $x,y \in \dom f$ and all $0\leq \lambda \leq 1$,
+\begin{equation}
+f(\lambda x + (1-\lambda)y)
+\leq
+\lambda f(x) + (1-\lambda)f(y).
+\end{equation}
+
+\begin{theorem}
+\label{theorem:cvx-equiv-1d-fcn}
+Let $f:\reals^n\to\reals$.
+Then for some $x\in\dom f$ and $v\in\reals^n$,
+define a function $g_{x,v}(t):\reals\to\reals$ such that $g_{x,v}(t) = f(x+tv)$
+with the domain, $\set{t\in\reals}{x+tv\in \dom f}$.
+Then $f$ is a convex function iff $g_{x,v}$ is a convex function for any $x\in\dom f$ and any $v\in\reals^n$.
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then for any $x\in\dom f$ and $v\in\reals^n$,
+for any $s,t \in\set{t\in\reals}{x+tv\in \dom f}$ and any $\lambda\in\reals$ such that $0\leq \lambda \leq 1$,
+\begin{eqnarray*}
+\lefteqn{
+g_{x,v}(\lambda s + (1-\lambda) t)
+=f(x+(\lambda s + (1-\lambda) t)v)
+}
+\\
+&=&
+f(\lambda (x+sv) + (1-\lambda) (x+tv))
+\\
+&\leq&
+\lambda f(x+sv) + (1-\lambda) f(x+tv)
+= \lambda g_{x,v}(s) + (1-\lambda) g_{x,v}(t).
+\end{eqnarray*}
+Therefore $g_{x,v}$ is a convex function.
+
+Now assume that
+$g_{x,v}(t):\reals\to\reals$ is a convex function for any $x\in\dom f$ and $v\in\reals^n$.
+Then for any $x,y \in \dom f$ and any $\lambda\in\reals$ such that $0\leq \lambda \leq 1$,
+\begin{eqnarray*}
+\lefteqn{
+f((1-\lambda) x + \lambda y ) =f(x + \lambda (y-x) )
+}
+\\
+&=&
+g_{x,y-x}(\lambda)
+= g_{x,y-x}((1-\lambda)\cdot 0 + \lambda \cdot 1)
+\leq (1-\lambda) g_{x,y-x}(0) + \lambda g_{x,y-x}(1)
+\\
+&=&
+(1-\lambda) f(x) + \lambda f(y),
+\end{eqnarray*}
+thus, $f$ is a convex function.
+\end{proof}
+
+\subsection{First order condition}
+
+\begin{theorem}
+\label{theorem:cvx-1st-order-cond-1}
+If a function $f:\reals\to\reals$ is differentiable, it is a convex function iff, for all $x, y \in \dom f$,
+\begin{equation}
+\label{eq:cvx-1st-order-cond-1}
+        f(y) \geq f(x) + f'(x) (y-x).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then assume that $y>x$. Let $h\in\reals$ be a positive number such that $h<y-x$. Then the definition of convexity implies that
+\[
+f(x+h) \leq (1-\lambda) f(x) + \lambda f(y)
+\]
+where $\lambda = h/(y-x)$ since
+\[
+(1-\lambda) x + \lambda y = x + \lambda (y-x) = x +h.
+\]
+Thus
+\[
+f(x+h) - f (x) \leq \lambda (f(y)-f(x)) = \frac{h}{y-x} (f(y)-f(x)),
+\]
+which implies
+\[
+f'(x) = \lim_{h\to0} \frac{f(x+h) - f (x)}{h} \leq \frac{f(y)-f(x)}{y-x}.
+\]
+Therefore
+\[
+f(y) - f(x) \geq f'(x)(y-x),
+\]
+hence (\ref{eq:cvx-1st-order-cond-1}) is true when $y>x$.
+
+We can prove (\ref{eq:cvx-1st-order-cond-1}) is true when $y<x$ using the very same method.
+Assume that $x>y$. Let $h\in\reals$ be a positive number such that $h<x-y$. Then the definition of convexity implies that
+\[
+f(x-h) \leq (1-\lambda) f(x) + \lambda f(y)
+\]
+where $\lambda = h/(x-y)$ since
+\[
+(1-\lambda) x + \lambda y = x + \lambda (y-x) = x -h.
+\]
+Thus
+\[
+f(x) - f (x-h) \geq \lambda (f(x)-f(y)) = \frac{h}{x-y} (f(x)-f(y)),
+\]
+which implies
+\[
+f'(x) = \lim_{h\to0} \frac{f(x) - f (x-h)}{h} \geq \frac{f(x)-f(y)}{x-y}  =\frac{f(y)-f(x)}{y-x}.
+\]
+Therefore
+\[
+f(y) - f(x) \geq f'(x)(y-x),
+\]
+hence (\ref{eq:cvx-1st-order-cond-1}) is true when $y<x$.
+It is obvise that (\ref{eq:cvx-1st-order-cond-1}) is true when $y=x$.
+Hence we have just proved that if $f:\reals\to\reals$ is a convex function, then (\ref{eq:cvx-1st-order-cond-1}) holds
+for any $x,y\in\dom f$.
+
+Now we prove the converse.
+Suppose that (\ref{eq:cvx-1st-order-cond-1}) holds for any $x,y\in\dom f$.
+Now let $x,y\in\dom f$ and $\lambda \in \reals$ suc that $0\leq \lambda \leq 1$.
+Let $z=\lambda x + (1-\lambda) y$. Then (\ref{eq:cvx-1st-order-cond-1}) implies that
+\begin{equation}
+\label{eq:dkfj-1}
+f(x) - f(z) \geq f'(z) (x-z) = (1-\lambda) f'(z) (x-y)
+\end{equation}
+and
+\begin{equation}
+\label{eq:dkfj-2}
+f(y) - f(z) \geq f'(z) (y-z) = \lambda f'(z) (y-x)
+\end{equation}
+If we multiply $\lambda$ on both sides of (\ref{eq:dkfj-1}),
+multiply $1-\lambda$ on both sides of (\ref{eq:dkfj-2}),
+and add both sides, we have
+\[
+\lambda(f(x) - f(z)) + (1-\lambda) (f(y) - f(z))
+\geq \lambda f(x) +(1-\lambda) f(y) - f(z) \geq 0,
+\]
+hence
+\[
+f(\lambda x + (1-\lambda) y)
+\leq \lambda f(x) + (1-\lambda) f(y).
+\]
+Therefore $f$ is a convex function.
+\end{proof}
+
+\begin{corollary}
+\label{corollary:cvx-deriv-non-decreasing}
+Let $f:\reals\to\reals$ be differentiable. Then $f$ is a convex function iff the derivative of $f$ is a nondecreasing function.
+\end{corollary}
+\begin{proof}
+Suppose that $f$ is a convex function.
+Let $x,y\in\dom f$ such that $x<y$.
+Then \theoremname~\ref{theorem:cvx-1st-order-cond-1} implies
+\[
+f(y) \geq f(x) + f'(x)(y-x)
+\]
+and
+\[
+f(x) \geq f(y) + f'(y)(x-y),
+\]
+thus
+\[
+f'(x) \leq \frac{f(y)-f(x)}{y-x}
+= \frac{f(x)-f(y)}{x-y} \leq f'(y)
+\]
+since $y>x$.
+Therefore $f'$ is a nondecreasing function.
+
+Now we prove the converse. Suppose that $f'$ is a nondecreasing function.
+Then if $y>x$, the mean value theorem implies that there exists some $z \in (x,y)$ such that
+\[
+\frac{f(y)-f(x)}{y-x} = f'(z).
+\]
+Since $f'$ is nondecreasing, we have
+\[
+f'(x) \leq \frac{f(y)-f(x)}{y-x} \leq f'(y),
+\]
+thus
+\begin{equation}
+\label{eq:cias-1}
+f(y) \geq f(x) + f'(x)(y-x)
+\end{equation}
+and
+\begin{equation}
+\label{eq:cias-2}
+f(y) \leq f(x) + f'(y)(y-x).
+\end{equation}
+Therefore (\ref{eq:cias-1}) implies that $f$ satisfies (\ref{eq:cvx-1st-order-cond-1}).
+Now if $x>y$, (\ref{eq:cias-2}) implies that
+\[
+f(x) \leq f(y) + f'(x)(x-y)
+\Leftrightarrow
+f(y) \geq f(x) + f'(x)(y-x)
+\]
+which again implies that $f$ satisfies (\ref{eq:cvx-1st-order-cond-1}).
+Therefore (\ref{theorem:cvx-1st-order-cond-1}) implies that $f$ is a convex function.
+\end{proof}
+
+\begin{corollary}
+\label{corollary:cvx-1st-order-cond}
+If a function $f:\reals^n\to\reals$ is differentiable, it is a convex function iff, for all $x,y \in \dom f$,
+\begin{equation}
+\label{eq:cvx-1st-order-cond}
+        f(y) \geq f(x) + \nabla f(x)^T (y-x).
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Let $x,y\in\dom f$.
+If we let $g_{x,y-x}:\reals\to\reals$ be a function such that $g_{x,y-x}(t) = f(x+t(y-x))$,
+\theoremname~\ref{theorem:cvx-equiv-1d-fcn} implies $g_{x,y-x}$ is a convex function.
+Therefore \theoremname~\ref{theorem:cvx-1st-order-cond-1} together with \corollaryname~\ref{corollary:dixu}
+implies
+\[
+f(y) = g_{x,y-x}(1) \geq g_{x,y-x}(0) + g_{x,y-x}'(0) (1-0)
+= f(x) + \nabla f(x) ^T (y-x)
+\]
+for any $x,y \in \dom f$.
+
+Now suppose that (\ref{eq:cvx-1st-order-cond}) holds for any $x,y \in \dom f$.
+Then \corollaryname~\ref{corollary:dixu} implies that,
+for any $r,s\in\reals$ and $v\in\reals^n$ such that $r,s\in\set{t\in\reals}{x+tv\in\dom f}$,
+\[
+g_{x,v}(r) = f(x+rv) \geq f(x+sv) + (r-s) \nabla f(x+sv)^T v = g_{x,v}(s) + g_{x,v}'(s)(r-s).
+\]
+Thus \theoremname~\ref{theorem:cvx-1st-order-cond-1} implies
+$g_{x,v}$ is a convex function for any $x\in\dom f$ and $v\in\reals^n$.
+Therefore by \theoremname~\ref{theorem:cvx-equiv-1d-fcn}, $f$ is a convex function.
+\end{proof}
+
+\subsection{Second order condition}
+
+\begin{theorem}
+\label{theorem:cvx-2nd-order-cond-1}
+If a function $f:\reals\to\reals$ is twice differentiable, it is a convex function iff, for all $x \in \dom f$,
+\begin{equation}
+\label{eq:cvx-2nd-order-cond-1}
+        f''(x) \geq 0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then \corollaryname~\ref{corollary:cvx-deriv-non-decreasing} implies that $f'$ is a nondecreasing function,
+hence
+\[
+f''(x)
+= \lim_{h\to0} \frac{f'(x+h) - f'(x)}{h}
+= \lim_{h\to0^+} \frac{f'(x+h) - f'(x)}{h} \geq 0.
+\]
+Now if $f''(x)\geq0$ for all $x\in\dom f$, the mean value theorem implies that $f'$ is a nondecreasing function.
+\end{proof}
+
+
+\begin{theorem}
+\label{theorem:cvx-2nd-order-cond}
+If a function $f:\reals^n\to\reals$ is twice differentiable, it is a convex function iff, for all $x \in \dom f$,
+\begin{equation}
+\label{eq:cvx-2nd-order-cond}
+        \nabla^2 f(x) \succeq 0.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Suppose that $f$ is a convex function.
+Then \theoremname~\ref{theorem:cvx-equiv-1d-fcn} implies that
+for any $x\in\dom f$ and any $v\in\reals^n$,
+the function $g_{x,v}:\reals\to\reals$ such that $g_{x,v}(t) = f(x+tv)$
+is a convex function in $\set{t\in\reals}{x+tv \in \dom f}$.
+Then \theoremname~\ref{theorem:cvx-2nd-order-cond-1} together with \corollaryname~\ref{corollary:eicg}
+implies that
+\[
+v^T \nabla^2 f(x) v = g_{x,v}''(0) \geq0.
+\]
+Therefore $\nabla^2 f(x) \succeq 0$ for any $x \in \dom f$.
+
+Now if $\nabla^2 f(x) \succeq 0$ for all $x\in\dom f$,
+then
+\corollaryname~\ref{corollary:eicg}
+implies that
+$g_{x,v}''(t) = v^T \nabla^2 f(x+tv) v \geq0$ for any $x \in \dom f$ and any $v\in\reals^n$.
+Then \theoremname~\ref{theorem:cvx-2nd-order-cond-1} implies
+$g_{x,v}$ is a convex function for any $x \in \dom f$ and any $v\in\reals^n$,
+hence by \theoremname~\ref{theorem:cvx-equiv-1d-fcn},
+$f$ is a convex function.
+\end{proof}
