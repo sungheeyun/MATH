@@ -474,10 +474,16 @@ and
 \begin{equation}
 1 - \gamma t = \frac{(1-\gamma) x_1^2}{x_1^2 + \gamma^3 x_2^2}
 \end{equation}
-Thus
 Thus the exact line search yields
 \begin{equation}
 x^+
+= x - t \nabla f(x)
+=
+\begin{my-matrix}{c}
+(1-t)x_1
+\\
+(1-\gamma t )x_2
+\end{my-matrix}
 = 
 \frac{(1-\gamma) x_1 x_2}{x_1^2 + \gamma^3 x_2^2}
 \begin{my-matrix}{c}
@@ -528,3 +534,23 @@ x^+
 \end{equation}
 
 
+
+Therefore if $x^{(0)}= [\gamma\ 1]^T$,
+then
+\begin{equation}
+x^{(k)}
+=
+\left(\frac{1-\gamma}{1+\gamma}\right)^k
+\begin{my-matrix}{c}
+(-1)^k \gamma
+\\
+1
+\end{my-matrix}
+=
+\left(\frac{\gamma-1}{\gamma+1}\right)^k
+\begin{my-matrix}{c}
+\gamma
+\\
+(-1)^k
+\end{my-matrix}.
+\end{equation}
