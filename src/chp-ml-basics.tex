@@ -57,10 +57,10 @@ or know $\Expect(Y|X=x)$ as a function of $x$,
 it is not possible to obtain $g^\ast$.
 
 Here we assume that we obtain the predictor for $Y$ given $X$
-from a dataset \dataset\
+from a dataset $D$
 where
 \begin{equation}
-\dataset = \{(x_1, y_1), \ldots, (x_N, y_N)\} \subseteq \reals^n \times \reals^m.\footnote{
+D = \{(x_1, y_1), \ldots, (x_N, y_N)\} \subseteq \reals^n \times \reals^m.\footnote{
 Note that strictly speaking, \dataset\ is \emph{not} a set
 since the order of $(x_i, y_i) \in \reals^n \times \reals^m$ matters,
 \ie, if the order is changed, we generally have different predictor,
@@ -69,8 +69,13 @@ Thus, we should say \dataset\ is a (ordered) list of points, $(x_i, y_i) \in \re
 }
 \end{equation}
 
-Now suppose that we have a predictor $g(\cdot;\dataset): \reals^n \to \reals^m$, 
-which depends on \dataset.
+Now suppose that we have a predictor $g(\cdot;D): \reals^n \to \reals^m$, 
+which depends on $D$.
+Now let \dataset\ denote the random variable for this data set,
+\ie,
+\begin{equation}
+\dataset = \{(X_1, Y_1), \ldots, (X_N, Y_N)\} \subseteq \reals^n \times \reals^m.
+\end{equation}
 
 Then the mean square error of this predictor can be decomposed as following.
 \begin{eqnarray*}
@@ -155,6 +160,7 @@ Then the mean square error of this predictor can be decomposed as following.
 	+ \Expect_{X} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
 	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2.
 \end{eqnarray*}
+
 Note that we use the fact that $\Expect_\dataset g(X;\dataset)$ is a function of $X$ only
 (hence does not depend on $X$).
 
