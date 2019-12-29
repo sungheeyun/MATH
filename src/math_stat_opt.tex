@@ -2,7 +2,8 @@
 
 \newcommand{\theoremsandsuchchapter}{}
 
-\input{mydefs}
+\input{ ../../FrequentlyUsed/latex/mydefs}
+\renewcommand{\Expect}{{\bf E{}}}
 
 \usepackage{appendix}
 \usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
@@ -44,7 +45,8 @@
 %\includeonly{app-amazon-mlu}
 %\includeonly{part-statistics}
 %\includeonly{chp-rl}
-\includeonly{chp-opt}
+%\includeonly{chp-opt}
+%\includeonly{chp-ml-basics}
 
 \begin{document}
 
@@ -83,6 +85,9 @@
 
 \part{Machine Learning}
 
+\chapter{Machine Learning Basics}
+\include{chp-ml-basics}
+
 \chapter{Optimization for Machine Learning}
 \include{chp-opt-for-ml}
 
@@ -92,7 +97,7 @@
 
 
 \chapter{Collaborative Filtering}
-\input{chp-cf}
+\include{chp-cf}
 
 \chapter{Time Series Anomaly Detection}
 \include{chp-anomaly-detection}

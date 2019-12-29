@@ -1,0 +1,242 @@
+\newcommand{\dataset}{\ensuremath{{\mathcal{D}}}}
+
+\section{Optimal Predictor}
+\label{sec:opt-predictor}
+
+Consider a regression problem where we predict $Y\in\reals^m$ given $X\in\reals^n$.
+We want to design a predictor $g:\reals^n\to\reals^m$
+so that $g(X) \sim Y$ in some statistical sense.
+We first show that $g(X) = \Expect (Y|X)$ is the optimal predictor (or estimator)
+in least-mean-square sense.
+
+We define $g^\ast: \reals^n \to \reals^m$ where $g(x) = \Expect(Y|X=x)$. Then
+
+\begin{eqnarray*}
+\lefteqn{
+\Expect \|g(X) - Y \|_2^2
+= \Expect \|g(X) - g^\ast(X) + g^\ast(X) - Y \|_2^2
+}
+\\
+&=&
+	\Expect \|g(X) - g^\ast(X)\|_2^2
+	+ \Expect \|g^\ast(X) - Y \|_2^2
+	+ 2\Expect (g(X) - g^\ast(X))^T (g^\ast(X) - Y)
+\\
+&=&
+	\Expect \|g(X) - g^\ast(X)\|_2^2
+	+ \Expect \|g^\ast(X) - Y \|_2^2
+	+ 2\Expect_X \Expect_Y \left( (g(X) - g^\ast(X))^T (g^\ast(X) - Y) |X \right)
+\\
+&=&
+	\Expect \|g(X) - g^\ast(X)\|_2^2
+	+ \Expect \|g^\ast(X) - Y \|_2^2
+	+ 2\Expect_X (g(X) - g^\ast(X))^T \Expect_Y \left( g^\ast(X) - Y |X \right)
+\\
+&=&
+	\Expect \|g(X) - g^\ast(X)\|_2^2
+	+ \Expect \|g^\ast(X) - Y \|_2^2
+	+ 2\Expect_X (g(X) - g^\ast(X))^T \left( g^\ast(X) - \Expect (Y|X) \right)
+\\
+&=&
+	\Expect \|g(X) - g^\ast(X)\|_2^2
+	+ \Expect \|g^\ast(X) - Y \|_2^2
+	\geq \Expect \|g^\ast(X) - Y \|_2^2.
+\end{eqnarray*}
+
+Therefore $g^\ast(X)$ is the optimal predictor for $Y$ in the least-mean-square sense.
+
+
+\section{Bias and Variance}
+
+In \S\ref{sec:opt-predictor},
+we proved that $g^\ast(X) = \Expect(Y|X)$ is the optimal predictor (or estimator)
+in the least-mean-square sense.
+However, unless we have the full knowledge of the joint probability distribution of $X$ and $Y$,
+\ie, $p(X,Y)$,
+or know $\Expect(Y|X=x)$ as a function of $x$,
+it is not possible to obtain $g^\ast$.
+
+Here we assume that we obtain the predictor for $Y$ given $X$
+from a dataset \dataset\
+where
+\begin{equation}
+\dataset = \{(x_1, y_1), \ldots, (x_N, y_N)\} \subseteq \reals^n \times \reals^m.\footnote{
+Note that strictly speaking, \dataset\ is \emph{not} a set
+since the order of $(x_i, y_i) \in \reals^n \times \reals^m$ matters,
+\ie, if the order is changed, we generally have different predictor,
+and we are allowed to have identical data point.
+Thus, we should say \dataset\ is a (ordered) list of points, $(x_i, y_i) \in \reals^n \times \reals^m$.
+}
+\end{equation}
+
+Now suppose that we have a predictor $g(\cdot;\dataset): \reals^n \to \reals^m$, 
+which depends on \dataset.
+
+Then the mean square error of this predictor can be decomposed as following.
+\begin{eqnarray*}
+\lefteqn{
+\Expect_{X,Y,\dataset} \|g(X;\dataset) - Y\|_2^2
+= \Expect_{X,Y,\dataset} \|g(X;\dataset) -g^\ast(X) + g^\ast(X)- Y\|_2^2
+}
+\\
+&=&
+	\Expect_{X,Y,\dataset} \|g(X;\dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y,\dataset} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2 \Expect_{X,Y,\dataset} (g(X;\dataset) -g^\ast(X) )^T( g^\ast(X)- Y)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2 \Expect_{X,\dataset}  \Expect_Y \left( (g(X;\dataset) -g^\ast(X) )^T( g^\ast(X)- Y) |X,\dataset \right)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2 \Expect_{X,\dataset}  (g(X;\dataset) -g^\ast(X) )^T\Expect_Y \left( g^\ast(X)- Y |X,\dataset \right)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2 \Expect_{X,\dataset}  (g(X;\dataset) -g^\ast(X) )^T\Expect_Y \left( g^\ast(X)- Y |X \right)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2 \Expect_{X,\dataset}  (g(X;\dataset) -g^\ast(X) )^T( g^\ast(X)- \Expect_Y(Y|X))
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset) + \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset)\|_2^2
+	+ \Expect_{X,\dataset} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X,\dataset} (g(X;\dataset) - \Expect_\dataset g(X; \dataset))^T (\Expect_\dataset g(X; \dataset) -g^\ast(X) )
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset)\|_2^2
+	+ \Expect_{X} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X} \Expect_\dataset \left( (g(X;\dataset) - \Expect_\dataset g(X; \dataset))^T (\Expect_\dataset g(X; \dataset) -g^\ast(X) ) |X\right)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset)\|_2^2
+	+ \Expect_{X} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X} \Expect_\dataset (g(X;\dataset) - \Expect_\dataset g(X; \dataset)|X)^T (\Expect_\dataset g(X; \dataset) -g^\ast(X))
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset)\|_2^2
+	+ \Expect_{X} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X} (\Expect_\dataset g(X;\dataset) - \Expect_\dataset g(X; \dataset)|X)^T (\Expect_\dataset g(X; \dataset) -g^\ast(X))
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset)\|_2^2
+	+ \Expect_{X} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2
+	+ \Expect_{X,Y} \|g^\ast(X)- Y\|_2^2.
+\end{eqnarray*}
+Note that we use the fact that $\Expect_\dataset g(X;\dataset)$ is a function of $X$ only
+(hence does not depend on $X$).
+
+In the last equation,
+the first term is called the \emph{variance} since it is the expected value (with respect to $X$) of variance of the predictor, $g(X;\dataset)$,
+with respect to the dataset, \dataset.
+It represents the extent to which the prediction varies around its expected value.
+The second term is the expected value of the square of the bias
+where the bias is defined to be the difference between the expected value of prediction with respect to dataset and the optimal prediction.
+The second term itself is sometimes called \emph{bias}.
+The third term is called \emph{noise} since it is caused by the intrinsic noise residing in $Y$
+which cannot be reduced even with the optimal predictor (in least-mean-square sense).
+
+The following equation summarizes these three quantities.
+\begin{eqnarray}
+\label{eq:var-bias-noise}
+\lefteqn{
+\Expect_{X,Y,\dataset} \|g(X;\dataset) - Y\|_2^2
+}
+\\
+&=&
+\underbrace{\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X; \dataset)\|_2^2}_\text{variance}
++
+\underbrace{\Expect_{X} \| \Expect_\dataset g(X; \dataset) -g^\ast(X) \|_2^2}_\text{bias}
++
+\underbrace{\Expect_{X,Y} \|g^\ast(X)- Y\|_2^2}_\text{noise}.
+\nonumber
+\end{eqnarray}
+
+In general, we do not know the optimal predictor; if we knew, we would not need to train our in the first place.
+Thus we can only estimate $g(X;\dataset) - \Expect_\dataset g(X;\dataset)$ and 
+$\Expect_\dataset g(X;\dataset)-Y$.
+The mean square error can also be expressed in these two quantities as follows.
+
+\begin{eqnarray*}
+\lefteqn{
+\Expect_{X,Y,\dataset} \|g(X;\dataset) - Y\|_2^2
+=
+\Expect_{X,Y,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset) + \Expect_\dataset g(X;\dataset) -Y\|_2^2
+}
+\\
+&=&
+	\Expect_{X,Y,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset)\|_2^2
+	+ \Expect_{X,Y,\dataset} \|\Expect_\dataset g(X;\dataset) -Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X,Y,\dataset} (g(X;\dataset) - \Expect_\dataset g(X;\dataset))^T(\Expect_\dataset g(X;\dataset) -Y)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset)\|_2^2
+	+ \Expect_{X,Y} \|\Expect_\dataset g(X;\dataset) -Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X,Y} \Expect_\dataset \left( (g(X;\dataset) - \Expect_\dataset g(X;\dataset))^T(\Expect_\dataset g(X;\dataset) -Y) |X,Y\right)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset)\|_2^2
+	+ \Expect_{X,Y} \|\Expect_\dataset g(X;\dataset) -Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X,Y} \Expect_\dataset (g(X;\dataset) - \Expect_\dataset g(X;\dataset)|X,Y)^T(\Expect_\dataset g(X;\dataset) -Y)
+\\
+&=&
+	\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset)\|_2^2
+	+ \Expect_{X,Y} \|\Expect_\dataset g(X;\dataset) -Y\|_2^2
+\\
+&&
+	+ 2\Expect_{X,Y} (\Expect_\dataset g(X;\dataset) - \Expect_\dataset g(X;\dataset))^T(\Expect_\dataset g(X;\dataset) -Y)
+\\
+&=&
+{\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset)\|_2^2}
++ {\Expect_{X,Y} \|\Expect_\dataset g(X;\dataset) -Y\|_2^2}.
+\end{eqnarray*}
+
+Equating the last equation with (\ref{eq:var-bias-noise}) yields
+
+\begin{equation}
+\Expect_{X,Y,\dataset} \|g(X;\dataset) - Y\|_2^2
+= \underbrace{\Expect_{X,\dataset} \|g(X;\dataset) - \Expect_\dataset g(X;\dataset)\|_2^2}_\text{variance}
++ \underbrace{\Expect_{X,Y} \|\Expect_\dataset g(X;\dataset) -Y\|_2^2}_\text{bias + noise}
+\end{equation}
+
+Therefore in reality, we can only obtain the sum of the bias and noise (not separately)
+unless we know the quantity of the noise.
+
