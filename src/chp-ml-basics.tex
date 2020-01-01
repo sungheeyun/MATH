@@ -69,7 +69,7 @@ Thus, we should say \dataset\ is a (ordered) list of points, $(x_i, y_i) \in \re
 }
 \end{equation}
 
-Now suppose that we have a predictor $g(\cdot;D): \reals^n \to \reals^m$, 
+Now suppose that we have a predictor $g(\cdot;D): \reals^n \to \reals^m$,
 which depends on $D$.
 Now let \dataset\ denote the random variable for this data set,
 \ie,
@@ -191,7 +191,7 @@ The following equation summarizes these three quantities.
 \end{eqnarray}
 
 In general, we do not know the optimal predictor; if we knew, we would not need to train our in the first place.
-Thus we can only estimate $g(X;\dataset) - \Expect_\dataset g(X;\dataset)$ and 
+Thus we can only estimate $g(X;\dataset) - \Expect_\dataset g(X;\dataset)$ and
 $\Expect_\dataset g(X;\dataset)-Y$.
 The mean square error can also be expressed in these two quantities as follows.
 
@@ -245,4 +245,313 @@ Equating the last equation with (\ref{eq:var-bias-noise}) yields
 
 Therefore in reality, we can only obtain the sum of the bias and noise (not separately)
 unless we know the quantity of the noise.
+
+
+\newcommand{\numsamples}{\ensuremath{N}}
+\newcommand{\sequence}[3]{\ensuremath{\{#1\}_{{#2}=1}^{#3}}}
+
+\newcommand{\noise}{\ensuremath{\beta}}
+\newcommand{\noiseset}{\ensuremath{\mathcal{B}}}
+
+\newcommand{\prior}{\ensuremath{\alpha}}
+\newcommand{\priorset}{\ensuremath{\mathcal{A}}}
+
+\newcommand{\param}{\ensuremath{\theta}}
+\newcommand{\paramset}{\Theta}
+\newcommand{\paramdim}{l}
+
+\newcommand{\bigX}{\tilde{X}}
+\newcommand{\bigY}{\tilde{Y}}
+\newcommand{\bigx}{\ensuremath{\tilde{x}}}
+\newcommand{\bigy}{\ensuremath{\tilde{y}}}
+
+\newcommand{\mles}[1]{{#1}_\mathrm{ML}}
+\newcommand{\maps}[1]{{#1}_\mathrm{MAP}}
+
+\section{Maximum Likelihood Estimation}
+
+Suppose that $X \in\reals^n$ and $Y \in\reals^m$ are random variables
+representing inputs (or independent variables or predictors or features)
+and outputs (or dependent variables or responses).
+We want to find a parameterized model to predict $Y$ from $X$.
+
+We consider the parameter $\param\in\paramset$
+where $\paramset\subset \reals^\paramdim$ is the set of all possible parameter values,
+and the model, $g: \reals^n \times \reals^\paramdim \to \reals^m$, such that
+$g(X; \param)$ is close to $Y$
+in some statistical sense.
+
+We further assume that the conditional probability of $Y$ given $g(X; \param)$ can be characterized by $\noise\in\noiseset$,
+\ie, $p(Y|g(X;\param))$ is a function of $\noise$
+where \noiseset\ is the set of all possible values for $\noise$.
+To express that $p(Y|g(X;\param))$ is a function of $\noise$,
+we will use a notation, $p(Y|X;\param, \noise)$, for $p(Y|g(X;\param))$.
+
+Now suppose that we have observed \numsamples\ independent data sample, \sequence{(x_i, y_i)}{i}{\numsamples}
+where $x_i\in\reals^n$ and $y_i\in\reals^m$.
+We want to find $\param\in\paramset$ which maximizes the probability of this event,
+\ie,
+\begin{equation}
+\label{eq:fuxy}
+p\left((X_1, Y_1)=(x_1, y_1), \ldots (X_\numsamples, Y_\numsamples)=(x_\numsamples, y_\numsamples)\right)
+\end{equation}
+
+For notational convenience, we define two random variables, $\bigX\in\reals^{n\times \numsamples}$
+and $\bigY\in\reals^{m\times \numsamples}$, such that
+\begin{equation}
+\bigX = \begin{my-matrix}{ccc}
+X_1 &\ldots &X_\numsamples
+\end{my-matrix}
+\end{equation}
+and
+\begin{equation}
+\bigY = \begin{my-matrix}{ccc}
+Y_1 &\ldots &Y_\numsamples
+\end{my-matrix}.
+\end{equation}
+We also defined $\bigx\in\reals^{n\times \numsamples}$ and $\bigy\in\reals^{m\times \numsamples}$, such that
+\begin{equation}
+\bigx = \begin{my-matrix}{ccc}
+x_1 &\ldots &x_\numsamples
+\end{my-matrix}
+\end{equation}
+and
+\begin{equation}
+\bigy = \begin{my-matrix}{ccc}
+y_1 &\ldots &y_\numsamples
+\end{my-matrix}.
+\end{equation}
+
+Then (\ref{eq:fuxy}) becomes
+\begin{equation}
+p(\bigX = \bigx, \bigY=\bigy).
+\end{equation}
+Bayes's theorem and the independence among $(X_i, Y_i)$ imply
+\begin{eqnarray*}
+\lefteqn{
+p(\bigX = \bigx, \bigY=\bigy)
+= \prod_{i=1}^\numsamples p(X_i=x_i, Y_i=y_i)
+}
+\\
+&=&
+\prod_{i=1}^\numsamples p(X_i=x_i| Y_i=y_i; \param, \noise) p(X_i=x_i)
+\\
+&\propto&
+\prod_{i=1}^\numsamples p(X_i=x_i| Y_i=y_i; \param, \noise).
+\end{eqnarray*}
+Here $p(X_i=x_i| Y_i=y_i; \param, \noise)$ is called \emph{likelihood function}.
+
+
+The maximum likelihood estimation (MLE) (or learning) is to find $\param$ (and $\noise$) which maximizes this probability.
+Since the log function is a strictly increasing function, taking log on this probability does give us the same results when maximizing it.
+\begin{equation}
+\label{eq:log-likelihood}
+\log p(\bigX = \bigx, \bigY=\bigy)
+= \sum_{i=1}^\numsamples \log p(X_i=x_i| Y_i=y_i; \param, \noise) + \text{constant}
+\end{equation}
+In many cases, this log form is preferable due to its numerical property.
+
+
+The optimal value of \param\ for the maximum likelihood estimation (when $\noise$ is fixed) can be written as
+\begin{equation}
+\label{eq:mle-solution}
+\mles{\param}(\noise) = \argmax_{\param\in\paramset} \sum_{i=1}^\numsamples \log p(X_i=x_i| Y_i=y_i; \param, \noise).
+\end{equation}
+
+Note that the solution is a function of $\noise$ when it is fixed.
+We sometimes want to find the optimal value for $\noise$, too.
+In this case,
+we have
+
+\begin{equation}
+\label{eq:mle-solution-1}
+(\mles{\param}, \mles{\noise}) = \argmax_{(\param, \noise)\in\paramset\times \noiseset} \sum_{i=1}^\numsamples \log p(X_i=x_i| Y_i=y_i; \param, \noise).
+\end{equation}
+
+Note that both of these are point estimation, \ie,
+we want to find one value for \param\ (and \noise) to maximize the log likelihood function.
+
+Now the MLE model is given by $g(\cdot; \mles{\param}): \reals^n \to \reals^m$,
+\ie, given $x\in\reals^n$, we can predict $y\in\reals^m$ by $g(x; \mles{\param})$.
+
+\section{Maximum a Posteriori Estimation}
+
+In MLE, we regard \param\ as a deterministic variable,
+which is called Frequentist perspective.
+
+However, we sometimes have prior knowledge of the distribution of \param\ (or belief about \param).
+In this situation, we want to find probability distribution of \param\ after observing some evidence,
+\eg, the \numsamples\ data sample we have observed, \sequence{(x_i, y_i)}{i}{\numsamples}.
+
+The natural way of finding the distribution of \param\ after observing this evidence
+is to evaluate the condition probability of \param\ given \bigx\ and \bigy, \ie,
+\begin{equation}
+p(\param|\bigX=\bigx, \bigY=\bigy).
+\end{equation}
+Note that \param\ is considered to be a \emph{random} variable
+unlike in MLE case.
+
+Here we introduce a new parameter $\prior\in\priorset$ that characterizes the distribution of \param\
+where \priorset\ is the set of all the possible values of \prior.
+
+Since the data samples are assumed to be independent,
+the Bayes' theorem implies that
+\begin{eqnarray*}
+\lefteqn{
+p(\param|\bigX=\bigx, \bigY=\bigy; \prior, \noise)
+=
+p(\bigX=\bigx, \bigY=\bigy| \param; \prior, \noise)
+p(\param; \prior, \noise)
+/ p(\bigX=\bigx, \bigY=\bigy)
+}
+\\
+&=&
+p(\bigX=\bigx, \bigY=\bigy| \param; \noise) p(\param; \prior)
+/ p(\bigX=\bigx, \bigY=\bigy)
+\\
+&\propto&
+p(\bigX=\bigx, \bigY=\bigy| \param; \noise) p(\param; \prior)
+\\
+&=&
+p(\param; \prior)
+\prod_{i=1}^\numsamples p(X_i=x_i, Y_i=y_i| \param; \noise)
+\\
+&=&
+p(\param; \prior)
+\prod_{i=1}^\numsamples p(Y_i=y_i|X_i=x_i,  \param; \noise)  p(X_i=x_i| \param; \noise)
+\\
+&=&
+p(\param; \prior)
+\prod_{i=1}^\numsamples p(Y_i=y_i|X_i=x_i,  \param; \noise)  p(X_i=x_i)
+\\
+&\propto&
+p(\param; \prior)
+\prod_{i=1}^\numsamples p(Y_i=y_i|X_i=x_i,  \param; \noise)
+\end{eqnarray*}
+
+The maximum a posteriori (MAP) estimation is to find \param\ (when \noise\ is fixed)
+which maximizes this posteriori probability.
+Thus, the MAP solution can be expressed as
+\begin{equation}
+\label{eq:map-solution}
+\maps{\param}(\prior, \noise) = \argmax_{\param\in\paramset}
+\left(
+\log p(\param; \prior)
++
+\sum_{i=1}^\numsamples \log p(Y_i=y_i|X_i=x_i,  \param; \noise)
+\right)
+\end{equation}
+where $p(Y_i=y_i|X_i=x_i, \param; \noise)$ is called \emph{likelihood function}.
+
+Note the difference between the likelihood function, $p(Y_i=y_i|X_i=x_i;  \param, \noise)$, in (\ref{eq:mle-solution})
+and the likelihood function, $p(Y_i=y_i|X_i=x_i,  \param; \noise)$, in (\ref{eq:map-solution})
+where \param\ in (\ref{eq:mle-solution}) is an optimization variable
+and \param\ in (\ref{eq:map-solution}) is a variable for a random variable.
+
+Now the MAP model is given by $g(\cdot; \maps{\param}): \reals^n \to \reals^m$,
+\ie, given $x\in\reals^n$, we can predict $y\in\reals^m$ by $g(x; \maps{\param})$.
+
+
+\section{Bayesian prior update}
+
+Note that both MLE and MAP estimation is a point estimation,
+\ie, to find one solution that maximizes some probability.
+
+However, the posterior probability $p(\param|\bigX=\bigx, \bigY=\bigy; \prior, \noise)$ can be used to update the prior probability.
+
+In Bayesian probability theory,
+if the posterior distributions are in the same probability distribution family
+as the prior probability distribution,
+the prior and posterior are then called \emph{conjugate distributions},
+and the prior is called a \emph{conjugate prior} for the likelihood function.
+
+In this case, we can update the prior by updating \prior.
+Suppose that we have initial prior, $\prior^{(0)} \in \priorset$.
+After we observing first data samples, $(\bigx^{(1)}, \bigy^{(1)})$,
+we evaluate the posterior probability $p(\param|\bigX=\bigx^{(1)}, \bigY=\bigy^{(1)}; \prior^{(0)}, \noise)$
+which can be characterized by some $\param^+$ due to conjugate distribution assumption.
+We let $\prior^{(1)}$ be this updated parameter.
+We can repeat this process every time we observe new set of data samples.
+This process can be expressed as
+\begin{equation}
+\prior^{(0)}
+\xrightarrow{\bigx^{(1)}, \bigy^{(1)}}
+\prior^{(1)}
+\xrightarrow{\bigx^{(2)}, \bigy^{(2)}}
+\prior^{(2)}
+\xrightarrow{\bigx^{(2)}, \bigy^{(2)}}
+\prior^{(3)}
+\cdots
+\end{equation}
+
+We can see this process as the one similar to what happens in our brain.
+A simplified version of explaining human learning process is
+to update its prior knowledge whenever it observes new evidence.
+For example,
+if one has observed that when it rains,
+the temperature is high,
+her prior knowledge is that
+\begin{equation}
+\text{rain} \rightarrow \text{high temperature}.
+\end{equation}
+However, if she experiences a rainy day with low temperature,
+her knowledge is updated as something like
+\begin{equation}
+\text{rain} \rightarrow \left\{\begin{array}{ll}
+\text{high temperature} &\text{with probability}\ 0.9
+\\
+\text{low temperature} &\text{with probability}\ 0.1
+\end{array}\right.
+\end{equation}
+Now this becomes her new prior.
+If she observes more rainy cold days,
+her knowledge is updated as something like
+\begin{equation}
+\text{rain} \rightarrow \left\{\begin{array}{ll}
+\text{high temperature} &\text{with probability}\ 0.7
+\\
+\text{low temperature} &\text{with probability}\ 0.3
+\end{array}\right.
+\end{equation}
+
+This analogy tells why the prior in Bayesian statistics
+is sometimes called Bayesian belief.
+This prior belief is something that can be constantly updated with new evidence.
+
+
+\section{Predictive Distribution}
+
+If \param\ is fixed,
+the probability of $y\in\reals^m$ given $x\in\reals^n$,
+$p(Y=y|X=x; \param, \noise)$,
+is solely characterized by $\noise\in\noiseset$.
+However, if we regard \param\ as a random variable with distribution characterized by \prior,
+the probability of $y\in\reals^m$ given $x\in\reals^n$
+can be evaluated by
+\begin{eqnarray*}
+\lefteqn{
+p(Y=y|X=x; \prior, \noise)
+=
+\int_{\param\in\paramset} p(Y=y, \param|X=x; \prior, \noise) d\param
+}
+\\
+&=&
+\int_{\param\in\paramset} p(Y=y| X=x,\param; \prior, \noise) p(\param|X=x; \prior, \noise) d\param
+\\
+&=&
+\int_{\param\in\paramset} p(Y=y| X=x,\param; \noise) p(\param; \prior) d\param,
+\end{eqnarray*}
+\ie,
+\begin{equation}
+\label{eq:pred-dist}
+p(Y=y|X=x; \prior, \noise) = \int_{\param\in\paramset} p(Y=y| X=x,\param; \noise) p(\param; \prior) d\param.
+\end{equation}
+
+This is called predictive distribution.
+This Bayesian statistical predictor,
+if (\ref{eq:pred-dist}) can be efficiently evaluated,
+not only gives the point estimation, \eg, by mean or mode,
+but also the distribution of the output.
+One advantage of this approach is that
+we can evaluate the confidence interval
 
