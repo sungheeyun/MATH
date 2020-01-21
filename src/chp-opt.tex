@@ -346,7 +346,7 @@ for all $x \in X$ and $y\in Y$.
 Now if $x^\ast$ and $\lambda^\ast$
 are primal and dual optimal points for a problem in which strong duality obtains,
 the form a saddle-point for the Lagrangian.
-Conversely, if $(x,\lambda)$ is a saddle-point of the Lagragian, then $x$ is primal optimal, $\lambda$ is dual optimal,
+Conversely, if $(x,\lambda)$ is a saddle-point of the Lagrangian, then $x$ is primal optimal, $\lambda$ is dual optimal,
 and the optimal duality gap is zero.
 
 To prove these, assume that $x^\ast\in\optdomain$ and $(\lambda^\ast, \nu^\ast) \in \reals^m_+ \times \reals^p$
@@ -417,6 +417,130 @@ $g(\tilde{\lambda}, \tilde{\nu}) = f_0(\tilde{x})$.
 Therefore $\tilde{x}$ is an optimal solution for the primal problem
 and $(\tilde{\lambda}, \tilde{\nu})$  is an optimal solution for the dual problem,
 hence the proof.
+
+
+\section{Convex optimization problems}
+
+\subsection{Equality constrained problem}
+
+Consider the following equality constrained problem:
+
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & f(x)
+\\
+\mbox{subject to} & Ax = b
+\end{array}
+\end{equation}
+where $x\in\reals^n$ is the optimization variable,
+$A\in\reals^{m\times n}$,
+and
+$b\in\reals^{m}$.
+The Lagrangian is
+\begin{equation}
+L(x,\nu) = f(x) + \nu^T (Ax-b)
+\end{equation}
+and the Lagrange dual function is
+\begin{equation}
+g(\nu) = \inf_{x\in\reals^n} L(x,\nu) = - \sup_{x\in\reals^n} (-\nu^T Ax -f(x)) -b^T \nu
+= - f^\ast(-A^T\nu) - b^T \nu
+\end{equation}
+
+The KKT optimality conditions are
+
+\begin{eqnarray}
+\mbox{primal feasibility:}
+&&Ax = b
+\\
+\mbox{gradient of Lagrangian vanishes:}
+&& \nabla f(x) + A^T\nu = 0
+\end{eqnarray}
+
+\subsubsection{Equality constrained problem examples}
+
+Consider the following equality constraint quadratic problem:
+\begin{equation}
+\begin{array}{ll}
+\mbox{minimize} & x^T P x + q^Tx
+\\
+\mbox{subject to} & Ax = b
+\end{array}
+\end{equation}
+where
+$x\in\reals^n$ is the optimization variable,
+$P\in\posdefset{n}$,
+$q\in\reals^{n}$,
+$A\in\reals^{m\times n}$,
+and
+$b\in\reals^{m}$.
+
+The Lagrangian is
+\begin{equation}
+L(x,\nu) = x^T P x + q^T x + \nu^T (Ax-b).
+\end{equation}
+
+The gradient of the Lagrangian with respect to $x$ is
+\begin{equation}
+\nabla_x L(x,\nu) = 2Px + q + A^T\nu = 0,
+\end{equation}
+hence
+\begin{equation}
+\argmin_{x} L(x,\nu) = -\frac{1}{2} P^{-1} (q + A^T\nu)
+\end{equation}
+
+The KKT conditions are
+\begin{eqnarray}
+\mbox{primal feasibility:}
+&&Ax = b
+\\
+\mbox{gradient of Lagrangian vanishes:}
+&& 2 Px + q + A^T\nu = 0
+\end{eqnarray}
+which are equivalent to
+\begin{equation}
+\begin{my-matrix}{cc}
+2P & A^T
+\\
+A & 0
+\end{my-matrix}
+\begin{my-matrix}{c}
+x
+\\
+\nu
+\end{my-matrix}
+=
+\begin{my-matrix}{c}
+-q
+\\
+b
+\end{my-matrix}.
+\end{equation}
+
+
+The conjugate of the objective function is
+\begin{equation}
+f^\ast(y) = \sup_{x} (y^Tx - x^TPx - q^Tx).
+\end{equation}
+Since the gradient of $y^Tx - x^TPx - q^Tx$ is $y-q - 2Px$,
+\begin{equation}
+\argsup_{x} (y^Tx - x^TPx - q^Tx) =  \frac{1}{2} P^{-1}(y-q),
+\end{equation}
+thus
+\begin{eqnarray*}
+f^\ast(y)
+&=&
+- \frac{1}{4} (y-q)^T P^{-1} (y-q) + \frac{1}{2}(y-q)^TP^{-1}(y-q) =  \frac{1}{4} (y-q)^T P^{-1} (y-q)
+\\
+&=&
+\frac{1}{4} \left(
+y^T P^{-1} y
+-2q^T P^{-1} y
++q^T P^{-1} q
+\right)
+\end{eqnarray*}
+
+
+
 
 
 \section{Unconstrained minimization}
