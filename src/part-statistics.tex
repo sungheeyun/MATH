@@ -156,7 +156,7 @@ Following the very same argument as before will lead to (\ref{eq:pdf-rv-transfor
 %\end{equation}
 %for any $y\in\reals^n$ where $\preceq$ is the componentwise inequality.
 %Since $g$ is an invertible and stricly increasing function, the inverse function $g^{-1}: g(\reals^n) \to \reals^n$
-%exists and 
+%exists and
 %(\ref{eq:wnux-2}) becomes
 %\[
 %    F_Y(y) = \Prob\{g(X) \preceq y\}
@@ -283,6 +283,92 @@ Hence, the correlation coefficient of $X_i$ and $Y$ for each $i$ is
 
 \emph{Therefore $Y$ has clear relation with $X_i$'s, but each correlation coefficient can be arbitrarily small as $n$ grows!}
 
+
+\section{Empirical Cumulative Distribution Function}
+
+Suppose that we have $n$ (scalar) data, $x_1, \ldots, x_n \in\reals$.
+If we assume that this data are from some probability distribution of a random variable $X$,
+one of the non-parameterized estimation method for the distribution is by empirical cumulative distribution function (ECDF).
+The ECDF is defined by
+\begin{equation}
+\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n u(x-x_i)
+\end{equation}
+where the step function $u:\reals\to\reals$ is defined by
+\begin{equation}
+u(x) = \left\{\begin{array}{ll}
+1 & \mbox{if } x \geq 0
+\\
+0 & \mbox{otherwise.}
+\end{array}\right.
+\end{equation}
+
+Under mild condition, we have
+\begin{equation}
+\lim_{n\to\infty} F_n(x) = F_X(x)
+\end{equation}
+where $F_X:\reals\to\reals$ is the true cumulative distribution function,
+\ie,
+\begin{equation}
+F_X(x) = \Prob\{X\leq x\}.
+\end{equation}
+
+\subsection{ECDF of mixture distribution}
+
+Suppose that we have $m$ set of data $\{x_{ji}\}_{i=1}^{n_j}$
+where $j=1,\ldots, m$ and $n_j$ refers to the size of the $j$th data set.
+
+If we assume that the $j$th data set is drawn from a random variable $X_j$,
+the $j$th ECDF is an approximate of the $j$th true CDF,
+\ie,
+\begin{equation}
+\hat{F}_j(x) = \frac{1}{n_j} \sum_{i=1}^{n_j} u(x-x_{ji})
+\sim F_{X_j}(x).
+\end{equation}
+
+Now let us figure out what is the relationship between the ECDF formed by all these data points
+and the $m$ original CDFs.
+Note that there are $\sum_{j=1}^m n_j$ data points in total.
+
+It turns out that the ECDF formed by all data points is an approximate for the mixture distribution
+of $X_1$, \ldots, $X_m$
+where the $j$th mixture probability is $\pi_j = n_j / \sum_{k=1}^m n_k$.
+Note that $\sum_{j=1}^m \pi_j = 1$.
+
+To be more precise, let us defined a random variable $\tilde{X}$
+the probability density function (PDF) of which is defined by
+\begin{equation}
+\label{eq:gyusj}
+f_{\tilde{X}}(x) = \sum_{j=1}^m \pi_j f_{X_j}(x).
+\end{equation}
+Then the CDF of $\tilde{X}$ is
+\begin{equation}
+F_{\tilde{X}}(x)
+= \int_{-\infty}^x f_{\tilde{X}}(\tilde{x}) d\tilde{x}
+= \sum_{j=1}^m \pi_j \int_{-\infty}^x f_{X_j}(\tilde{x}) d\tilde{x}
+= \sum_{j=1}^m \pi_j F_{X_j}(x).
+\end{equation}
+
+Now the ECDF obtained from \emph{all} $\sum_{j=1}^m n_j$ data points is (by definition)
+\begin{eqnarray*}
+\hat{F}(x) &=& \frac{1}{\sum_{j=1}^m n_j} \sum_{j=1}^m \sum_{i=1}^{n_j} u(x-x_{ji})
+= \frac{1}{\sum_{j=1}^m n_j} \sum_{j=1}^m \frac{n_j}{n_j} \sum_{i=1}^{n_j} u(x-x_{ji})
+\\
+&=&
+\sum_{j=1}^m \frac{n_j}{\sum_{j=1}^m n_j} \left( \frac{1}{n_j} \sum_{i=1}^{n_j} u(x-x_{ji}) \right)
+\\
+&=&
+\sum_{j=1}^m p_j \hat{F}_j(x).
+\end{eqnarray*}
+
+Since $\lim_{n_j\to\infty} \hat{F}_j(x) = F_{X_j}(x)$ for each $j$,
+\begin{equation}
+\lim_{n_1, \ldots, n_j \to\infty} \hat{F}(x) = \sum_{j=1}^m p_j F_{X_j}(x) = \hat{F}_{\tilde{X}}(x),
+\end{equation}
+\ie,
+the ECDF converges to the CDF of $\tilde{X}$.
+
+Therefore the ECDF formed by all the data points $\{x_{ji}\}_{i=1}^{n_j}$
+is the ECDF for the mixture distribution defined by (\ref{eq:gyusj}).
 
 
 
@@ -569,4 +655,5 @@ D(p\|q) = -\Expect_p \log q(X) + \Expect_p \log p(X)
 = -\Expect_p \log q(X) - H(p)
 \end{equation}
 where the first term, $-\Expect_p \log q(X)$ is called the \emph{cross-entropy} of $p$ and $q$.
+
 
