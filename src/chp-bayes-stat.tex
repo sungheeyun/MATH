@@ -1,0 +1,65 @@
+\section{Bayesian Theorem}
+
+Suppose that $A$ and $B$ are two events with $\prob{B} \neq 0$. Then
+\begin{equation}
+\label{eq:bayes-theorem}
+\condprob{A}{B} = \frac{\condprob{B}{A} \prob{A}}{\prob{B}}.
+\end{equation}
+This is called \emph{Bayesian theorem}.
+
+\section{Bayesian Inference}
+
+\begin{equation}
+p(\theta|X)
+= \frac{p(X|\theta) p(\theta)}{ p(X)}
+= \frac{p(X|\theta) p(\theta)}{ \int p(X|\theta) p(\theta) d \theta }
+\propto
+p(X|\theta) p(\theta)
+=
+\mathrm{likelihood} \times \mathrm{prior}
+\end{equation}
+
+
+\section{Conjugate prior}
+
+\subsection{Bernoulli distribution}
+
+For Bernoulli distribution,
+the conjugate prior is the beta distribution.
+\begin{equation}
+p(\theta) = \frac{1}{B(a,b)} \theta^{a-1} (1-\theta)^{b-1}
+\end{equation}
+
+Then the posterior probability can be expressed as
+\begin{eqnarray*}
+p(\theta|X)
+&\propto& p(X|\theta) p(\theta)
+\propto \left(\prod_{i=1}^n \theta^{I(x_i=1)} (1-\theta)^{I(x_i=0)} \right) \theta^{a-1} (1-\theta)^{b-1}
+\\
+&=&
+\theta^{k+a-1}(1-\theta)^{n-k+b-1}
+\end{eqnarray*}
+where $k$ is the number of $1$s in $X$.
+Thus $p(\theta|X) \sim \mathrm{Beta}(k+a, n-k+b)$, \ie,
+\begin{equation}
+p(\theta|X) = \frac{1}{B(k+a,n-k+b)} \theta^{k+a-1}(1-\theta)^{n-k+b-1}.
+\end{equation}
+
+
+
+
+
+
+\subsection{Gaussian distribution}
+
+\newcommand{\gauss}{\mathcal{N}}
+
+Suppose that $X \sim \gauss(\mu, \tau^{-1})$ and $\mu \sim \gauss(m,\lambda^{-1})$.
+Then the posterior distribution is
+\begin{equation}
+p(\mu|X) \sim \gauss\left(
+\frac{\tau \sum_{i=1}^n x_i + \lambda m}{n\tau + \lambda},
+(n\tau + \lambda)^{-1}
+\right)
+\end{equation}
+

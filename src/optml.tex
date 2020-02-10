@@ -1,4 +1,4 @@
- \documentclass[10pt, twoside]{book}   	% use "amsart" instead of "article" for AMSLaTeX format
+\documentclass[10pt, twoside]{book}   	% use "amsart" instead of "article" for AMSLaTeX format
 
 \newcommand{\theoremsandsuchchapter}{}
 
@@ -48,6 +48,7 @@
 %\includeonly{chp-opt}
 %\includeonly{chp-ml-basics}
 %\includeonly{chp-cvx-analysis}
+%\includeonly{chp-stat-basics}
 
 \begin{document}
 
@@ -81,8 +82,16 @@
 
 
 \part{Statistics}
-\include{part-statistics}
+%\include{part-statistics}
 
+\chapter{Statistics Basics}
+\include{chp-stat-basics}
+
+\chapter{Bayesian Statistics}
+\include{chp-bayes-stat}
+
+\chapter{Information Theory}
+\include{chp-info-theory}
 
 \part{Machine Learning}
 

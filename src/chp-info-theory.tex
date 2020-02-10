@@ -1,0 +1,40 @@
+\section{Basics}
+
+\subsection{Entropy}
+
+\subsection{Mutual Information}
+
+The mutual information (MI) is defined by
+
+\begin{equation}
+I(X;Y) = \Expect \log \frac{f_{X,Y}(X,Y)}{f_{X}(X)f_{Y}(Y)}
+= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \log \frac{f_{X,Y}(x,y)}{f_{X}(x)f_{Y}(y)} \, dx dy
+\end{equation}
+
+
+\subsection{Relative Entropy (Kullback–Leibler divergence)}
+
+The relative entropy of the two random distributions, $p$ and $q$, is defined by
+\begin{equation}
+\label{eq:def-rel-ent}
+D(p\|q) = \Expect_p \log\left(\frac{p(X)}{q(X)}\right).
+\end{equation}
+
+The relative entropy represents the difference measure between the two distributions.
+Unlike the mutual information, relative entropy is asymmetric, \ie,
+in general, $D(p\|q) \neq D(q\|p)$.
+It is always nonnegative quantity since the Jensen's inequality implies that
+\begin{equation}
+-D(p\|q) = \Expect_p \log\left(\frac{q(X)}{p(X)}\right)
+\leq \log\left(\Expect_p \left(\frac{q(X)}{p(X)}\right)\right)
+= \log\left(\int_{-\infty}^\infty q(x)\, dx \right) = 0.
+\end{equation}
+
+The relative entropy can be rewritten as
+\begin{equation}
+D(p\|q) = -\Expect_p \log q(X) + \Expect_p \log p(X)
+= -\Expect_p \log q(X) - H(p)
+\end{equation}
+where the first term, $-\Expect_p \log q(X)$ is called the \emph{cross-entropy} of $p$ and $q$.
+
+

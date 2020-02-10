@@ -1,8 +1,6 @@
 
-
-\chapter{Statistics Basics}
-
-\section{Correlation coefficients}
+\section{Probability space and random variables}
+\subsection{Correlation coefficients}
 
 The correlation coefficients of two random variables, $X$ and $Y$, is defined by
 
@@ -315,7 +313,7 @@ where $F_X:\reals\to\reals$ is the true cumulative distribution function,
 F_X(x) = \Prob\{X\leq x\}.
 \end{equation}
 
-\subsection{ECDF of mixture distribution}
+\subsection{Mixture distribution of ECDF}
 
 Suppose that we have $m$ set of data $\{x_{ji}\}_{i=1}^{n_j}$
 where $j=1,\ldots, m$ and $n_j$ refers to the size of the $j$th data set.
@@ -360,12 +358,12 @@ Now the ECDF obtained from \emph{all} $\sum_{j=1}^m n_j$ data points is (by defi
 \sum_{j=1}^m \frac{n_j}{\sum_{j=1}^m n_j} \left( \frac{1}{n_j} \sum_{i=1}^{n_j} u(x-x_{ji}) \right)
 \\
 &=&
-\sum_{j=1}^m p_j \hat{F}_j(x).
+\sum_{j=1}^m \pi_j \hat{F}_j(x).
 \end{eqnarray*}
 
 Since $\lim_{n_j\to\infty} \hat{F}_j(x) = F_{X_j}(x)$ for each $j$,
 \begin{equation}
-\lim_{n_1, \ldots, n_j \to\infty} \hat{F}(x) = \sum_{j=1}^m p_j F_{X_j}(x) = \hat{F}_{\tilde{X}}(x),
+\lim_{n_1, \ldots, n_j \to\infty} \hat{F}(x) = \sum_{j=1}^m \pi_j F_{X_j}(x) = \hat{F}_{\tilde{X}}(x),
 \end{equation}
 \ie,
 the ECDF converges to the CDF of $\tilde{X}$.
@@ -374,10 +372,27 @@ Therefore the ECDF formed by all the data points $\{x_{ji}\}_{i=1}^{n_j}$
 is the ECDF for the mixture distribution defined by (\ref{eq:gyusj}).
 
 
+\subsection{ECDF of mixture distribution}
 
-\chapter{Various distributions}
+We discussed what distribution a mixture of data points from different distributions represent.
+Here we try to do (kind of) converse,
+\ie,
+given arbitrary mixture probabilities, $\pi_j$ ($j=1,\ldots,m$),
+form ECDF approximating the following mixture distribution.
+\begin{equation}
+\label{eq:fydhf}
+\sum_{j=1}^m \pi_j f_{X_j}(x).
+\end{equation}
 
-\section{Log-normal distribution}
+It can be proved that the following (modified) ECDF approximates the mixture distribution in (\ref{eq:fydhf}).
+\begin{equation}
+\hat{F}(x) = \sum_{j=1}^m \frac{\pi_j}{n_j} \sum_{i=1}^{n_j} u(x- x_{ji}).
+\end{equation}
+
+
+\section{Various distributions}
+
+\subsection{Log-normal distribution}
 
  We say $Y$ is log-normally distributed, if, for $X\sim\mathcal{N}(\mu_X,\sigma_X^2)$,
  \begin{equation}
@@ -394,7 +409,7 @@ f_Y(y) &=& \frac{1}{\exp(\log(y))} \cdot \frac{1}{\sqrt{2\pi} \sigma_X}  \exp\le
 \end{eqnarray}
 
 
-\subsection{Some statistics}
+\subsubsection{Some statistics}
 
 The definition of the expected value implies
 \begin{eqnarray*}
@@ -525,7 +540,7 @@ y = \exp(\mu_X-\sigma_X^2),
 which is the mode of $Y$.
 
 
-\subsection{Parameter estimation}
+\subsubsection{Parameter estimation}
 
 Now assume that we have a log-normally distributed random variable, $Y\in\ppreals$,
 with $\mu_Y$ and $\sigma_Y^2$ as its mean and variance.
@@ -544,119 +559,3 @@ thus
 \mu_X &=& \log(\mu_Y) - \sigma_X^2/2 = \log(\mu_Y) - \log(1+{\sigma_Y^2}/{\mu_Y^2})/2
 = \frac{1}{2} \log\left(\frac{\mu_Y^2}{1+{\sigma_Y^2}/{\mu_Y^2}}\right).
 \end{eqnarray*}
-
-
-\chapter{Bayesian Statistics}
-
-\section{Bayesian Theorem}
-
-Suppose that $A$ and $B$ are two events with $\prob{B} \neq 0$. Then
-\begin{equation}
-\label{eq:bayes-theorem}
-\condprob{A}{B} = \frac{\condprob{B}{A} \prob{A}}{\prob{B}}.
-\end{equation}
-This is called \emph{Bayesian theorem}.
-
-\section{Bayesian Inference}
-
-\begin{equation}
-p(\theta|X)
-= \frac{p(X|\theta) p(\theta)}{ p(X)}
-= \frac{p(X|\theta) p(\theta)}{ \int p(X|\theta) p(\theta) d \theta }
-\propto
-p(X|\theta) p(\theta)
-=
-\mathrm{likelihood} \times \mathrm{prior}
-\end{equation}
-
-
-\section{Conjugate prior}
-
-\subsection{Bernoulli distribution}
-
-For Bernoulli distribution,
-the conjugate prior is the beta distribution.
-\begin{equation}
-p(\theta) = \frac{1}{B(a,b)} \theta^{a-1} (1-\theta)^{b-1}
-\end{equation}
-
-Then the posterior probability can be expressed as
-\begin{eqnarray*}
-p(\theta|X)
-&\propto& p(X|\theta) p(\theta)
-\propto \left(\prod_{i=1}^n \theta^{I(x_i=1)} (1-\theta)^{I(x_i=0)} \right) \theta^{a-1} (1-\theta)^{b-1}
-\\
-&=&
-\theta^{k+a-1}(1-\theta)^{n-k+b-1}
-\end{eqnarray*}
-where $k$ is the number of $1$s in $X$.
-Thus $p(\theta|X) \sim \mathrm{Beta}(k+a, n-k+b)$, \ie,
-\begin{equation}
-p(\theta|X) = \frac{1}{B(k+a,n-k+b)} \theta^{k+a-1}(1-\theta)^{n-k+b-1}.
-\end{equation}
-
-
-
-
-
-
-\subsection{Gaussian distribution}
-
-\newcommand{\gauss}{\mathcal{N}}
-
-Suppose that $X \sim \gauss(\mu, \tau^{-1})$ and $\mu \sim \gauss(m,\lambda^{-1})$.
-Then the posterior distribution is
-\begin{equation}
-p(\mu|X) \sim \gauss\left(
-\frac{\tau \sum_{i=1}^n x_i + \lambda m}{n\tau + \lambda},
-(n\tau + \lambda)^{-1}
-\right)
-\end{equation}
-
-
-
-
-
-\chapter{Information Theory}
-
-\section{Basics}
-
-
-\subsection{Entropy}
-
-\subsection{Mutual Information}
-
-The mutual information (MI) is defined by
-
-\begin{equation}
-I(X;Y) = \Expect \log \frac{f_{X,Y}(X,Y)}{f_{X}(X)f_{Y}(Y)}
-= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \log \frac{f_{X,Y}(x,y)}{f_{X}(x)f_{Y}(y)} \, dx dy
-\end{equation}
-
-
-\subsection{Relative Entropy (Kullback–Leibler divergence)}
-
-The relative entropy of the two random distributions, $p$ and $q$, is defined by
-\begin{equation}
-\label{eq:def-rel-ent}
-D(p\|q) = \Expect_p \log\left(\frac{p(X)}{q(X)}\right).
-\end{equation}
-
-The relative entropy represents the difference measure between the two distributions.
-Unlike the mutual information, relative entropy is asymmetric, \ie,
-in general, $D(p\|q) \neq D(q\|p)$.
-It is always nonnegative quantity since the Jensen's inequality implies that
-\begin{equation}
--D(p\|q) = \Expect_p \log\left(\frac{q(X)}{p(X)}\right)
-\leq \log\left(\Expect_p \left(\frac{q(X)}{p(X)}\right)\right)
-= \log\left(\int_{-\infty}^\infty q(x)\, dx \right) = 0.
-\end{equation}
-
-The relative entropy can be rewritten as
-\begin{equation}
-D(p\|q) = -\Expect_p \log q(X) + \Expect_p \log p(X)
-= -\Expect_p \log q(X) - H(p)
-\end{equation}
-where the first term, $-\Expect_p \log q(X)$ is called the \emph{cross-entropy} of $p$ and $q$.
-
-
