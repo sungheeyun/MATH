@@ -541,6 +541,41 @@ y^T P^{-1} y
 
 
 
+\subsection{Special optimization problem examples}
+
+\subsubsection{Unconstrained max-det problem}
+
+We consider the following unconstrained max-det problem:
+\begin{equation}
+\label{eq:prob:unc-max-det}
+\begin{array}{ll}
+\mbox{minimize} & - \log \det(X) + \Tr A X
+\end{array}
+\end{equation}
+where the optimization variable is $X\in\posdefset{n}$ and $A \in \posdefset{n}$.
+
+Let $f:\posdefset{n} \to \reals$ be the objective function,
+\ie, $f(X) = - \log \det(X) + \Tr A X$.
+Now if we let $\adj(X) \in\posdefset{n}$ be the adjugate of $X$,
+\ie, $\adj(X)_{ij} = (-1)^{i+j} {\bf minor}(X)_{ji}$
+where ${\bf minor}(X)_{ij}$ is the $(i,j)$-minor of $X$,
+\ie, the determinant of the $(n-1)$-by-$(n-1)$ matrix that results from deleting row $i$ and column $j$ of $X$,
+then we have $\det(X) = \sum_{j=1}^n X_{ij} \adj(X)_{ji}$.
+Since $\adj(X)_{ji}$ is not a function of $X_{ij}$,
+we have
+\begin{equation}
+\frac{\partial}{\partial X_{ij}} \det(X) = \adj(X)_{ji}.
+\end{equation}
+Therefore
+\begin{equation}
+\frac{\partial}{\partial X_{ij}} f(X) = -\frac{\adj(X)_{ji}}{\det(X)} + A_{ji}
+= - \left(X^{-1}\right)_{ji} + A_{ji}.
+\end{equation}
+Since $-\log \det(X)$ is a convex function in $X$ as proved in XXX, $f(X)$ is a convex function,
+thus, since $\nabla_X f\left(A^{-1}\right)= 0$, $f(X)$ has its minimum value when $X=A^{-1}$.
+
+Therefore the optimal solution for (\ref{eq:prob:unc-max-det}) is $X^\ast = A^{-1}$ and the optimal value is $\log\det(A) + n$.
+
 
 
 \section{Unconstrained minimization}
