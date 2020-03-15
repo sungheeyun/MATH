@@ -392,6 +392,41 @@ It can be proved that the following (modified) ECDF approximates the mixture dis
 
 \section{Various distributions}
 
+\subsection{Gaussian distribution}
+
+The Gaussian (or normal) distribution is a type of continuous probability distribution for a real-valued random variable
+or real-valued random variables.
+The PDF of (vector) Gaussian random variable $X\in\reals^n$ with mean $\mu\in\reals^n$ and covariance matrix $\Sigma\in\posdefset{n}$ is
+defined by $f_X:\reals^n\to\preals$ where
+\begin{equation}
+\label{eq:pdf:gaussian}
+f_X(x) = \frac{1}{(2\pi)^{n/2}\det(\Sigma)^{1/2}} \exp\left(
+-\frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu)
+\right).
+\end{equation}
+We use the notation $X\sim \mathcal{N}(\mu, \Sigma)$ to denote that $X$ is a Gaussian random variable with
+with mean $\mu\in\reals^n$ and covariance matrix $\Sigma\in\posdefset{n}$.
+
+If $n=1$, this reduces to a scalar Gaussian random variable the PDF of which is given by
+\begin{equation}
+f_X(x) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left( - (x-\mu)^2 /2\sigma^2 \right)
+\end{equation}
+where $\mu\in\reals$ is the mean and $\sigma^2$ is the variance.
+
+In a statistical inference or machine learning context, we are sometimes interested in log-likelihood.
+To evaluate the log-likelihood, we need to take logarithm on the PDF.
+For Gaussian random variable,
+this quantity is given by
+\begin{equation}
+\log f_X(x) = -\frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu) - \frac{n}{2} \log(2\pi) - \frac{1}{2} \log \det(\Sigma).
+\end{equation}
+
+
+
+
+
+
+
 \subsection{Log-normal distribution}
 
  We say $Y$ is log-normally distributed, if, for $X\sim\mathcal{N}(\mu_X,\sigma_X^2)$,
@@ -559,3 +594,159 @@ thus
 \mu_X &=& \log(\mu_Y) - \sigma_X^2/2 = \log(\mu_Y) - \log(1+{\sigma_Y^2}/{\mu_Y^2})/2
 = \frac{1}{2} \log\left(\frac{\mu_Y^2}{1+{\sigma_Y^2}/{\mu_Y^2}}\right).
 \end{eqnarray*}
+
+
+\section{Exponential family}
+
+In probability and statistics,
+an exponential family is a parametric set of probability distributions of a certain form.
+This special form is chosen for mathematical convenience, based on some useful algebraic properties,
+as well as for generality,
+as exponential families are in a sense very natural sets of distributions to consider.
+The term exponential class is sometimes used in place of \emph{exponential family},
+or the older term Koopman–Darmois family.
+The terms \emph{distribution} and \emph{family} are often used loosely:
+properly, an exponential family is a set of distributions,
+where the specific distribution varies with the parameter;
+however, a parametric family of distributions is often referred to as \emph{a distribution}
+(like \emph{the normal distribution}, meaning \emph{the family of normal distributions})
+and the set of all exponential families is sometimes loosely referred to as \emph{the} exponential family.
+
+The concept of exponential families is credited to E. J. G. Pitman, G. Darmois, and B. O. Koopman in 1935–1936.
+Exponential families of distributions provides a general framework for selecting a possible alternative parameterisation of a parametric family of distributions,
+in terms of natural parameters, and for defining useful sample statistics, called the natural sufficient statistics of the family.
+
+The exponential family of distributions over $x\in\reals^n$ given parameters $\eta \in\reals^m$ is defined to be the set of distributions of the form
+\begin{equation}
+\label{eq:pdf:exp-family}
+p(x|\eta) = g(\eta) h(x) \exp(\eta^T u(x))
+\end{equation}
+for some functions $g:\reals^m \to \preals$, $h:\reals^n\to\preals$,
+and $u:\reals^n \to \reals^m$.
+Note that the requirement for the PDF implies
+\begin{equation}
+\label{eq:vbydiuv}
+\int p(x|\eta) dx = g(\eta) \int h(x) \exp(\eta^T u(x)) dx = 1
+\Leftrightarrow
+g(\eta) = \left(\int h(x) \exp(\eta^T u(x)) dx \right)^{-1}.
+\end{equation}
+The exponential family of distributions covers many distributions as shown below.
+
+\subsection{Categorical distribution}
+
+For $\mu_i>0$ with $\sum_{i=1}^n \mu_i =1$,
+the PMF of the categorical distribution
+is given by
+\begin{equation}
+p(x|\mu) = \prod_{i=1}^n \mu_i^{x_i}
+= \mu_n^{1-\sum_{j=1}^{n-1} x_j}\prod_{i=1}^{n-1} \mu_i^{x_i}
+= \mu_n \prod_{i=1}^{n-1} (\mu_i / \mu_n)^{x_i}
+\end{equation}
+where $x \in \{0,1\}^{n-1}$ with $0\leq \sum_{i=1}^{n-1} x_i \leq 1$.
+Since
+\begin{equation}
+p(x|\mu) = \mu_n \exp\left( \sum_{i=1}^{n-1} x_i \log(\mu_i / \mu_n) \right),
+\end{equation}
+we could let $\eta_i = \log(\mu_i / \mu_n)$ for $i=1, \ldots, n-1$
+and figure out how we can express $\mu_n$ in terms of $\eta\in\reals^{n-1}$.
+However, here we use (\ref{eq:vbydiuv}) for that.
+Now let
+\begin{equation}
+p(x|\eta) = g(\eta) \exp(\eta^Tx).
+\end{equation}
+Then
+\begin{equation}
+g(\eta) \sum_{0\leq \ones^T x \leq 1} \exp(\eta^T x) = g(\eta) \left( 1 + \sum_{i=1}^{n-1} \exp(\eta_i)\right) = 1,
+\end{equation}
+thus
+$g(\eta) = \left( 1 + \sum_{i=1}^{n-1} \exp(\eta_i)\right)^{-1}$.
+Therefore the categorical distribution using the standard representation for the exponential family (\ref{eq:pdf:exp-family})
+is given by
+\begin{equation}
+\label{eq:pdf:multinoulli:exp}
+p(x|\eta) = \frac{\exp(\eta^T x)}{1 + \sum_{i=1}^{n-1} \exp(\eta_i)}
+\end{equation}
+with
+\begin{eqnarray}
+\eta_i &=& \log\left(\frac{\mu_i}{1-\ones^T \mu} \right)
+\mbox{ for } i=1,\ldots,n-1
+\\
+u(x) &=& x
+\\
+g(\eta) &=& \left( 1 + \sum_{i=1}^{n-1} \exp(\eta_i)\right)^{-1}
+\\
+h(x) &=& 1.
+\end{eqnarray}
+
+\subsection{Bernoulli distribution}
+
+The Bernoulli distribution is a categorical distribution with $n=2$.
+Therefore (\ref{eq:pdf:multinoulli:exp}) implies that
+the Bernoulli distribution using the standard representation for the exponential family (\ref{eq:pdf:exp-family})
+is given by
+\begin{equation}
+\label{eq:pdf:bernoulli:exp}
+p(x|\eta) = \frac{\exp(\eta x)}{1 + \exp(\eta)}
+\end{equation}
+where $x \in \{0,1\}$ and $\eta \in \reals$
+with
+\begin{eqnarray}
+\eta &=& \log\left(\frac{\mu}{1-\mu} \right)
+\\
+u(x) &=& x
+\\
+g(\eta) &=& \left( 1 + \exp(\eta)\right)^{-1} = \sigma(-\eta)
+\\
+h(x) &=& 1
+\end{eqnarray}
+where $\sigma$ is the logistic sigmoid function.
+
+
+\subsection{Gaussian distribution}
+
+The PDF of Gaussian random variable with mean $\mu\in\reals^n$ and covariance matrix $\Sigma\in\posdefset{n}$ is
+given by (\ref{eq:pdf:gaussian}). We can rewrite it as
+\begin{equation}
+p(x|\mu,\Sigma) = \frac{1}{(2\pi)^{n/2}\det(\Sigma)^{1/2}} \exp\left(
+-\frac{1}{2} x^T \Sigma^{-1} x
++ \mu^T \Sigma^{-1} x - \frac{1}{2} \mu^T \Sigma^{-1} \mu
+\right).
+\end{equation}
+If we let $\eta_1 = - \frac{1}{2} \Sigma^{-1}$ and $\eta_2 = \Sigma^{-1} \mu$,
+then
+\begin{eqnarray*}
+p(x|\eta)
+&=&
+\frac{\det(-2\eta_1)^{1/2}}{(2\pi)^{n/2}} \exp\left(
+\Tr \eta_1 xx^T + \eta_2^T x
+- \frac{1}{2} \eta_2^T  (-2\eta_1)^{-1} \eta_2
+\right)
+\\
+&=&
+\frac{2^{n/2}\det(-\eta_1)^{1/2}}{(2\pi)^{n/2}} \exp\left(
+\Tr \eta_1 xx^T + \eta_2^T x
++ \frac{1}{4} \eta_2^T  \eta_1^{-1} \eta_2
+\right).
+\end{eqnarray*}
+
+Therefore
+the Gaussian distribution using the standard representation for the exponential family (\ref{eq:pdf:exp-family})
+is given by
+\begin{equation}
+\label{eq:pdf:gaussian:exp}
+p(x|\eta) = \frac{\det(-\eta_1)^{1/2}}{\pi^{n/2}} \exp\left(\frac{1}{4} \eta_2^T  \eta_1^{-1} \eta_2 \right)
+\exp\left( \Tr \eta_1 xx^T + \eta_2^T x \right)
+\end{equation}
+with
+\begin{eqnarray}
+\eta &=& (\eta_1, \eta_2) = \left(-\frac{1}{2} \Sigma^{-1}, \Sigma^{-1}\mu \right) \in (-\posdefset{n}) \times \reals^n
+\\
+u(x) &=& \left(xx^T, x\right) \in \possemidefset{n} \times \reals^n
+\\
+g(\eta) &=& \frac{\det(-\eta_1)^{1/2}}{\pi^{n/2}} \exp\left(\frac{1}{4} \eta_2^T  \eta_1^{-1} \eta_2 \right)
+\\
+h(x) &=& 1.
+\end{eqnarray}
+
+
+
