@@ -35,6 +35,154 @@ When $b=\ones$, the Cauchy-Schwarz inequality implies
 \end{equation}
 
 
+\section{Determinant}
+
+\subsection{Definition}
+
+Let $A\in\reals^{n\times n}$. Then the determinant of $A$ is defined by
+\begin{equation}
+\label{eq:def:det}
+\det(A) = \sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{i=1}^n A_{i, \sigma(i)}
+\end{equation}
+where $\Pi(n)$ is the symmetric group of permutations of $\{1, \ldots, n\}$.
+
+\begin{description}
+
+\item [Characteristic polynomial] For $A\in\reals^{n\times n}$, the characteristic
+of $A$ is defined by the following ($n$th order) polynomial.
+\begin{equation}
+\label{eq:char-poly}
+p(x) = \det(xI_n - A).
+\end{equation}
+Note that even though $xI_n-A \not\in\reals^{n\times n}$,
+\ie, rather $xI_n -A \in \reals(1)^{n\times n}$
+where $\reals(k)$ denotes the set of all $k$-th order polynomial with real coefficients,
+the determinant can be defined in the same way that that for real matrix is defined,
+\eg, using (\ref{eq:def:det}).
+
+\end{description}
+
+
+\subsection{Properties}
+
+\begin{description}
+\item [multiplicative property of determinants]
+For $A, B\in\reals^{n\times n}$,
+\begin{equation}
+\det(AB) = \det(A) \det(B).
+\end{equation}
+
+\begin{proof}
+By (\ref{eq:def:det}),
+\begin{eqnarray*}
+\det(AB)
+&=&
+\sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{i=1}^n (AB)_{i, \sigma(i)}
+\\
+&=&
+\sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{i=1}^n \sum_{j=1}^n A_{i,j} B_{j, \sigma(i)}
+\\
+&=&
+\sum_{\sigma \in \Pi(n)} \sign(\sigma) \sum_{1\leq j_1\leq n, \ldots, 1\leq j_n\leq n} \prod_{i=1}^n A_{i,j_i} B_{j_i, \sigma(i)}
+\\
+&=&
+\sum_{1\leq j_1\leq n, \ldots, 1\leq j_n\leq n} \sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{i=1}^n A_{i,j_i} B_{j_i, \sigma(i)}
+\\
+&=&
+\sum_{1\leq j_1\leq n, \ldots, 1\leq j_n\leq n} \prod_{i=1}^n A_{i,j_i} \left( \sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{k=1}^n B_{j_k, \sigma(k)} \right)
+\\
+&=&
+\sum_{\tau\in\Pi(n)} \prod_{i=1}^n A_{i,\tau(i)} \left( \sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{k=1}^n B_{\tau(k), \sigma(k)} \right)
+\\
+&=&
+\sum_{\tau\in\Pi(n)} \prod_{i=1}^n A_{i,\tau(i)} \left( \sum_{\sigma \in \Pi(n)} \sign(\sigma) \prod_{k=1}^n B_{k, \left(\sigma\circ \tau^{-1} \right)(k)} \right)
+\\
+&=&
+\sum_{\tau\in\Pi(n)} \prod_{i=1}^n A_{i,\tau(i)} \left( \sum_{\sigma \in \Pi(n)} \sign(\sigma\circ\tau^{-1}) \sign(\tau^{-1}) \prod_{k=1}^n B_{k, \left(\sigma\circ \tau^{-1} \right)(k)} \right)
+\\
+&=&
+\sum_{\tau\in\Pi(n)} \prod_{i=1}^n A_{i,\tau(i)} \left( \sum_{\sigma \in \Pi(n)} \sign(\sigma\circ\tau^{-1}) \sign(\tau) \prod_{k=1}^n B_{k, \left(\sigma\circ \tau^{-1} \right)(k)} \right)
+\\
+&=&
+\sum_{\tau\in\Pi(n)} \sign(\tau) \prod_{i=1}^n A_{i,\tau(i)} \left( \sum_{\sigma \in \Pi(n)} \sign(\sigma\circ\tau^{-1}) \prod_{k=1}^n B_{k, \left(\sigma\circ \tau^{-1} \right)(k)} \right)
+\\
+&=&
+\det(B) \sum_{\tau\in\Pi(n)} \sign(\tau) \prod_{i=1}^n A_{i,\tau(i)}
+= \det(B) \det(A)
+\\
+&=&
+\det(A) \det(B).
+\end{eqnarray*}
+\end{proof}
+
+\item [Determinant in terms of minors]
+The determinant of $A\in\reals^{n\times n}$ can be expressed in terms of its minors,
+\ie,
+for all $1\leq k\leq n$,
+\begin{equation}
+\det(A) = \sum_{j=1}^n (-1)^{k+j} A_{k,j} \minor(A)
+= \sum_{i=1}^n (-1)^{i+k} A_{i,k} \minor(A)
+\end{equation}
+where $\minor(A)_{ij}$ is the $(i,j)$-minor of $A$,
+\ie, the determinant of the $(n-1)$-by-$(n-1)$ matrix that results from deleting row $i$ and column $j$ of $A$.
+
+\item [Upper and lower triangular matrices]
+The determinant of an upper or lower triangular matrix is the product of the diagonal entries.
+
+\item [Matrix inverse formula] For a square matrix $A\in\reals^{n\times n}$,
+if $\det(A)\neq0$, the inverse matrix is uniquely determined
+and it can be expressed as
+\begin{equation}
+\label{eq:mat-inverse-adj}
+A^{-1} = \frac{1}{\det(A)} \adj(A)
+\end{equation}
+where $\adj(A)\in\reals^{n\times n}$ denotes the adjugate of $A$
+which is defined by
+\begin{equation}
+\adj(A) = \begin{my-matrix}{llll}
+\minor(A)_{1,1} & -\minor(A)_{2,1} &  \cdots & (-1)^{n+1} \minor(A)_{n,1}
+\\
+- \minor(A)_{1,2} & \minor(A)_{2,2} &  \cdots & (-1)^{n+1} \minor(A)_{n,2}
+\\
+\vdots &\vdots & \ddots & \vdots
+\\
+(-1)^{n+1} \minor(A)_{1,n} & (-1)^{n+2}\minor(A)_{2,n} &  \cdots & \minor(A)_{n,n}
+\end{my-matrix},
+\end{equation}
+\ie,
+\begin{equation}
+\adj(A)_{i,j} = (-1)^{i+j} \minor(A)_{j,i}
+\end{equation}
+for all $1\leq i,j \leq n$.
+
+
+\item [Singularity] A square matrix is invertible if and only if its determinant is nonzero.
+
+\begin{proof}
+Suppose that $A\in\reals^{n\times n}$ is invertible.
+Then there exists $B\in\reals^{n\times n}$ such that $AB=I_n$.
+The multiplicative property of determinants implies that $\det(A) \det(B) = 1$.
+Therefore $\det(A) \neq 0$.
+Conversely, if $\det(A) \neq 0$, there exists the inverse matrix of $A$ given by (\ref{eq:mat-inverse-adj}).
+Therefore $A$ is invertible, \ie, nonsignular if and only if $\det(A)\neq0$.
+\end{proof}
+
+\item [Characteristic polynomial and eigvenvalues] For $A\in\reals^{n\times n}$,
+$\lambda$ is an eigenvalue of $A$ if and only if it is a root for the characteristic polynomial of $A$,
+\ie,
+\begin{equation}
+\det(\lambda I-A) = 0.
+\end{equation}
+
+\item [Cayley–Hamilton theorem]
+For a square matrix $A\in\reals^{n\times n}$,
+$p(A) = 0$
+where $p$ is the characteristic polynomial of $A$ given by (\ref{eq:char-poly}).
+
+\end{description}
+
+
+
 
 \section{Eigenvalues}
 
@@ -216,7 +364,7 @@ Therefore $A\in\posdefset{n}$ if and only if all $\lambda_i$ are positive.
 \section{Matrix norms}
 
 \begin{equation}
-\mathbf{dist}( C_\mathrm{org 1}, C_\mathrm{org 2} ) = 
+\mathbf{dist}( C_\mathrm{org 1}, C_\mathrm{org 2} ) =
 \|C_\mathrm{org 1} - C_\mathrm{org 2} \|
 = |\lambda_\mathrm{max}(C_\mathrm{org 1} - C_\mathrm{org 2})|
 \end{equation}
