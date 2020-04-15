@@ -106,7 +106,7 @@ Let $f:\reals\to\reals^n$ and $g:\reals^n\to\reals$ be differentiable.
 Then $h:\reals\to\reals$ such that $h(t) = g(f(t))$ is also differentiable and
 \[
 h'(t) = \sum_{i=1}^n f_i'(t) \frac{\partial g}{\partial x_i} (f(t))
-= \nabla^T g(f(t))^T D_f (t)
+= \nabla g(f(t))^T D_f (t)
 \]
 for all $t\in\dom f$.
 \end{theorem}
@@ -119,6 +119,22 @@ Then $h$ is differentiable and
 \begin{equation}
 \label{eq:chain-rule-gen}
 D h(x) = Dg(f(x)) Df(x)
+\end{equation}
+where
+$D f:\reals^n\to\reals^{m\times n}$,
+$D g:\reals^m\to\reals^{p\times m}$,
+and $D f:\reals^n\to\reals^{p\times n}$
+are the Jacobian matrix functions of $f$, $g$, and $h$ respectively.
+\end{corollary}
+
+\begin{corollary}
+\label{corollary:chain-rule-grad}
+Let $f:\reals^n\to\reals^m$ and $g:\reals^m\to\reals$ be differentiable.
+Then define a function $h:\reals^n\to\reals$ such that $h(x) = g(f(x))$ for all $x\in\dom f$.
+Then $h$ is differentiable and
+\begin{equation}
+\label{eq:chain-rule-gen}
+\nabla h(x) = Df(x)^T \nabla g(f(x))
 \end{equation}
 where
 $D f:\reals^n\to\reals^{m\times n}$,

@@ -1,0 +1,55 @@
+
+\section{Some typical optimization problems}
+
+\subsection{Strictly convex quadratic minimization}
+
+Consider a strictly convex quadratic minimization problem:
+\begin{equation}
+\label{eq:prob:strict-cvx-quad-min}
+\begin{array}{ll}
+\mbox{minimize} & g(\alpha) = f(c+\alpha d)
+\end{array}
+\end{equation}
+where $\alpha\in\reals$ is the optimization variable,
+$f:\reals^n \to \reals$ is defined by
+$f(x) = x^T A x/2 - b^Tx$
+for some
+$A\in\posdefset{n}$
+and
+$b\in\reals^n$,
+$c\neq 0\in\reals^n$,
+and $d\in\reals^n$.
+Then the optimization solution for (\ref{eq:prob:strict-cvx-quad-min}) is given by
+\begin{equation}
+\label{eq:prob:sol:strict-cvx-quad-min}
+\alpha^\ast = \frac{d^T ( b - Ac)}{d^T A d}.
+\end{equation}
+
+\begin{proof}
+We show two different (but mathematically equivalent) proofs.
+First, we plug $c + \alpha d$ in the equation of $f$. Then
+\begin{eqnarray*}
+g(\alpha) &=& \frac{1}{2} (c+\alpha d)^T A (c+ \alpha d) - b^T (c + \alpha d)
+%\lefteqn{g(\alpha) = \frac{1}{2} (c+\alpha d)^T A (c+ \alpha d) - b^T (c + \alpha d)}
+\\
+&=& \frac{1}{2} \alpha^2 d^T A d - \alpha d^T ( b - Ac)
++ \frac{1}{2} c^TAc - c^Tb
+\end{eqnarray*}
+Thus, since $c^TAc>0$,
+the optimization solution for (\ref{eq:prob:strict-cvx-quad-min}) is what is given in (\ref{eq:prob:sol:strict-cvx-quad-min}).
+
+Another method uses \theoremname~\ref{theorem:chain-rule},
+which implies that
+\begin{equation}
+g'(\alpha)
+= \frac{d}{d\alpha} g(\alpha)
+= d^T \nabla f(c+\alpha d)
+= d^T ( A(c+\alpha d) - b )
+= \alpha d^T A d - d^T( b - Ac)
+\end{equation}
+Since $g$ is a strictly convex function in $\alpha$,
+$g'(\alpha^\ast) = 0$,
+hence
+the optimization solution for (\ref{eq:prob:strict-cvx-quad-min}) is what is given in (\ref{eq:prob:sol:strict-cvx-quad-min}).
+
+\end{proof}
