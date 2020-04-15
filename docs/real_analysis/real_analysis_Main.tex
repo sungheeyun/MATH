@@ -1,0 +1,176 @@
+\documentclass{article}
+
+\input{../../../FrequentlyUsed/latex/mydefs}
+\input{../../../FrequentlyUsed/latex/mypackages}
+
+\title{Can an existence or entity (or living creature) in a continuous universe count?}
+\author{Sunghee Yun}
+
+\begin{document}
+\maketitle
+
+In this document,
+I will show how one can define the real numbers without using the concept of natural numbers.
+Then I will argue that an entity in a continuous universe, \eg, without fingers,
+could possess a perception of natural numbers.
+
+\section{What are real numbers? How can we define them?}
+
+One approach is to define them as \href{https://en.wikipedia.org/wiki/Dedekind_cut}{Dedekind cuts}
+of rational numbers, which in turn area defined by integers.
+This gives an elegant construction of the real numbers from more primitive concepts and set theory.
+
+Another way of doing this is to consider them as already given
+together a set of axioms for them.
+In fact, \emph{these axioms completely characterize the real numbers}.
+We assume as given the set $\reals$ of real numbers,
+the set $\ppreals$ of positive real numbers,
+and the functions $+$ and $\cdot$ on $\reals\times\reals$ to $\reals$
+and assume that these satisfy the following axioms,
+which we list in three groups.
+
+The first group describes the algebraic properties
+and the second the order properties.
+The third comprises the least upper bound axiom.
+
+\paragraph{A. The Field Axioms}
+For all $x,y,z \in\reals$ we have
+\begin{description}
+\item[A1] $x + y = y + x$. (additive commutativity)
+\item[A2] $(x + y) + z = x + (y + z)$. (additive associativity)
+\item[A3] There exists $0 \in\reals$ such that $x+0=x$ for all $x\in\reals$. (additive identity)
+\item[A4] For each $x\in\reals$ there exists a $w \in \reals$ such that $x+w=0$.
+\item[A5] $xy=yx$. (multiplicative commutativity)
+\item[A6] $(xy)z=x(yz)$. (multiplicative associativity)
+\item[A7] There exists $1 \in\reals$ such that $1\neq0$ and $x\cdot1=x$ for all $x\in\reals$. (multiplicative identity)
+\item[A8] For each $x\in\reals$ different from $0$ there exists a $w \in \reals$ such that $xw=1$.
+\item[A9] $x(y+z) = xy+xz$. (distributivity)
+\end{description}
+
+Any set that satisfies these axioms is called a \emph{field} (under $+$ and $\cdot$).
+The $0$ in {\bf Axiom A3} is unique.
+The $w$ in {\bf Axiom A4} is unique and denoted by $-x$.
+We defined subtraction $x-y$ as $x+(-y)$.
+The $1$ in {\bf Axiom A7} is also unique.
+The $w$ in {\bf Axiom A8} is unique and denoted by $x^{-1}$.
+(By the way, if we have any field,
+\ie,
+any system satisfying {\bf Axiom A1} through {\bf Axiom A9},
+we can perform all the operations of elementary algebra,
+including the solution of a linear system.)
+
+
+The second class of properties possessed by the real numbers
+have to do with the fact that the real numbers are ordered.
+When we use the notation of a positive real number
+as the primitive one,
+we have the following second group of axioms.
+
+\paragraph{B. Axioms of Order}
+The subset $\ppreals$ of positive real numbers satisfies the following:
+
+\begin{description}
+\item[B1] $(x,y\in\ppreals) \Rightarrow x + y \in\ppreals$.
+\item[B2] $(x,y\in\ppreals) \Rightarrow x y \in\ppreals$.
+\item[B3] $(x\in\ppreals) \Rightarrow -x \not\in\ppreals$.
+\item[B4] $(x\in\reals) \Rightarrow (x=0) \mbox{ or } (x\in\ppreals) \mbox{ or } (-x\in\ppreals)$
+\end{description}
+
+Any system satisfying the axioms of groups {\bf Axiom A} and {\bf Axiom B} is called an \emph{ordered field}.
+Thus the real numbers are an ordered field.
+(The rational numbers give another example of an ordered field.)
+
+In an ordered field we defined the notion $x<y$ to mean $y-x\in\ppreals$.
+We write $x\leq y$ for $x<y$ or $x=y$.
+Since {\bf Axiom B1} implies that the relation $<$ is \emph{transitive}
+and {\bf Axiom B4} implies that it is \emph{antisymmetric},
+the real numbers are \emph{linearly ordered} by $<$.
+
+The third axiom group consists of a single axiom,
+and it is this axiom that \emph{distinguishes the real numbers from other ordered fields}.
+However, as we shall see in subsequent sections, we do not need this axiom to prove our argument.
+
+\paragraph{C. Completeness Axiom}
+Every nonempty set $S$ of real numbers
+which has an upper bound has a least upper bound.
+
+
+\section{Principle of recursive definition}
+
+We take for granted the principle of recursive definition
+without proof.
+
+\begin{principle}
+[Principle of recursive definition]
+Let $f$ be a function from a set $X$ to itself,
+and let $a$ be an element of $X$.
+Then there is a unique infinite sequence $\{x_i\}_{i=1}^\infty$ from $X$
+such that $x_1 = a$ and $x_{i+1} = f(x_i)$ for each $i\in \naturals$.
+\end{principle}
+
+
+\section{How can we define in a continuous universe?}
+
+We generally adopt the procedure of taking the natural numbers
+for granted and of using them as counting numbers.
+However, \emph{an entity living in a continuous universe
+may not be capable of counting}.
+Here I show that how an entity in such a universe
+\emph{could} perceive the set of natural numbers
+as a subset of real numbers
+and \emph{recognize the concept of counting without discrete objects such as fingers}.
+Since we have just shown that we can define the real numbers without natural numbers' help,
+this stands as a valid argument!
+
+
+Note here that we use the symbol $1$ not only to denote the first natural number,
+but also the special real number given by {\bf Axiom A7}.
+One is tempted to define the real number $3$ as $1 + 1 + 1$,
+and, in a ``similar'' fashion,
+we can define real numbers corresponding to any natural number.
+
+However, we can use a tool to do this in a more precise fashion.
+By the principle of recursive definition
+there is a function $\varphi(1) = 1$
+and $\varphi(n+1) = \varphi(n) + 1$.
+\emph{Here $1$ denotes a real number on the right side and a natural number on the left.}
+We show that the mapping $\varphi$ is a one-to-one mapping of $\naturals$ into $\reals$.
+
+Let $p$ and $q$ be two different natural numbers with $p<q$.
+Then $q=p+n$ with $n=q-p$,
+and we shall show that $\varphi(p) < \varphi(q)$
+by induction on $n$.
+For $n=1$ we haev $q=p+1$ and $\varphi(q) = \varphi(p) + 1 > \varphi(p)$.
+For general $n$ we have $\varphi(p+n+1) = \varphi(p+n) + 1 > \varphi(p+n) > \varphi(p)$,
+thus by induction $\varphi(p+n)>\varphi(p)$,
+and we see that the mapping $\varphi$ is one-to-one.
+We can also prove by induction that $\varphi(p+q) = \varphi(p) + \varphi(q)$ and $\varphi(pq) = \varphi(p) \varphi(q)$.
+Therefore $\varphi$ provides a one-to-one correspondence between the natural numbers and a subset of $\reals$,
+and $\varphi$ preserves sums, products, and the relation $<$.
+Strictly speaking, we should distinguish between the natural number $n$
+and its image $\varphi(n)$ under $\varphi$.
+
+If we do not make the distinction,
+we can consider the set $\naturals$ of \emph{natural numbers} to be a subset of $\reals$.
+By taking differences of natural numbers,
+we obtain the \emph{integers} as a subset of $\reals$.
+Taking quotients of integers provides us the \emph{rationals}.
+
+Since {\bf Axiom C} was not used in this discussion,
+\emph{the same results hold for any ordered field}.
+Thus we have shown the following:
+
+\begin{proposition}
+Every ordered field contains (sets isomorphic to)
+the natural numbers,
+the integers,
+and the rational numbers.
+\end{proposition}
+
+
+
+
+
+
+\end{document}
+
