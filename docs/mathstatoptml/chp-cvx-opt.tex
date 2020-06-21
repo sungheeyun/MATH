@@ -1,4 +1,3 @@
-\newcommand{\optdomain}{\mathcal{D}}
 
 \section{Mathematical optimization problem}
 
@@ -61,13 +60,13 @@ The feasible set for (\ref{eq:opt-prob}) is defined by
 \begin{equation}
 \feasibleset
 =
-\set{x\in \mathcal{D}}
+\set{x\in \optdomain}
 { f_i(x)\leq 0 \mbox{ for } i =0, \ldots, m,\ h_j(x) = 0 \mbox{ for } j = 1,\ldots,p}
 \subseteq \reals^n
 \end{equation}
 where
 \begin{equation}
-\mathcal{D} = \left( \bigcap_{0\leq i\leq m} \dom f_i \right) \cap \left( \bigcap_{1\leq i\leq p} \dom h_i \right).
+\optdomain = \left( \bigcap_{0\leq i\leq m} \dom f_i \right) \cap \left( \bigcap_{1\leq i\leq p} \dom h_i \right).
 \end{equation}
 
 \item
@@ -210,6 +209,92 @@ Therefore, if $x_0$ is an optimal solution for the unconstrained problem, $\grad
 
 \subsection{The Lagrange dual problem}
 
+Given the optimization problem (\ref{eq:opt-prob}),
+the Lagrangian $L:\reals^n \times \reals^m \times \reals^p \to \reals$
+associated with (\ref{eq:opt-prob})
+is defined by
+\begin{equation}
+\label{eq:Lagrangian}
+L(x, \lambda, \nu) = f_0(x) + \sum_{i=1}^m \lambda_i f_i(x) + \sum_{i=1}^p \nu_i h_i(x).
+\end{equation}
+
+The (Lagrange) dual function $g:\reals^m \times \reals^p \to \reals$ (derived from the Lagrangian) is defined by
+\begin{equation}
+g(\lambda, \nu) = \inf_{x\in\optdomain} L(x, \lambda, \nu).
+\end{equation}
+
+The (Lagrange) dual problem is defined as
+\begin{equation}
+\label{eq:dual-prob}
+\begin{array}{ll}
+\mbox{maximize} & g(\lambda, \nu)
+\\
+\mbox{subject to} & \lambda \succeq 0 
+\end{array}
+\end{equation}
+where
+$(\lambda, \nu) \in\reals^m \times \reals^p$ is the optimization variable
+and
+$g$ is the objective function.
+
+\subsubsection{Gradient of dual function}
+
+
+Suppose that given $(\lambda, \nu) \in\reals^m \times \reals^p$,
+the infimum $\inf_{x\in\optdomain} L(x,\lambda,\nu)$ is achieved
+and only one point achieves it.
+In other words,
+suppose that the set $\{x\in\optdomain| L(x,\lambda, \nu) = g(\lambda, \nu) \} \subseteq \reals^n$ is a singleton,
+\ie, a set having exactly one element.
+Let $x^\ast: \reals^m \times \reals^p$
+be a function denoting this value,
+\ie,
+\begin{equation}
+g(\lambda, \nu) = L(x^\ast(\lambda, \nu), \lambda, \nu).
+\end{equation}
+
+Then the gradient of $g$ with respect to $\lambda$
+can be evaluated as
+\begin{eqnarray*}
+\nabla_\lambda g(\lambda, \nu)
+&=& \nabla_\lambda x^\ast(\lambda, \nu) \nabla_x L(x^\ast(\lambda, \nu), \lambda, \nu)
++ \nabla_\lambda L(x^\ast(\lambda, \nu), \lambda, \nu)
+\\
+&=& 
+\left[\begin{array}{cccc} f_1(x^\ast(\lambda,\nu)) & f_2(x^\ast(\lambda,\nu)) & \cdots & f_m(x^\ast(\lambda, \nu)) \end{array}\right]^T
+\in\reals^m
+\end{eqnarray*}
+since $x^\ast(\lambda,\nu)$ minimizes $L(x,\lambda,\nu)$,
+thus $\nabla_x L(x^\ast(\lambda, \nu), \lambda, \nu)=0$.
+Similarly,
+\begin{eqnarray*}
+\nabla_\nu g(\lambda, \nu)
+&=& \nabla_\nu x^\ast(\lambda, \nu) \nabla_x L(x^\ast(\lambda, \nu), \lambda, \nu)
++ \nabla_\nu L(x^\ast(\lambda, \nu), \lambda, \nu)
+\\
+&=& 
+\left[\begin{array}{cccc} h_1(x^\ast(\lambda,\nu)) & h_2(x^\ast(\lambda,\nu)) & \cdots & h_p(x^\ast(\lambda, \nu)) \end{array}\right]^T
+\in\reals^p
+\end{eqnarray*}
+since $\nabla_x L(x^\ast(\lambda, \nu), \lambda, \nu)=0$.
+
+Here given a function $f:\reals^n\to\reals^m$,
+the gradient of $f$, $\nabla f:\reals^n\to\reals^{n\times m}$,
+is defined by
+\begin{equation}
+\nabla f(x) = \left[\begin{array}{cccc}
+\nabla f_1(x)
+&
+\nabla f_2(x)
+&
+\cdots
+&
+\nabla f_m(x)
+\end{array}\right]
+\in\reals^{n\times m}.
+\end{equation}
+
+
 \subsubsection{Examples}
 
 \paragraph{Standard form LP}
@@ -288,7 +373,7 @@ The Lagrange dual problem is
 & \ones^T x = 1
 \end{array}
 \end{equation}
-with domain $\mathcal{D} = \reals^n_+$
+with domain $\optdomain = \reals^n_+$
 
 The Lagrange dual problem is
 
