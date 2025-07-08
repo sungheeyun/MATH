@@ -1,0 +1,240 @@
+
+
+\input{D:/Multimedia/mydefs}
+%\input{D:/mydefs}
+
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhead[R]{Probability and Statistics for Electrical Engineering}
+
+\addtolength{\headsep}{.5cm}
+
+
+
+\input{statdefs}
+\renewcommand{\emph}[1]{{\it #1}}
+
+\begin{document}
+\setlength{\headheight}{15pt}
+\maketitle
+
+\begin{enumerate}
+
+	\item \lgprob{3.21}.
+	\begin{enumerate}
+		\item In \lgprob{3.11},
+		compare \Exp{Y}\ to \Exp{X} where \X\ is the maximum of coin tosses.
+		\ifdefined\sol
+		\begin{solution}
+		Remember that
+		\[ \pmfxk{0} = 1/16,\ \pmfxk{1} = 8/16,\ \pmfxk{2} = 7/16 \]
+		and
+		\[ \pmfk{Y}{0} = 1/4,\ \pmfk{Y}{1} = 1/2,\ \pmfk{Y}{2} = 1/4. \]
+		Thus
+		\[ \Exp{X} = \sum_{x=0}^2 x\pmfxk{x} = 11/8 = 1.375 \]
+		and
+		\[ \Exp{Y} = \sum_{y=0}^2 y\pmfk{Y}{y} = 1.  \]
+		The expected value of $X$ is greater than that of $Y$,
+		which is due to the fact that
+		$X$ is taken from the maximum of the two (two time) coin tosses
+		whereas $Y$ is from one (two time) coin toss.
+		\end{solution}
+		\fi
+
+		\item Compare \VAR{X}\ and \VAR{Y}.
+		\ifdefined\sol
+		\begin{solution}
+		By definition,
+		\[
+			\VAR{X} = \Exp{X^2} - \Exp{X}^2
+			= \sum_{x=0}^2 x^2\pmfxk{x} - (11/8)^2
+			= 23/64
+		\]
+		and
+		\[
+			\VAR{Y} = \Exp{Y^2} - \Exp{Y}^2
+			= \sum_{y=0}^2 y^2\pmfk{Y}{y} - 1^2
+			= 1/2,
+		\]
+		hence \VAR{Y}\ is greater than \VAR{X}.
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+
+	\item \lgprob{3.24}.
+	Find the mean codeword length in \lgprob{3.6}.
+	How can this average be interpreted
+	in a very large number of encodings of binary triplets?
+	\ifdefined\sol
+	\begin{solution}
+		Remember that the PMF of \X\ was obtained as
+		\[ \pmfxk{2} = 1/2,\ \pmfxk{3} = 1/4,\ \pmfxk{4} = 1/4, \]
+		thus
+		the mean codeword length is
+		\[
+			\Exp{X} = \sum_{x=2}^4 x \pmfxk{x} = 11/4 = 2.75.
+		\]
+		This means
+		if we encode a very large number of binary triplets (in \lgprob{3.6}),
+		we can reduce the number of bits by 8.33\% ($=(3-2.75)/3$).
+	\end{solution}
+	\fi
+
+
+	\item \lgprob{3.28}.
+	Find the expected value and variance of the modem signal in \lgprob{3.17}.
+	\ifdefined\sol
+	\begin{solution}
+	Remember that
+	\[
+		\pmfk{Y}{-1} = 1/10,\
+		\pmfk{Y}{0} = 2/10,\
+		\pmfk{Y}{1} = 3/10,\
+		\pmfk{Y}{2} = 4/10,
+	\]
+	hence
+	\[
+		\Exp{Y} = \sum_{y=-1}^2 y \pmfk{Y}{y} = 1
+	\]
+	and
+	\[
+		\VAR{Y} = \Exp{Y^2} - \Exp{Y}^2
+		= 2 - 1 = 1.
+	\]
+	\end{solution}
+	\fi
+
+	\item \lgprob{3.31}.
+	In this problem, you can use the following two facts without proof.
+	\begin{itemize}
+		\item The binomial theorem: $(a+b)^n$ can be expanded using $n+1$ terms as follows:
+		\[
+			(a+b)^n = \sumto{k}{0}{n} {n \choose k} a^k b^{n-k}
+		\]
+		where
+		\[
+			{n \choose k} = \frac{n!}{k!(n-k)!} = \frac{n(n-1)\cdots (n-k+1)}{k!}.
+		\]
+
+		\item The expected value and the variance
+		of the binomial random variable with $n$ and $p$
+		are $np$ and $npq=np(1-p)$ respectively.
+		That is, if $X$ is the binomial random variable $X$ such that
+		\[
+			\pmfxk{k} = {n \choose k} p^k q^{n-k},
+		\]
+		then
+		\[
+			\Exp{X} = np
+			\mand
+			\VAR{X} = npq.
+		\]
+
+	\end{itemize}
+	\begin{enumerate}
+		\item Suppose a fair coin is tossed $n$ times.
+		Each coin toss costs $d$ dollars
+		and the reward in obtaining \X\ heads is $aX^2 + bX$.
+		Find the expected value of the net reward.
+		\ifdefined\sol
+		\begin{solution}
+		If \X\ is the random variable representing the number of heads
+		in $n$ fair coin tossings,
+		it is the binomial random variable with $p=1/2$,
+		hence
+		\[
+			\Exp{X} = n/2,\ \VAR{X} = n/4,
+		\]
+		thus
+		\[
+			\Exp{X^2} = \VAR{X} + \Exp{X}^2 = n/4 + n^2/4.
+		\]
+		Therefore the expected reward is
+		\[
+			\Exp{a X^2 + b X}
+			= a \Exp{X^2} + b \Exp{X}
+			= a (n/4+n^2/4) + b n/2
+			= \frac{ an^2 + (a+2b)n }{4}.
+		\]
+		Since $n$ coin tosses costs $nd$ dollars, the expected value of the net reward
+		is
+		\[
+			\frac{ an^2 + (a+2b)n }{4} -dn
+			= \frac{ an^2 + (a+2b-4d)n }{4}.
+		\]
+
+		\end{solution}
+		\fi
+
+		\item Suppose that the reward in obtaining \X\ heads is $a^X$,
+		where $a > 0$. Find the expected value of the reward.
+		\ifdefined\sol
+		\begin{solution}
+		\[
+			\Exp{a^X} = \sumto{k}{0}{n} a^k {n\choose k}
+			\left(\frac{1}{2}\right)^k
+			\left(\frac{1}{2}\right)^{n-k}
+			= \left( \sumto{k}{0}{n} {n\choose k}a^k  \right)
+			\left(\frac{1}{2}\right)^n
+			= \left(\frac{a+1}{2}\right)^n.
+		\]
+		\end{solution}
+		\fi
+	\end{enumerate}
+
+	\item \lgprob{3.34}.
+	Consider the St. Petersburg Paradox in \lgexamref{3.16}.
+	Suppose that the casino has a total of $M = 2^m$ dollars,
+	and so it can only afford a finite number of coin tosses.
+	\begin{enumerate}
+		\item How many tosses can the casino afford?
+		\ifdefined\sol
+		\begin{solution}
+			It can afford $m$ coin tosses.
+		\end{solution}
+		\fi
+
+		\item Find the expected payoff to the player.
+		\ifdefined\sol
+		\begin{solution}
+			Let \X\ be the number of fair coin tosses
+			until a tail comes up.
+			If $X\leq m$,
+			then the casino can pay the amount it promisses,
+			\ie, $2^X$.
+			However, if $X>m$, it can only pay the maximum amount, $M=2^m$.
+			Thus, the payoff $f(X)$ is defined by
+			\[
+				f(X) = \min\{2^X,2^m\}.
+			\]
+			Therefore the expected payoff to the player is
+			\[
+				\Exp{f(X)} = \sumto{k}{1}{m} 2^k (1/2)^k + \sumto{k}{m+1}{\infty} 2^m (1/2)^k
+				=  m + \frac{1}{2} \cdot \frac{1}{1-\frac{1}{2}}
+				= m + 1.
+			\]
+		\end{solution}
+		\fi
+
+		\item How much should a player be willing to pay to play this game?
+		\ifdefined\sol
+		\begin{solution}
+			The player should be willing to pay up to $m$ dollars.
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}
+
+
+

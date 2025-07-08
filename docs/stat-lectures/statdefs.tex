@@ -1,0 +1,160 @@
+\newcommand{\mfor}{\mbox{ for }}
+\newcommand{\mand}{\mbox{ and }}
+\newcommand{\mforall}{\mbox{ for all }}
+\newcommand{\mif}{\mbox{if }}
+\newcommand{\ld}{\ensuremath{\lambda}}
+
+
+\newcommand{\lgprob}[1]{LGProb~{#1}}
+\newcommand{\lgfig}[1]{LGFig~{#1}}
+\newcommand{\lgexam}[2]{LGExample~{#1} {\bf #2}}
+\newcommand{\lgexamref}[1]{LGExample~{#1}}
+\newcommand{\lgeq}[1]{LGEquation~(#1)}
+
+\newcommand{\br}[1]{\{#1\}}
+
+\newcommand{\randvar}{random variable}
+\newcommand{\var}{variance}
+\newcommand{\bernrv}{{Bernoulli \randvar}}
+\newcommand{\binomrv}{{binomial \randvar}}
+\newcommand{\geomrv}{{geometric \randvar}}
+\newcommand{\possrv}{{Poisson \randvar}}
+
+\newcommand{\unifrv}{{uniform \randvar}}
+\newcommand{\exprv}{{exponential \randvar}}
+\newcommand{\gaussrv}{{uniform \randvar}}
+
+\newcommand{\possdist}{{Poisson distribution}}
+\newcommand{\cond}{conditional}
+
+\newcommand{\unitfcn}{unit step function}
+\newcommand{\delfcn}{delta function}
+
+
+
+\newcommand{\al}{\ensuremath{\alpha}}
+
+
+\newcommand{\sA}{\ensuremath{A}}
+\newcommand{\sB}{\ensuremath{B}}
+\newcommand{\Ai}[1]{\ensuremath{A_{#1}}}
+\newcommand{\Bi}[1]{\ensuremath{B_{#1}}}
+\newcommand{\Ei}[1]{\ensuremath{E_{#1}}}
+\newcommand{\Ak}{\Ai{k}}
+\newcommand{\X}{\ensuremath{X}}
+\newcommand{\xk}{\ensuremath{x_k}}
+\newcommand{\mzeta}{\ensuremath{\zeta}}
+
+\newcommand{\comp}[1]{\ensuremath{{#1}^c}}
+\newcommand{\diff}[2]{{#1}\backslash{#2}}
+\newcommand{\sspace}{\ensuremath{S}}
+\newcommand{\ssx}{\ensuremath{S_X}}
+\newcommand{\evcl}{\ensuremath{\mathcal{F}}}
+
+\newcommand{\pr}[1]{\ensuremath{P[#1]}}
+%\renewcommand{\pr}[1]{\ensuremath{{\bf Pr}\{#1\}}}
+\newcommand{\prb}[1]{\ensuremath{P[\{#1\}]}}
+\newcommand{\bpr}[1]{\ensuremath{P\left[#1\right]}}
+\newcommand{\cpr}[2]{\pr{#1|#2}}
+\newcommand{\cpreq}[2]{\frac{\pr{#1\cap #2}}{\pr{#2}}}
+\newcommand{\cprbeq}[2]{\cpreq{\br{#1}}{\br{#2}}}
+\newcommand{\appr}[2]{\pr{#1|#2}\pr{#2}}
+\newcommand{\relfreq}[1]{f_{#1}}
+
+\newcommand{\expect}[1]{\ensuremath{m_{#1}}}
+\newcommand{\cexp}[2]{\expect{#1|#2}}
+\renewcommand{\Expect}[1]{\ensuremath{{\bf E}[#1]}}
+\newcommand{\bExp}[1]{\ensuremath{{\bf E}\left[#1\right]}}
+\newcommand{\Exp}[1]{\Expect{#1}}
+\newcommand{\cExp}[2]{\Exp{#1|#2}}
+\newcommand{\samplemean}[2]{\langle{#1}\rangle_{#2}}
+\newcommand{\std}[1]{\ensuremath{\sigma_{#1}}}
+\newcommand{\VAR}[1]{\ensuremath{{\bf VAR}[#1]}}
+\newcommand{\cVAR}[2]{\VAR{#1|#2}}
+\newcommand{\STD}[1]{\ensuremath{{\bf STD}[#1]}}
+
+\newcommand{\ep}[1]{\ensuremath{E_{#1}}}
+\renewcommand{\ev}[1]{\ensuremath{A_{#1}}}
+
+\newcommand{\borel}{\ensuremath{\mathcal{B}}}
+
+\newcommand{\chs}[2]{\ensuremath{{{#1} \choose {#2}}}}
+
+\newcommand{\bigcupto}[3]{\bigcup_{#1=#2}^{#3}}
+\newcommand{\bigcupkton}{\bigcupto{k}{1}{n}}
+\newcommand{\bigcupktoi}{\bigcupto{k}{1}{\infty}}
+
+\newcommand{\bigcapto}[3]{\bigcap_{#1=#2}^{#3}}
+\newcommand{\bigcapkton}{\bigcapto{k}{1}{n}}
+
+\newcommand{\sumto}[3]{\sum_{#1=#2}^{#3}}
+\newcommand{\sumkton}{\sumto{k}{1}{n}}
+\newcommand{\sumiton}{\sumto{i}{1}{n}}
+\newcommand{\sumktoi}{\sumto{k}{1}{\infty}}
+\newcommand{\sumntoi}{\sumto{n}{1}{\infty}}
+\newcommand{\sumkzton}{\sumto{k}{0}{n}}
+\newcommand{\sumkztoi}{\sumto{k}{0}{\infty}}
+\newcommand{\sumnztoi}{\sumto{n}{0}{\infty}}
+
+\newcommand{\xcomma}[2]{\ensuremath{{#1}_1, {#1}_2, \ldots, {#1}_{#2} }}
+\newcommand{\xcommai}[1]{\ensuremath{{#1}_1, {#1}_2, \ldots }}
+\newcommand{\xplus}[2]{\ensuremath{{#1}_1 + {#1}_2 + \cdots + {#1}_{#2} }}
+\newcommand{\xcap}[2]{\ensuremath{{#1}_1 \cap {#1}_2 \cap \cdots \cap {#1}_{#2} }}
+
+\newcommand{\ceil}[1]{\ensuremath{\lceil #1 \rceil}}
+\newcommand{\floor}[1]{\ensuremath{\lfloor #1 \rfloor}}
+\newcommand{\kmax}{\ensuremath{k_\mathrm{max}}}
+
+\newcommand{\posspmf}[2]{\frac{{#1}^{#2}}{{#2}!}e^{-{#1}}}
+\newcommand{\binompmf}[3]{\chs{{#1}}{{#3}}{#2}^{#3}(1-{#2})^{{#1}-{#3}}}
+\newcommand{\dbinompmf}{\binompmf{n}{p}{k}}
+
+
+%\newcommand{\numbereveryeqns}{}
+
+\ifdefined\numbereveryeqns
+	\newcommand{\beq}{\begin{equation}}
+	\newcommand{\eeq}{\end{equation}}
+\else
+	\newcommand{\beq}{\[}
+	\newcommand{\eeq}{\]}
+\fi
+
+\newcommand{\beql}[1]{\begin{equation}\label{#1}}
+\newcommand{\eeql}{\end{equation}}
+
+\newcommand{\optional}{$\dagger$}
+
+\newcommand{\pmf}[1]{p_{#1}}
+\newcommand{\pmfk}[2]{\ensuremath{\pmf{#1}(#2)}}
+\newcommand{\pmfxk}[1]{\pmfk{X}{#1}}
+\newcommand{\cpmfk}[3]{\ensuremath{\pmf{#1}(#2|#3)}}
+\newcommand{\cpmfxk}[2]{\cpmfk{X}{#1}{#2}}
+
+\newcommand{\cdf}[1]{F_{#1}}
+\newcommand{\cdfk}[2]{\ensuremath{\cdf{#1}(#2)}}
+\newcommand{\cdfxk}[1]{\cdfk{X}{#1}}
+\newcommand{\ccdfk}[3]{\ensuremath{\cdf{#1}(#2|#3)}}
+\newcommand{\ccdfxk}[2]{\ccdfk{X}{#1}{#2}}
+
+\newcommand{\pdf}[1]{f_{#1}}
+\newcommand{\pdfk}[2]{\ensuremath{\pdf{#1}(#2)}}
+\newcommand{\pdfxk}[1]{\pdfk{X}{#1}}
+\newcommand{\cpdfk}[3]{\ensuremath{\pdf{#1}(#2|#3)}}
+\newcommand{\cpdfxk}[2]{\cpdfk{X}{#1}{#2}}
+
+\newcommand{\indi}[1]{I_{#1}}
+
+\newcommand{\acapb}{\ensuremath{A\cap B}}
+\newcommand{\acupb}{\ensuremath{A\cup B}}
+
+
+\newcommand{\limninfty}{\lim_{n\to\infty}}
+\newcommand{\intinftoinf}{\int_{-\infty}^\infty}
+\newcommand{\intinfto}[1]{\int_{-\infty}^{#1}}
+
+\newcommand{\ddx}{\frac{d}{dx}}
+
+\newcommand{\gausspdf}[3]{\frac{1}{\sqrt{2\pi} {#3}} e^{-({#1}{#2})^2/2{#3}^2} }
+
+

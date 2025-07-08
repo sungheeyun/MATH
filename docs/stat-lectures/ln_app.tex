@@ -1,0 +1,248 @@
+
+\chapter{Mathematics}
+\label{app-math}
+
+\section{The binomial theorem}
+
+\begin{itemize}
+	\item The binomial theorem:
+	for any $a$, $b$, and $n\in\naturals$,
+	\beql{eq-binom-the}
+		(a+b)^n = \sumto{k}{0}{n} \chs{n}{k} a^k b^{n-k}
+	\eeql
+	where
+	\beql{eq-comb}
+		\chs{n}{k} = \frac{n!}{k!(n-k)!}
+		= \frac{n(n-1)\cdots (n-k+1)}{k!}
+	\eeql
+	is the number of combinations
+	of choosing $k$ items out of $n$ items,
+	which is read as ``$n$ choose $k$'' or sometimes ``$n$ combination $k$''.
+	It is sometimes denoted by $\,_nC_k$.
+	(Note the convension defined $0!=1$.)
+	\begin{proof}
+		It is obvious that (\ref{eq-binom-the}) holds for $n=1$.
+		Suppose that (\ref{eq-binom-the}) holds for $n=m$.
+		Then the inductive assumption implies
+		\begin{eqnarray*}
+			\lefteqn{
+			(a+b)^{m+1} = (a+b) (a+b)^m
+			= (a+b) \sumto{k}{0}{m} \chs{m}{k} a^k b^{m-k}
+			}
+			\\ &=&
+			\sumto{k}{0}{m} \chs{m}{k} a^k b^{m-k+1}
+			+ \sumto{k}{0}{m} \chs{m}{k} a^{k+1} b^{m-k}
+			\\ &=&
+			\sumto{k}{0}{m} \chs{m}{k} a^k b^{m-k+1}
+			+ \sumto{k'}{1}{m+1} \chs{m}{k'-1} a^{k} b^{m-k'+1}
+			\\ &=&
+			\sumto{k}{0}{m} \chs{m}{k} a^k b^{m-k+1}
+			+ \sumto{k'}{1}{m+1} \chs{m}{k'-1} a^{k'} b^{m-k'+1}
+			\\ &=&
+			a^0b^{m+1}
+			+ \sumto{k}{1}{m} \left( \chs{m}{k} + \chs{m}{k-1} \right) a^{k} b^{m+1-k}
+			+ a^{m+1} b^0
+			\\ &=&
+			a^0b^{m+1}
+			+ \sumto{k}{1}{m} \chs{m+1}{k} a^{k} b^{m+1-k}
+			+ a^{m+1} b^0
+			\\ &=&
+			\sumto{k}{0}{m+1} \chs{m+1}{k} a^{k} b^{m+1-k}
+		\end{eqnarray*}
+		where the following formula is used for the last equality:
+		\begin{eqnarray*}
+			%\lefteqn{
+			\chs{m}{k} + \chs{m}{k-1}
+			&=& \frac{m!}{k!(m-k)!} + \frac{m!}{(k-1)!(m-k+1)!}
+			%}
+			\\&=&
+			 \frac{m!(m-k+1)+ m!k}{k!(m-k+1)!}
+			= \frac{(m+1)!}{k!(m-k+1)!}
+			= \chs{m+1}{k}
+		\end{eqnarray*}
+		Thus, (\ref{eq-binom-the}) holds for $n=m+1$, too.
+		Therefore the mathematical induction implies
+		(\ref{eq-binom-the}) holds for all $n\in\naturals$.
+		\qed
+	\end{proof}
+
+	\item If we differentiate both sides of (\ref{eq-binom-the}) \wrt\ $a$
+	and multiplying both sides by $a$,
+	we have
+	\beql{eq-k-binom}
+		\sumkton \chs{n}{k} ka^{k} b^{n-k}
+		= na(a+b)^{n-1}.
+	\eeql
+	If we again differentiate both sides of (\ref{eq-k-binom}) \wrt\ $a$
+	and multiplying both sides by $a$,
+	we have
+	\beql{eq-ks-binom}
+	%	= n(n-1)a(a+b)^{n-2} + n(a+b)^{n-1}
+		\sumkzton \chs{n}{k} k^2a^{k-1} b^{n-k}
+		=
+		na(a+b)^{n-2} ( a(n-1) + a + b ).
+	\eeql
+	\iffalse
+	\[
+		n(a+b)^{n-1} = \sumkton k \chs{n}{k} a^{k-1} b^{n-k}.
+	\]
+	\[
+		n(n-1)(a+b)^{n-2} = \sumto{k}{2}{n} k(k-1)\chs{n}{k} a^{k-2} b^{n-k}.
+	\]
+	\[
+		\sumto{k}{1}{n} k^2\chs{n}{k} a^{k} b^{n-k}
+		 = \sumto{k}{2}{n} k(k-1)\chs{n}{k} a^{k} b^{n-k}
+		 + \sumto{k}{1}{n} k\chs{n}{k} a^{k} b^{n-k}
+		 \]
+		 \[
+		 = a^2 n(n-1) (a+b)^{n-2} + na(a+b)^{n-1}
+		 = na(a+b)^{n-2} ( a(n-1) + (a+b))
+	\]
+	\fi
+
+
+\end{itemize}
+
+
+
+\section{Inifinite sequences and series}
+
+All the following equations hold only for $x\in(-1,1)$.
+\begin{eqnarray}
+\label{eq-is-xk}
+	\sumkztoi x^k
+	&=& \frac{1}{1-x},
+\\ \label{eq-is-kxk-2}
+	\sumktoi k x^{k-1}
+	&=& \frac{1}{(1-x)^2},
+\\ \label{eq-is-ksxk-2}
+	\sumto{k}{2}{\infty} k (k-1)x^{k-2}
+	&=& \frac{2}{(1-x)^3},
+\\ \label{eq-is-kcxk-2}
+	\sumto{k}{3}{\infty} k (k-1)(k-2)  x^{k-3}
+	&=& \frac{6}{(1-x)^4},
+\\ \label{eq-is-kmxk-2}
+	\sumto{k}{m}{\infty} k (k-1) \cdots (k-m+1)  x^{k-m}
+	&=& \frac{m!}{(1-x)^{m+1}}.
+\end{eqnarray}
+
+Multiplying $x$ on both sides of (\ref{eq-is-kxk-2}) yields
+\beql{eq-is-kxk}
+	\sumktoi k x^k = \frac{x}{(1-x)^2}.
+\eeql
+
+Multiplying $x^2$ on both sides of (\ref{eq-is-ksxk-2}) and adding it to (\ref{eq-is-kxk})
+yields
+\beql{eq-is-ksxk}
+	\sumktoi k^2 x^k = \frac{2x^2}{(1-x)^3} + \frac{x}{(1-x)^2}.
+	= \frac{2x^2+x(1-x)}{(1-x)^3}
+	= \frac{x^2+x}{(1-x)^3}
+	= \frac{x(1+x)}{(1-x)^3}
+\eeql
+
+\section{Taylor series}
+
+\begin{itemize}
+	\item The Taylor series of a real or complex function $f(x)$ that is
+	infinitely differentiable in a neighborhood of a real or complex number $a$
+	is the power series
+	\beql{eq-taylor-series}
+		\sumnztoi \frac{f^{(n)}(a)}{n!} (x-a)^n
+		=
+		f(a)
+		+ \frac{f'(a)}{1!} (x-a)
+		+ \frac{f''(a)}{2!} (x-a)^2
+		+ \frac{f'''(a)}{3!} (x-a)^3
+		+ \cdots
+	\eeql
+	where $n!$ denotes the factorial of $n$ and
+	$f^{(n)}(a)$ denotes the $n$th derivative of $f$ evaluated at the point $a$.
+	The zeroth derivative of $f$ is defined to be $f$ itself and
+	$(x - a)^0$ and $0!$ are both defined to be $1$.
+	In the case that a = 0, the series is also called a \emph{Maclaurin series}.
+
+	\item A function is \emph{analytic} in an open disc centered at $a$
+	if and only if its Taylor series converges to the value of the function
+	at each point of the disc.
+
+	\item If $f(x)$ is equal to its Taylor series everywhere
+	it is called \emph{entire}.
+	\begin{itemize}
+		\item The polynomials and the exponential function $e^x$ and
+		the trigonometric functions (sine and cosine)
+		are examples of entire functions.
+		\item Examples of functions that are not entire include the logarithm,
+		the trigonometric function tangent,
+		and its inverse arctan.
+		For these functions the Taylor series do not converge if x is far from a.
+		\item Taylor series can be used to calculate the value of an entire function
+		in every point, if the value of the function,
+		and of all of its derivatives, are known at a single point.
+	\end{itemize}
+
+	\item The exponential function is entire,
+	thus
+	\beql{eq-taylor-exp}
+		\exp(x) = \sumnztoi \frac{1}{n!} x^n
+	\eeql
+	for all $x\in\complexes$.
+\end{itemize}
+
+
+\chapter{Proofs}
+\label{app-proofs}
+
+\begin{itemize}
+	\item Alternative proofs for the expected value and the \var\ of \binomrv\ in \S\ref{loc-binom-alter-proof}
+	\begin{enumerate}
+		\item By regarding the \binomrv\ as a sum of $n$ independent and identically distributed
+		\bernrv s:
+		\begin{proof}
+		Let \X\ be the \binomrv\ with $n$ and $p$.
+		If we let $X_i$ for $i=1,2,\ldots,n$
+		be the $n$ independent and identically distributed \bernrv s with $p$,
+		\[
+			X = \sumkton X_i.
+		\]
+		Then the linearity of the expected value operator
+		implies
+		\[
+			\Exp{X} = \sumkton \Exp{X_i} = np
+		\]
+		and the independence of $X_i$ implies
+		\[
+			\Exp{X^2} = \sumkton \Exp{X_i^2} + 2\sum_{i<j} \Exp{X_i}\Exp{X_j}
+			= n(p(1-p)+p^2) + n(n-1)p^2
+			= np(1-p) + (np)^2,
+		\]
+		thus
+		\[
+			\VAR{X} = \Exp{X^2} - \Exp{X}^2
+			= np(1-p),
+		\]
+		hence the proof.
+		\end{proof}
+		
+		\item Using (\ref{eq-k-binom}) and (\ref{eq-ks-binom}):
+		\begin{proof}
+		Let \X\ be the \binomrv\ with $n$ and $p$.
+		Then (\ref{eq-k-binom}) implies
+		\[
+			\Exp{X} = \sumkzton k \dbinompmf
+			= np (p+(1-p))^{n-1} = np
+		\]
+		and (\ref{eq-ks-binom}) implies
+		\[
+			\Exp{X^2} = \sumkzton k^2 \dbinompmf
+			 = np(p(n-1)+1)
+			 = (np)^2 + np(1-p),
+		\]
+		thus
+		\[
+			\VAR{X} = \Exp{X^2} - \Exp{X}^2
+			= np(1-p),
+		\]
+		hence the proof.
+		\end{proof}
+	\end{enumerate}
+\end{itemize}

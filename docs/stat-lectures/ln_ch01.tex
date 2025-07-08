@@ -1,0 +1,86 @@
+\chapter{Probability Models in Electrical and Computer Engineering}
+
+\bit
+	\item Electrical and computer engineers have played a central role in the design of modern information and communications systems. These highly successful systems work reliably and predictably in highly variable and chaotic environments.
+
+	\item Designers today face even greater challenges.
+	The systems they build are unprecedented in scale
+	and the chaotic environments in which they must operate are untrodden terrritory.
+
+	\item Probability models are one of the tools that enable the designer
+	to make sense out of the chaos and to successfully build systems that are
+	\emph{efficient, reliable, and cost effective}.
+\eit
+
+\section{Mathematical Models as Tools in Analysis and Design}
+\bit
+	\item A \emph{model} is an approximate representation
+	of a physical situation.
+	A model attempts to explain observed behavior
+	using a set of \emph{simple and understandable rules}.
+
+	\item \emph{Mathematical models}
+	are used when the observational phenomenon has \emph{measurable} properties.
+\eit
+
+\section{Deterministic Models}
+\bit
+	\item In \emph{deterministic models}
+	the conditions under which an experiment is carried out
+	determine the \emph{exact outcome} of the experiment.
+	\emph{Circuit theory} is an example of a deterministic mathematical model.
+
+\eit
+
+\section{Probability Models}
+\bit
+	\item Many systems of interest involve phenomena
+	that exhibit unpredictable variation and randomness.
+	We define a \emph{random experiment} to be an experiment
+	in which the outcome varies in an \emph{unpredictable fashion}
+	when the experiment is repeated \emph{under the same conditions}.
+
+	\item In a random experiment of selecting a ball from an urn
+	containing three identical balls, labeled $0$, $1$, and $2$.
+	The \emph{outcome} of this experiment is a number
+	from the set $\sspace = \{0, 1, 2\}$.
+	We call the set \sspace\
+	of all possible outcomes the \emph{sample space}.
+
+	\item Many probability models in engineering are based on the fact
+	that averages obtained
+	in long sequences of repetitions (trials) of random experiments
+	consistently yield approximately the same value.
+	This property is called \emph{statistical regularity}.
+
+	\item
+	The modern theory of probability begins with
+	a construction of a set of axioms
+	that specify that probability assignments must satisfy these properties.
+	It supposes that:
+	\begin{enumerate}
+		\item a random experiment has been defined,
+		and a set \sspace\ of all possible outcomes has been identified.
+		\item a class of subsets of \sspace\ called events has been specified
+		\item each event \sA\ has been assigned a number,
+		\pr{A}, in such a way that the following axioms are satisfied:
+	\end{enumerate}
+	\bit
+		\item $0\leq \pr{A} \leq 1$.
+		\item $\pr{\sspace} = 1$.
+		\item If \sA\ and \sB\ are events that cannot occur simultaneously,
+%		then $\pr{A \mor B} = \pr{A} + \pr{B}$.
+	\eit
+
+	\item
+	Let us consider how we proceed from a real-world problem
+	that involves randomness to a \emph{probability model} for the problem.
+	The theory requires that we identify the elements in the above axioms.
+	This involves (1) defining the random experiment inherent in the application, (2) specifying the set S of all possible outcomes and the events of interest, and (3) specifying a probability assignment from which the probabilities of all events of interest can be computed. The challenge is to develop the simplest model that explains all the relevant aspects of the real-world problem
+\eit
+
+
+\section{A Detailed Example: A Packet Voice Transmission System}
+\section{Other Examples}
+\section{Overview of Book Summary Problems}
+

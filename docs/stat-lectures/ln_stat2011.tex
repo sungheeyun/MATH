@@ -1,0 +1,40 @@
+
+\documentclass{report}
+
+\input{../../../FrequentlyUsed/latex/mydefs}
+%\input{D:/mydefs}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+
+\title{Lecture note: Probability and Statistics for EE}
+\author{Sunghee Yun}
+
+\renewcommand{\emph}[1]{{\bf #1}}
+
+\input{statdefs}
+\newtheorem{coro}{Corollary}[chapter]
+\newtheorem{defn}{Definition}[chapter]
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+%\chapter{Probability Models in Electrical and Computer Engineering}
+\include{ln_ch01}
+
+%\chapter{Basic Concepts of Probability Theory}
+\include{ln_ch02}
+
+%\chapter{Discrete Random Variables}
+\include{ln_ch03}
+
+%\chapter{One Random Variable}
+\include{ln_ch04}
+
+\appendix
+\include{ln_app}
+
+\end{document}
+

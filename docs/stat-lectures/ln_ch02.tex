@@ -1,0 +1,824 @@
+
+\chapter{Basic Concepts of Probability Theory}
+
+\section{Specifying Random Experiments}
+
+\bit
+	\item A \emph{random experiment} is an experiment
+	in which the outcome \emph{varies in an unpredictable fashion}
+	when the experiment is repeated under the same conditions.
+	A random experiment is specified by stating an experimental procedure and a set of one or more measurements or observations.
+
+	\item \lgexam{2.1}{}
+	\bit
+		\item Experiment \ep{1}: Select a ball from an urn containing balls numbered 1 to 50. Note the number of the ball.
+		\item Experiment \ep{2}: Select a ball from an urn containing balls numbered 1 to 4. Suppose that balls 1 and 2 are black and that balls 3 and 4 are white. Note the number and color of the ball you select.
+		\item Experiment \ep{3}: Toss a coin three times and note the sequence of heads and tails.
+		\item Experiment \ep{4}: Toss a coin three times and note the number of heads.
+		\item Experiment \ep{5}: Count the number of voice packets containing only silence produced from a group of $N$ speakers in a $10$-ms period.
+		\item Experiment \ep{6}: A block of information is transmitted repeatedly over a noisy channel until an error-free block arrives at the receiver. Count the number of transmissions required.
+		\item Experiment \ep{7}: Pick a number at random between zero and one.
+		\item Experiment \ep{8}: Measure the time between page requests in a Web server.
+		\item Experiment \ep{9}: Measure the lifetime of a given computer memory chip in a specified environment.
+		\item Experiment \ep{10}: Determine the value of an audio signal at time $t_1$.
+		\item Experiment \ep{11}: Determine the values of an audio signal at times $t_1$ and $t_2$.
+		\item Experiment \ep{12}: Pick two numbers at random between zero and one.
+		\item Experiment \ep{13}: Pick a number $X$ at random between zero and one, then pick a number $Y$ at random between zero and $X$.
+		\item Experiment \ep{14}: A system component is installed at time $t = 0$. For $t \geq 0$ let $X(t) = 1$ as long as the component is functioning, and let $X(t) = 0$ after the component fails.
+	\eit
+
+
+	\item The specification of a random experiment must include an \emph{unambiguous} statement of \emph{exactly what is measured or observed}. For example, random experiments may consist of the same procedure but differ in the observations made, as illustrated by \ep{3} and \ep{4}.
+
+	\item The \emph{sample space} $S$ of a random experiment is defined as the set of all possible outcomes.  We can
+	\begin{enumerate}
+		\item list all the elements, separated by commas, inside a pair of braces:
+		\[ A = \{0,1,2,3\},\]
+		\item give a property that specifies the elements of the set:
+		\[ A = \set{x}{x \mbox{ is an integer such that } 0\leq x\leq 3}.\]
+	\end{enumerate}
+
+	\item The sample spaces corresponding to the experiments in \lgexamref{2.1} are given below using set notation:
+	\begin{eqnarray*}
+		S_1 &=& \{ 1,2,\ldots, 50\}
+		\\S_2 &=& \{(1,b),(2,b),(3,w),(4,w)\}
+		\\S_3 &=& \{HHH, HHT, HTH, THH, TTH, THT, HTT, TTT\}
+		\\S_4 &=& \{0,1,2,3\}
+		\\S_5 &=& \{0,1,2,\ldots,N\}
+		\\S_6 &=& \{1,2,3,\ldots\}
+		\\S_7 &=& \set{x}{0\leq x\leq 1} = [0,1]
+		\\S_8 &=& \set{t}{t\geq 0} = [0,\infty)
+		\\S_9 &=& \set{t}{t\geq 0} = [0,\infty)
+		\\S_{10} &=& \reals = \set{v}{-\infty < v < \infty } = (-\infty,\infty)
+		\\S_{11} &=& \reals^2 = \set{(v_1,v_2)}{ -\infty < v_1 < \infty \mbox{ and } -\infty < v_2 < \infty }
+		\\S_{12} &=& \set{(x,y)}{0\leq x\leq 1 \mbox{ and } 0\leq y\leq 1}
+		\\S_{13} &=& \set{(x,y)}{0\leq y\leq x\leq 1}
+		\\S_{14} &=& \mbox{set of functions $X(t)$ for which }
+			X(t) = 1 \mbox{ for } 0\leq t < t_0
+			\mbox{ and } X(t) = 0
+		\\&& \mbox{ for } t\geq t_0
+		\mbox{ where } t_0 > 0 \mbox{ is the time when the component fails.}
+	\end{eqnarray*}
+
+	\item The three types of sample space:
+	\begin{enumerate}
+		\item finite sample space, \eg,
+			\ep{1}, \ep{2}, \ep{3}, \ep{4}, and \ep{5}
+		\item discrete sample space or countably infinite sample space, \eg, \ep{6}
+		\item continous sample space, \eg, \ep{7} through \ep{13}
+	\end{enumerate}
+
+	\item \emph{Events} correspond to subsets of $S$.
+	\bit
+		\item For example,
+			\begin{enumerate}
+				\item $\{HHH,HHT\}$ is an event of \ep{3}
+				\item $[2,\infty)$ is an event of \ep{8}
+			\end{enumerate}
+		\item Two special events
+			\begin{enumerate}
+				\item $S$: the sample space itself
+				\item $\emptyset$: impossible or null event
+			\end{enumerate}
+	\eit
+
+	\item Event examples: \ev{k} refers to an event corresponding to Experiment \ep{k}
+	\bit
+		\item \ep{1}: ``An even-numbered ball is selected,'' $\ev{1} = \{2, 4, \ldots, 48, 50\}$.
+		\item \ep{2}: ``The ball is white and even-numbered,'' $\ev{2} = \{(4, w)\}$.
+		\item \ep{3}: ``The three tosses give the same outcome,'' $\ev{3} = \{HHH, TTT\}$.
+		\item \ep{4}: ``The number of heads equals the number of tails,'' $\ev{4} = \emptyset$.
+		\item \ep{5}: ``No active packets are produced,'' $\ev{5} = \{0\}$.
+		\item \ep{6}: ``Fewer than $10$ transmissions are required,'' $\ev{6} = \{1, \ldots, 9\}$.
+		\item \ep{7}: ``The number selected is nonnegative,'' $\ev{7} = S_7$.
+	\eit
+
+	\item Elementary event: an event from a discrete sample space that consists of a single outcome
+
+\eit
+
+\paragraph{Review of Set Theory}
+
+\bit
+	\item A \emph{set} is a collection of objects and will be denoted by capital
+	letters $S$, $A$, $B$, \ldots\ We define $U$ as the \emph{universal set}
+	that consists of all possible objects of interest in a given setting or application.
+	In the context of random experiments we refer to the universal set as
+	the \emph{sample space}.
+
+
+	\item A \emph{set} $A$ is a collection of objects from $U$,
+	and these objects are called the \emph{elements} or \emph{points} of the set $A$
+	and will be denoted by lowercase letters, $\zeta$, $a$, $b$, $x$, $y$, \ldots\
+	We use the notation:
+	\[
+		x \in A \mbox{ and } x \notin A
+	\]
+
+	\item A \emph{Venn diagram} is an illustration of sets and their interrelationships.
+
+
+	\item We say \sA\ is a \emph{subset} of \sB\ if every element of \sA\ also belongs to \sB,
+	that is, if $x\in\sA$ implies $x\in\sB$.
+	We say that ``\sA\ is contained in \sB'' and we write:
+	\beq A \subset B \eeq
+	or
+	\beq A \subseteq B. \eeq
+
+	\item The \emph{empty set} $\emptyset$ is defined as the set with no elements.
+
+	\item We say that \emph{\sA\ and \sB\ are equal} if they contain the same elements.
+	\beq
+		\sA = \sB \mbox{ if and only if } \sA \subset \sB \mbox{ and } \sB \subset \sA.
+	\eeq
+
+	\item Three basic operations on sets: \emph{union}, \emph{intersection}, and \emph{complement}
+	\bit
+		\item union
+			\beq A \cup B = \set{x}{ x\in A \mbox{ or } x \in B}\eeq
+
+		\item intersection
+			\beq A \cap B = \set{x}{ x\in A \mbox{ and } x \in B}\eeq
+
+		\item complement
+			\beq \comp{A} = \set{x}{x \notin A} \eeq
+	\eit
+
+	\item \emph{Relative complement} or \emph{difference}
+	\beq
+		A - B = \diff{A}{B} = \set{x}{x\in A \mbox{ and } x \notin B}
+	\eeq
+
+	\item Properties of set operations
+	\bit
+		\item commutativity
+		\beq
+%			A \cup B = B\cup A \mand  A \cap B = B \cap A.
+			A \cup B = B\cup A \mbox{ and }  A \cap B = B \cap A.
+		\eeq
+
+		\item associativity
+		\beq
+			A \cup ( B \cup C ) = (A \cup B ) \cup C
+%			\mand
+			\mbox{ and }
+			A \cap ( B \cap C ) = (A \cap B ) \cap C
+		\eeq
+
+		\item distributivity
+		\beq
+			A \cup ( B \cap C) = ( A \cup B ) \cap ( A \cup C )
+%			\mand
+			\mbox{ and }
+			A \cap ( B \cup C) = ( A \cap B ) \cup ( A \cap C )
+		\eeq
+	\eit
+
+	\item DeMorgan's rules
+		\beq
+			\comp{(A\cup B)} = \comp{A} \cap \comp{B}
+%			\mand
+			\mbox{ and }
+			\comp{(A\cap B)} = \comp{A} \cup \comp{B}
+		\eeq
+
+	\item \lgexam{2.7}{}
+
+
+	\item The union and intersection operations can be repeated
+		for an arbitrary number of sets.
+		\bit
+		\item intersection
+			\bit
+			\item for finite number of sets
+				\beq
+					\bigcapkton A_k = A_1 \cap \cdots \cap A_n
+				\eeq
+			\item for countably infinite sequence of sets
+				\beq
+					\bigcap_{k=1}^{\infty} A_k
+				\eeq
+			\eit
+		\item union
+			\bit
+			\item for finite number of sets
+				\beq
+					\bigcupkton A_k = A_1 \cup \cdots \cup A_n
+				\eeq
+			\item for countably infinite sequence of sets
+				\beq
+					\bigcup_{k=1}^{\infty} A_k
+				\eeq
+			\eit
+		\eit
+
+	\item countable unions and intersections of sets are essential in dealing with sample spaces that are not finite.
+
+	\item \emph{Event class} \evcl\ is the set of events of interest.
+	\bit
+		\item \evcl\ is a \emph{set of subsets} of the sample space $S$
+		\item The three set operations, \ie, complements, countable unions, and countable intersections,
+		result in events in \evcl
+
+
+	\eit
+
+	\item \emph{Borel field} is the set of subsets in $\reals$
+	which can be generated by the three set operations from intervals of real line. (later\ldots)
+	\item \emph{power set of $S$}: when $S=\{1,2,\ldots,k\}$ is a finite sample space,
+	the of all the subsets of $S$ is called the power set of $S$ and
+	it is denoted by $2^S$.
+
+	\item \lgexam{2.8}{}
+\eit
+
+\section{The Axioms of Probability}
+\bit
+	\item A \emph{probability law} for a random experiment
+	is a rule that assigns probabilities to the events
+	of the experiment that belong to the event class \evcl.
+	\beq
+		P: \evcl \to \preals.
+	\eeq
+	For an event $A \in \evcl$, a number $\pr{A}$ is called the \emph{probability of $A$}.
+
+	\item The probability law must satisfy the following axioms:
+	\bit
+		\item Axiom I: \beql{eq-ax-1} \pr{A} \geq 0. \eeql
+		\item Axiom II: \beql{eq-ax-2} \pr{S} = 1.\eeql
+		\item Axiom III: If $A \cap B = \emptyset$, then
+			\beql{eq-ax-3} \pr{A\cup B} = \pr{A} + \pr{B}. \eeql
+		\item Axiom III': If $A_1,A_2, \ldots$ is a sequence of mutually exclusive events,
+			\ie, $A_i \cap A_j = \emptyset$ for all $i\neq j$, then
+			\beql{eq-ax-3-1}
+				\bpr{ \bigcup_{k=1}^\infty A_k } = \sum_{k=1}^\infty \pr{A_k}.
+			\eeql
+
+	\eit
+\eit
+
+\begin{coro}
+	\beq \pr{\comp{A}} = 1 - \pr{A} \eeq
+\end{coro}
+
+\begin{coro}
+	\beq \pr{A} \leq 1 \eeq
+\end{coro}
+
+\begin{coro}
+	\beq \pr{\emptyset} = 0  \eeq
+\end{coro}
+
+\begin{coro}
+\label{coro-finite-me}
+	If $A_1,A_2,\ldots,A_n$ are mutually exclusive, then
+	\beq \bpr{ \bigcup_{k=1}^{n} A_k } = \sum_{k=1}^n \pr{A_k} \mfor n\geq 2. \eeq
+\end{coro}
+
+\begin{coro}
+	\beq
+		\pr{A\cup B} = \pr{A} + \pr{B} - \pr{A\cap B}.
+	\eeq
+\end{coro}
+
+\begin{coro}
+	\beq
+		\bpr{ \bigcup_{k=1}^{n} A_k }
+		= \sum_{k=1}^n \pr{A_k}
+		- \sum_{j<k}^n \pr{A_j\cap A_k}
+		+ \sum_{i<j<k}^n \pr{A_i\cap A_j\cap A_k}
+		\cdots
+		+ (-1)^{n+1} \pr{A_1\cap \cdots \cap A_n},
+	\eeq
+\end{coro}
+from which it is follows that
+\beq
+	\pr{A\cup B} \leq \pr{A} + \pr{B}.
+\eeq
+This results is frequently used to obtain
+upper bounds for probabilities of interest.
+
+\begin{coro}
+If $A\subset B$, then
+\beq
+	\pr{A} \leq \pr{B}.
+\eeq
+\end{coro}
+
+However,
+we still
+\emph{need an initial probability assignment for some basic set of events}
+from which the probability of all other events can be computed.
+
+\paragraph{Discrete Sample Spaces}
+
+\bit
+	\item The \emph{probability law} for an experiment
+	with a countable sample space
+	can be specified by giving
+	the \emph{probabilities of the elementary events}.
+
+	\item \emph{Finite case:} Suppose that $S= \br{a_1, a_2,\ldots,a_n}$
+	and let \evcl\ consist of all subsets of $S$.
+	Then for any event $B=\br{a_1', a_2', \ldots, a_m'}\in\evcl$,
+	\beq
+		\pr{B}=\pr{\br{a_1', a_2', \ldots, a_m'}}
+		=\pr{\br{a_1'}} +\pr{\br{a_1'}} + \cdots +\pr{\br{a_m'}}
+	\eeq
+
+	\begin{itemize}
+		\item Of particular interest is the case of \emph{equally likely outcomes}.
+		\beq
+			\pr{\br{a_1}} = \pr{\br{a_2}} = \cdots = \pr{\br{a_n}} = \frac{1}{n}.
+		\eeq
+		If $B=\br{a_1', a_2', \ldots, a_k'}\in\evcl$,
+		\beq
+			\pr{B}=\pr{\br{a_1', a_2', \ldots, a_k'}}
+			=\pr{\br{a_1'}} +\pr{\br{a_1'}} + \cdots +\pr{\br{a_k'}}
+			= \frac{k}{n},
+		\eeq
+		\ie,
+		if outcomes are equally likely,
+		then the probability of an event is equal to the number of outcomes
+		in the event divided by the total number of outcomes in the sample space.
+	\end{itemize}
+
+	\item \emph{Countably infinite case:}
+		Suppose $S=\br{a_1,a_2,\ldots}$.
+		Axiom III' implies
+		that if $D = \br{a_1',a_2',\ldots}$,
+		\beq
+		\pr{D}=\pr{\br{a_1', a_2', a_3', \ldots}}
+		=\pr{\br{a_1'}} +\pr{\br{a_2'}} + \pr{\br{a_3'}} + \cdots,
+		\eeq
+		\ie,
+		the probability of an event with a countably infinite sample space
+		is determined from the infinite (or finite) sum of
+		the probabilities of the elementary events.
+
+	\item \lgexam{2.10}{} a coin is tossed three times.
+
+	\item \lgexam{2.11}{} a coin is tossed repeatedly until the first heads shows up.
+
+\eit
+
+\paragraph{Continuous Sample Spaces}
+
+\bit
+
+	\item All the subset of $\reals$ is too large!
+	\item The \emph{Borel field}, \borel, contains all open and closed intervals of the real line
+	as well as all events that can be obtained as countable unions, intersections,
+	and complements.
+	\emph{Axiom III' is once again the key to calculating probabilities of events},
+	\ie,
+	\[
+		\bpr{\bigcup_{k=1}^\infty A_k} = \sum_{k=1}^\infty \pr{A_k}
+	\]
+	for a sequence of mutually exclusive events
+	that are represented by intervals of the real line.
+	For this reason, probability laws in experiments with continuous sample spaces
+	specify a rule for assigning numbers to \emph{intervals of the real line}.
+
+	\item \emph{The probability that the outcome takes on a specific value is zero.}
+	Why?
+
+	\item \lgexam{2.13}{}
+	The proportion of chips whose lifetime exceeds $t$
+	decreases exponentially at a rate $\alpha$.
+	Then
+	\beq
+		\pr{(t,\infty)} = e^{-\alpha t}
+	\eeq
+	for $t>0$.
+
+\eit
+
+\paragraph{How do we proceed from a problem statement to its probability model?}
+
+\begin{enumerate}
+	\item The problem statement implicitly or explicitly \emph{defines a random experiment},
+	which specifies an experimental procedure and a set of measurements and observations.
+	These \emph{measurements and observations determine the set of all possible outcomes}
+	and hence the sample space \sspace.
+
+	\item An \emph{initial probability} assignment that specifies the probability of certain events
+	must be determined next. This probability assignment must satisfy the axioms of probability.
+	\begin{itemize}
+		\item If \sspace\ is \emph{discrete},
+		then it suffices to specify the \emph{probabilities of elementary events}.
+		\item If \sspace\ is \emph{continuous},
+		it suffices to specify the \emph{probabilities of intervals of the real line
+		or regions of the plane}.
+	\end{itemize}
+
+	\item The probability of other events of interest can then be determined
+	from the \emph{initial probability assignment}
+	and \emph{the axioms of probability} and their corollaries.
+\end{enumerate}
+
+\section{Computing Probabilities Using Counting Methods \optional}
+
+This section is optional.
+However, reading it carefully
+will make it easier for you to understand subsequent sections;
+I encourage you to read it if you have time.
+
+This section deals with
+\bit
+	\item permutations
+	\item $n$ factorial:  $n! = 1\cdot2\cdots (n-1)n$
+	\item Stirling's formula
+	\beql{eq-stirling}
+		n! \sim \sqrt{2\pi} n^{n+1/2} e^{-n}
+	\eeql
+
+	\item binomial coefficient:
+	\beql{eq-binom-coef}
+		{n \choose{k}} = C_k^n = \frac{n!}{k!(n-k)!}
+	\eeql
+	for $0\leq k\leq n$ with the convention $0!=1$.
+
+	\item multinomial coefficient:
+	\beql{eq-multinom-coef}
+		\frac{n!}{k_1!\cdots k_m!}
+	\eeql
+	where $k1+\cdots+k_m = n$.
+
+\eit
+
+
+\section{Conditional Probability}
+
+\bit
+	\item \emph{Conditional probability},
+	$\cpr{A}{B}$,
+	is the probability of event \sA\ given that even \sB\ has occurred.
+	\beql{eq-cond-prob-1}
+		\cpr{A}{B} = \frac{\pr{A\cap B}}{\pr{B}}
+		\mfor
+		\pr{B} > 0.
+	\eeql
+	This implies
+	\beql{eq-cond-prob-2}
+		\pr{A\cap B} = \cpr{A}{B} \pr{B}
+	\eeql
+	and by symmetry
+	\beql{eq-cond-prob-3}
+		\pr{A\cap B} = \cpr{B}{A} \pr{A}.
+	\eeql
+
+
+	\item Please read and understand (thoroughly) \lgexamref{2.24} and \lgexamref{2.25}.
+
+	\item \lgexam{2.26}{Binary Communication System}
+
+
+	\item Let $B_1$, \ldots, $B_n$ be mutually exclusive events whose
+	union equals the sample space \sspace\ as shown in \lgfig{2.12},
+	\ie,
+	\beql{eq-partition}
+		\bigcup_{k=1}^n B_k = \sspace
+%		\mand
+		\mbox{ and }
+		B_i \cap B_j = \emptyset
+		\mforall
+		i\neq j.
+	\eeql
+	We refer to these sets as a \emph{partition} of \sspace.
+
+	\item Any event \sA\ can be represented as the union
+	of mutually exclusive events in the following way:
+	\beq
+		A = A \cap \sspace
+		= A \cap \bigcupkton B_k
+		= \bigcupkton ( A \cap B_k)
+	\eeq
+	by the distributivity.
+	\corollaryname~\ref{coro-finite-me}
+	implies that
+	\beql{eq-partition-prob}
+		\pr{A} = \sumkton \pr{A\cap B_k}
+		= \pr{A\cap B_1} + \cdots + \pr{A \cap B_n}.
+	\eeql
+
+	\item \emph{Theorem on total probability}:
+	(\ref{eq-partition-prob}) and (\ref{eq-cond-prob-2})
+	imply
+	\beql{eq-total-prob}
+		\pr{A} = \sumkton \appr{A}{B_k}
+		= \appr{A}{B_1} + \cdots + \appr{A }{B_n}.
+	\eeql
+
+	\item \lgexam{2.28}{}
+\eit
+
+\paragraph{Bayes' Rule}
+
+\bit
+	\item
+	Let \Bi{1}, \ldots, \Bi{n}\ be a partition of a sample space \sspace.
+	Suppose that event \sA\ occurs.
+	Then the probability of event \Bi{j} is
+	\beql{eq-bayes-rule}
+		\cpr{B_j}{A}
+		= \frac{\pr{B_j \cap A}}{\pr{A}}
+		= \frac{\appr{B_j}{A}}
+			{ \sumkton \appr{A}{B_k}}.
+	\eeql
+	where the theorem on total probability is used
+	and (\ref{eq-bayes-rule}) is called \emph{Bayes' rule}.
+
+	\item
+	Bayes' rule is often applied in the following situation.
+	We have some random experiment in which the events of interest
+	form a partition.
+	The \emph{``a priori probabilities''} of these events,
+	\pr{B_j}, are the probabilities of the events
+	before the experiment is performed.
+	Now suppose that the experiment is performed,
+	and we are informed that event \sA\ occurred;
+	the \emph{``a posteriori probabilities''}
+	are the probabilities of the events in the partition,
+	\cpr{B_j}{A}, given this additional information.
+
+
+	\item \lgexam{2.30}{Quality Control}
+
+\eit
+
+\section{Independence of Events}
+
+\bit
+	\item If knowledge of the occurrence of an event \sB\
+	does not alter the probability of some other event \sA,
+	then it would be natural to say that event \sA\ is independent of \sB.
+	In terms of probabilities this situation occurs when
+	\beq
+		\pr{A} = \cpr{A}{B} = \frac{\pr{A \cap B}}{\pr{B}}
+	\eeq
+	We will define two events \sA\ and \sB\ to be \emph{independent}
+	if
+	\beql{eq-indep-1}
+		\pr{A\cap B} = \pr{A} \pr{B}.
+	\eeql
+	Note that if $\pr{B}\neq 0$, (\ref{eq-indep-1}) with (\ref{eq-cond-prob-2}) implies
+	\beql{eq-indep-2}
+		\cpr{A}{B} = \pr{A}
+	\eeql
+	and if $\pr{A}\neq 0$, (\ref{eq-indep-1}) with (\ref{eq-cond-prob-3}) implies
+	\beql{eq-indep-3}
+		\cpr{B}{A} = \pr{B}.
+	\eeql
+
+	\item In general
+	if two events have nonzero probability and are mutually exclusive,
+	then they cannot be independent.
+	For suppose they were independent and mutually exclusive;
+	then
+	\beq
+		0 = \pr{A \cap B} = \pr{A} \pr{B},
+	\eeq
+	which implies that at least one of the events must have zero probability.
+
+	\item \lgexam{2.32}{}
+
+
+	\item \emph{Independence of three events}
+	$A$, $B$, and $C$:
+	\begin{itemize}
+		\item pairwise independence:
+		\beq
+			\pr{A\cap B} = \pr{A} \pr{B},
+			\pr{B\cap C} = \pr{B} \pr{C},
+%			\mand
+			\mbox{ and }
+			\pr{C\cap A} = \pr{C} \pr{A}.
+		\eeq
+
+		\item The knowledge of the joint occurrence of any two,
+		say \sA\ and \sB,
+		should not affect the probability of the third,
+		\ie,
+		\beq
+			\pr{C} = \cpr{C}{A\cap B}
+			\iff
+			\pr{C} = \frac{\pr{A\cap B\cap C}}{\pr{A\cap B}}
+				= \frac{\pr{A\cap B\cap C}}{\pr{A}\pr{B}},
+		\eeq
+		hence
+		\beq
+			\pr{A\cap B\cap C} = \pr{A} \pr{B} \pr{C}.
+		\eeq
+
+		\item \emph{Independence of $n$ events}:
+		The events \Ai{1}, \ldots, \Ai{n}\ are said to be independent
+		if for any $k=2,\ldots,n$ and any $1\leq i_1 < i_2 < \cdots < i_k \leq n$,
+		\beql{eq-n-indep}
+			\pr{ \Ai{i_1} \cap \cdots \cap \Ai{i_k} }
+			 = \pr{ \Ai{i_1}} \cdots \pr{\Ai{i_k} }.
+		\eeql
+		We must check $2^n-n-1$ combinations!
+
+		\item
+		Most common application
+		of the independence concept is
+		in making the assumption that the events of separate experiments are independent.
+		We refer to such experiments as \emph{independent experiments}.
+
+	\end{itemize}
+
+\eit
+
+\section{Sequential Experiments}
+\bit
+	\item
+	Many random experiments can be viewed as sequential experiments
+	that consist of a sequence of simpler subexperiments.
+\eit
+
+\paragraph{Sequences of Independent Experiments}
+
+\bit
+	\item Suppose that a \emph{random experiment consists of performing experiments}
+	\Ei{1}, \ldots, \Ei{n}.
+	The outcome of this experiment will then be an \emph{$n$-tuple}
+	\beq
+		s = (s_1, ..., s_n),
+	\eeq
+	where $s_k$ is the outcome of the $k$th subexperiment.
+	The sample space of the sequential experiment is defined
+	as the set that contains the above $n$-tuples
+	and is denoted by the \emph{Cartesian product}
+	of the individual sample spaces
+	\beql{eq-cart-prod}
+		\sspace_1 \times \cdots \times \sspace_n.
+	\eeql
+
+	\item
+	We can usually determine, \emph{because of physical considerations,}
+	when the subexperiments are independent,
+	in the sense that the outcome of any given subexperiment
+	cannot affect the outcomes of the other subexperiments.
+	Let \Ai{1}, \ldots, \Ai{n}\ be events such that \Ai{k}\ concerns
+	only the outcome of the $k$th subexperiment.
+	\emph{If the subexperiments are independent,
+	then it is reasonable to assume that
+	the above events \Ai{1}, \ldots, \Ai{n}\ are independent.}
+	Thus
+	\beq
+		\pr{A_1\cap \cdots\cap A_n} = \pr{A_1} \cdots \pr{A_n}.
+	\eeq
+	\emph{This expression allows us to compute all probabilities
+	of events of the sequential experiment.}
+
+\eit
+
+\paragraph{The Binomial Probability Law}
+\bit
+	\item A \emph{Bernoulli} trial involves performing an experiment once and noting
+	whether a particular event $A$ occurs.
+	The outcome of the Bernoulli trial is said to be
+	a ``success'' if $A$ occurs and a ``failure'' otherwise.
+
+
+	\item
+	Let $k$ be the number of successes in $n$ independent Bernoulli trials,
+	then the probabilities of $k$ are given by the \emph{binomial probability law:}
+	\beql{eq-binom-prob-law}
+		p_n(k) = {n \choose{k}} p^k (1-p)^{n-k}
+		\mfor
+		k=0,\ldots,n,
+	\eeql
+	where $p_n(k)$ is the probability of $k$ successes in $n$ trials,
+	and
+	\beql{eq-comb-1}
+		{n \choose{k}} = \frac{n!}{k!(n-k)!}.
+	\eeql
+	is the \emph{binomial coefficient}.
+
+	\item The \emph{binomial theorem} implies
+	\beql{eq-binom-theorem}
+		(a+b)^n = \sumkton {n\choose{k}} a^kb^{n-k},
+	\eeql
+	hence
+	\beq
+		\sumkton p_n(k)
+		= \sumkton {n \choose{k}} p^k (1-p)^{n-k}
+		= (p + (1-p))^n = 1
+	\eeq
+	confirming that \emph{the binomial probabilities sum to $1$}.
+
+	\item recursive formula for the binomial probability:
+	\beql{eq-binom-prob-recurs}
+		p_n(k+1) = \frac{(n-k)p}{(k+1)(1-p)} p_n(k).
+	\eeql
+
+	\item \lgexam{2.40}{Error Correction Coding}
+\eit
+
+\paragraph{The Multinomial Probability Law}
+
+\bit
+	\item Let \Bi{1}, \Bi{2}, \ldots, \Bi{M}\
+	be a partition of the sample space \sspace\ of some random experiment
+	and let $\pr{B_j} = p_j$.
+	The events are \emph{mutually exclusive}, so
+	\beq
+		p_1 + p_2 + ... + p_M = 1.
+	\eeq
+	Suppose that $n$ independent repetitions of the experiment are performed.
+	Let $k_j$ be the number of times event \Bi{j}\ occurs,
+	then the vector $(\xcomma{k}{M})$
+	specifies the number of times each of the events \Bi{j}\ occurs.
+	The probability of the vector $(\xcomma{k}{M})$
+	satisfies the \emph{multinomial probability law:}
+	\beql{eq-multinom-prob-law}
+		\pr{(\xcomma{k}{M})} = \frac{n!}{k_1!k_2!\cdots k_M!}
+		p_1^{k_1} p_2^{k_2} \cdots p_M^{k_M}
+	\eeql
+	where $\xplus{k}{M} = n$.
+	It reduces to the binomial probability law when $M=2$.
+\eit
+
+\paragraph{The Geometric Probability Law}
+
+\bit
+	\item Consider a sequential experiment
+	in which we \emph{repeat independent Bernoulli trials until the occurrence of the first success}.
+	Let the outcome of this experiment be $m$,
+	the number of trials carried out until the occurrence of the first success.
+	Then
+	\beql{eq-geo-prob-law}
+		p(m) = \pr{ \comp{A_1} \comp{A_2} \cdots \comp{A_{m-1}} A_m}
+		= (1-p)^{m-1} p
+		\mfor
+		m \in \{1,2,\ldots\}.
+	\eeql
+	This is called the \emph{geometric probability law}.
+
+	\item The formula for the sum of infinite geometric sequence
+	gives
+	\beq
+		\sumto{m}{1}{\infty} p(m) = \sumto{m}{1}{\infty} p q^{m-1} = \frac{p}{1-q} = 1
+	\eeq
+	where $q=1-p$.
+	Also
+	\beq
+		\pr{m>K}
+		= \sumto{m}{K+1}{\infty} p(m) = \sumto{m}{K+1}{\infty} p q^{m-1}
+		= \frac{pq^k}{1-q} = q^k.
+	\eeq
+
+	\item \lgexam{2.43}{Error Control By Retransmission}
+
+\eit
+
+\paragraph{Sequences of Dependent Experiments}
+
+\bit
+	\item
+	Suppose the sequence of outcomes $s_1,s_2,\ldots$ satisfy
+	\beql{eq-only-depend-prev}
+		\cpr{s_n}{\xcap{s}{n-1}} = \cpr{s_n}{s_{n-1}}
+	\eeql
+	for any $n\leq1$,
+	\ie,
+	the outcome $s_n$ only depends on the previous outcome $s_{n+1}$.
+	The sequential experiments that satisfy (\ref{eq-only-depend-prev})
+	are called \emph{Markov chains}
+	For these experiments, the probability of a sequence
+	$\xcomma{s}{n}$\ is given by
+	\beql{eq-markov-chains}
+		\pr{\xcomma{s}{n}} = \cpr{s_{n}}{s_{n-1}} \cpr{s_{n-1}}{s_{n-2}}
+			\cdots \cpr{s_{1}}{s_{0}} \pr{s_0}.
+	\eeql
+\eit
+
+
+\section{Synthesizing Randomness: Random Number Generators \optional}
+MAYBE LATER
+
+\section{Fine Points: Event Classes \optional}
+\label{sec:fine-points-1}
+NO CONTENTS
+
+\section{Fine Points: Probabilities of Sequences of Events Summary Problems \optional}
+\label{sec:fine-points-2}
+(ALMOST) NO CONTENTS
+
+\subsection{The Borel Field of Events}
+\subsection{Continuity of Probability}
+\begin{coro}[Continuity of Probability Function]
+\label{coro-cont-prob-fcn}
+Let $A_1$, $A_2$, \ldots\
+be an increasing or decreasing sequences of events
+in \evcl, then:
+\beql{eq-cont-prob-fcn}
+	\lim_{n\to\infty} \pr{A_n} = \pr{\lim_{n\to\infty}A_n}.
+\eeql
+
+\end{coro}
+
+
+

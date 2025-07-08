@@ -1,0 +1,494 @@
+
+
+\input{D:/Multimedia/mydefs}
+%\input{D:/mydefs}
+
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhead[R]{Probability and Statistics for Electrical Engineering}
+
+\addtolength{\headsep}{.5cm}
+
+
+
+\input{statdefs}
+\renewcommand{\emph}[1]{{\it #1}}
+
+\begin{document}
+\setlength{\headheight}{15pt}
+\maketitle
+
+\begin{enumerate}
+
+	\item \lgprob{4.4}.
+	An urn contains $8$ \$$1$ bills
+	and two \$$5$ bills.
+	Let \X\ be the total amount that results when two bills are drawn from the urn without replacement,
+	and
+	let $Y$ be the total amount that results when two bills are drawn from the urn with replacement.
+	\begin{enumerate}
+		\item Plot and compare the CDF's of the random variables.
+		\item Use the CDF to compare the probabilities of the following events in the two problems:
+		$\{X = \$2\}$,
+		$\{X < \$7\}$,
+		$\{X \geq 6\}$.
+	\end{enumerate}
+
+
+	\item \lgprob{4.7}.
+	A point is selected at random inside a square defined by
+	$\{(x, y): 0 \leq x \leq b, 0 \leq y \leq b\}$.
+	Assume the point is equally likely to fall anywhere in the square.
+	Let the random variable $Z$ be given by the minimum of the two coordinates of the point
+	where the dart lands.
+	\begin{enumerate}
+		\item Find the sample space \sspace\
+		and the sample space of $Z$, $\sspace_{Z}$.
+		\item Show the mapping from \sspace\ to $\sspace_{Z}$.
+		\item Find the region in the square corresponding to the event
+		$\{Z \leq z\}$.
+		\item Find and plot the CDF of $Z$.
+		\item Use the CDF to find: $\pr{Z > 0}$, $\pr{Z > b}$, $\pr{Z \leq b/2}$, $\pr{Z > b/4}$.
+	\end{enumerate}
+
+
+	\item \lgprob{4.11}.
+	The random variable \X\ is uniformly distributed in the interval
+	$[-1, 2]$.
+	\begin{enumerate}
+		\item Find and plot the CDF of \X.
+		\item Use the CDF to find the probabilities of the following events:
+		$\{X \leq 0\}$,
+		$\{|X - 0.5| < 1\}$,
+		and $C = \{X > -0.5\}$.
+	\end{enumerate}
+
+	\item \lgprob{4.15}.
+	For $\beta > 0$ and $\lambda > 0$,
+	the Weibull random variable $X$ has CDF:
+	\begin{equation}
+		\cdfxk{x} = \left\{\begin{array}{ll}
+		0	&\mfor x< 0
+		\\1-e^{(x/\lambda)^\beta}	&\mfor x \geq 0.
+		\end{array}\right.
+	\end{equation}
+	\begin{enumerate}
+	\item Plot the CDF of $X$ for $\beta = 0.5$, $1$, and $2$.
+	\item Find the probability $\pr{j\lambda < X < (j + 1)\lambda}$
+	and $\pr{X < j\lambda}$.
+	\item Plot $\log \pr{X > x}$ vs. $\log x$.
+
+	\end{enumerate}
+
+	\item \lgprob{4.20}.
+	\begin{enumerate}
+		\item Find and plot the PDF of the random variable $Z$ in \lgprob{4.7}.
+		\item Use the PDF to find the probability that the minimum is greater than $b/3$.
+	\end{enumerate}
+
+\end{enumerate}
+
+\section*{Bonus problems}
+
+\begin{enumerate}
+	\item \lgprob{4.29}.
+	Let $C$ be an event for which $\pr{C} > 0$.
+	Show that $\ccdfxk{x}{C}$
+	satisfies the eight properties of a CDF.
+	\ifdefined\sol
+	\begin{solution}
+	First, we note the continuity of probability function:
+	\begin{equation}
+	\label{eq-cont-prob-fcn}
+		\lim_{n\to\infty} \pr{A_n} = \bpr{\lim_{n\to\infty} A_n}
+	\end{equation}
+	for an increasing or decreasing sequence of events in \evcl,
+	$A_1$, $A_2$, \ldots.
+
+	\renewcommand{\labelenumii}{(\roman{enumii})}
+	\begin{enumerate}
+		\item
+		By definition,
+		\[
+			\ccdfxk{x}{C} = \cpr{X \leq x}{C}
+			= \frac{\pr{\{X\leq x\} \cap C}}{\pr{C}}.
+		\]
+		Since $0\leq \pr{\{X\leq x\} \cap C} \leq \pr{C}$, we have
+		\begin{equation}
+			\label{eq-1}
+			0 \leq \cdfxk{x}{C} \leq 1.
+		\end{equation}
+
+		\item
+		Now let us consider the following increasing sequence of events
+		\[
+			A_n = \{X \leq n \} \cap C.
+		\]
+		Then by definition
+		\[
+			\lim_{n\to\infty} A_n
+			= \bigcup_{n=1}^\infty A_n
+			= \bigcup_{n=1}^\infty \left( \{X \leq n \} \cap C \right)
+			= \left( \bigcup_{n=1}^\infty \{X \leq n \} \right) \cap C
+			= \sspace \cap C
+			= C.
+		\]
+		Therefore (\ref{eq-cont-prob-fcn}) implies
+		\begin{eqnarray}
+		\nonumber
+			\lefteqn{
+			\lim_{x\to\infty} \ccdfxk{x}{C}
+			= \lim_{n\to\infty} \ccdfxk{n}{C}
+			}
+			\\
+			&=& \frac{\lim_{n\to\infty} \pr{\{X\leq n\}\cap C}}{\pr{C}}
+			= \frac{\lim_{n\to\infty} \pr{A_n}}{\pr{C}}
+			= \frac{\pr{\lim_{n\to\infty} A_n}}{\pr{C}}
+			= \frac{\pr{C}}{\pr{C}}
+			= 1.
+			\label{eq-2}
+		\end{eqnarray}
+
+		\item
+		Similarly define the following decreasing sequence of events
+		\[
+			B_n = \{X \leq -n \} \cap C.
+		\]
+		Then
+		\[
+			\lim_{n\to\infty} B_n
+			= \bigcap_{n=1}^\infty B_n
+			= \bigcap_{n=1}^\infty \left( \{X \leq -n \} \cap C \right)
+			= \left( \bigcap_{n=1}^\infty \{X \leq -n \} \right) \cap C
+			= \emptyset \cap C
+			= \emptyset.
+		\]
+		Thus (\ref{eq-cont-prob-fcn}) implies
+		\begin{eqnarray}
+		\nonumber
+			\lefteqn{
+			\lim_{x\to-\infty} \ccdfxk{x}{C}
+			= \lim_{n\to-\infty} \ccdfxk{n}{C}
+			}
+			\\
+			&=& \frac{\lim_{n\to\infty} \pr{\{X\leq -n\}\cap C}}{\pr{C}}
+			= \frac{\lim_{n\to\infty} \pr{B_n}}{\pr{C}}
+			= \frac{\pr{\lim_{n\to\infty} B_n}}{\pr{C}}
+			= \frac{\pr{\emptyset}}{\pr{C}}
+			= 0.
+			\label{eq-3}
+		\end{eqnarray}
+
+		\item
+		For any $a$ and $b$ such that $a<b$,
+		$\{X\leq a\} \subseteq \{X\leq b\}$,
+		hence
+		\[
+			\left( \{X\leq a\} \cap C \right) \subseteq
+			\left( \{X\leq b\} \cap C \right).
+		\]
+		Thus $ \pr{ \{X\leq a\} \cap C } \leq \pr{ \{X\leq b\} \cap C }$
+		and
+		\[
+		\ccdfxk{a}{C}
+		=\frac{\pr{ \{X\leq a\} \cap C }}{\pr{C}} \leq
+		\frac{ \pr{ \{X\leq b\} \cap C }}{\pr{C}}
+		=\ccdfxk{b}{C}.
+		\]
+		Therefore
+		\begin{equation}
+		\label{eq-4}
+		\ccdfxk{x}{C} \mbox{ is a nondecreasing function of } x.
+		\end{equation}
+
+		\item
+		Now for some $x\in\reals$,
+		we consider the following decreasing sequence of events,
+		\[
+			D_n = \{X\leq x + 1/n \} \cap C.
+		\]
+		Then
+		\[
+			\bigcap_{n=1}^\infty D_n
+			= \left( \bigcap_{n=1}^\infty \{ X \leq x + 1/n \} \right) \cap C
+			= \{X\leq x\} \cap C.
+		\]
+		Thus (\ref{eq-cont-prob-fcn}) implies
+		\begin{eqnarray}
+			\nonumber
+			\lefteqn{
+			\lim_{h\to+0} \ccdfxk{x+h}{C}
+			= \lim_{n\to\infty} \ccdfxk{x+1/n}{C}
+			= \frac{ \lim_{n\to\infty} \pr{ \{X \leq x + 1/n\} \cap C }}{\pr{C}}
+			}
+			\\
+			&=& \frac{ \lim_{n\to\infty} \pr{ D_n }}{\pr{C}}
+			= \frac{ \pr{ \lim_{n\to\infty} D_n }}{\pr{C}}
+			= \frac{ \pr{ \{X\leq x\} \cap C }}{\pr{C}}
+			= \ccdfxk{x}{C}
+			\label{eq-5}
+		\end{eqnarray}
+		\ie,
+		\ccdfxk{x}{C}\
+		is continuous from the right.
+
+
+		\item
+		Again suppose that $a<b$.
+		Then $\{x\leq b\} = \{x\leq a\} \cup  \{ a < x \leq b\}$.
+		The distributivity implies
+		\[
+			\{x\leq b\} \cap C
+			= \underbrace{\{x\leq a\} \cap C}_A
+			\cup  \underbrace{\{ a < x \leq b\} \cap C}_B
+		\]
+		Since $A$ and $B$ are disjoint, \ie, $A\cap B = \emptyset$,
+		\[
+			\pr{\{x\leq b\} \cap C}
+			= \pr{\{x\leq a\} \cap C}
+			+  \pr{\{ a < x \leq b\} \cap C},
+		\]
+		thus
+		\begin{eqnarray}
+		\nonumber
+			\lefteqn{
+			\cpr{a<x\leq b}{C}
+			= \frac{\pr{\{a<x\leq b\}\cap C }}{\pr{C}}
+			}
+			\\
+			&=&
+			 \frac{\pr{\{x\leq b\} \cap C} - \pr{\{x\leq a\} \cap C}}{\pr{C}}
+			= \ccdfxk{b}{C} - \ccdfxk{a}{C}.
+			\label{eq-6}
+		\end{eqnarray}
+
+		\item For any $x\in\reals$,
+		(\ref{eq-6}) implies
+		\begin{eqnarray*}
+			\lefteqn{
+			\lim_{x\to+0} (\ccdfxk{x}{C} - \ccdfxk{x-h}{C})
+			= \lim_{n\to\infty} (\ccdfxk{x}{C} - \ccdfxk{x-1/n}{C})
+			}
+			\\
+			&=& \lim_{n\to\infty} \cpr{x-1/n < X \leq x}{C}
+			= \frac{ \lim_{n\to\infty}
+				\pr{\{x-1/n < X \leq x\}\cap C}}{\pr{C}}
+			\\&=& \frac{ \pr{
+			\lim_{n\to\infty} \{x-1/n < X \leq x\}\cap C}}{\pr{C}}
+			= \frac{ \pr{ \{X=x\} \cap C}}{\pr{C}}
+			= \cpr{X=x}{C},
+		\end{eqnarray*}
+		hence
+		\begin{equation}
+		\label{eq-7}
+			\cpr{X=x}{C} = \ccdfxk{x}{C} - \ccdfxk{x^-}{C}.
+		\end{equation}
+
+		\item Lastly,
+		$\{ X \leq x \} \cup \{X > x\} = \sspace$,
+		thus
+		\[
+			(\{ X \leq x \} \cap C)
+			\cup
+			(\{X > x\} \cap C) = \sspace \cap C = C.
+		\]
+		Since $\{ X \leq x \} \cap C$ and $\{X > x\} \cap C$ are disjoint,
+		\[
+			\pr{\{ X \leq x \} \cap C}
+			+
+			\pr{\{X > x\} \cap C} = \pr{C},
+		\]
+		and dividing the both side with \pr{C}\ gives
+		\[
+			\ccdfxk{x}{C} + \cpr{X>x}{C} = 1,
+		\]
+		hence
+		\begin{equation}
+		\label{eq-8}
+			\cpr{X>x}{C} = 1 - \ccdfxk{x}{C}.
+		\end{equation}
+	\end{enumerate}
+	\renewcommand{\labelenumii}{(\alpha{enumii})}
+
+	Therefore \ccdfxk{x}{C}\ satisfies the eight properties of a CDF,
+	(\ref{eq-1}),
+	(\ref{eq-2}),
+	(\ref{eq-3}),
+	(\ref{eq-4}),
+	(\ref{eq-5}),
+	(\ref{eq-6}),
+	(\ref{eq-7}),
+	and (\ref{eq-8}).
+	\end{solution}
+	\fi
+
+
+	\item \lgprob{4.46}.
+	Find the mean and variance of the Gaussian random variable
+	by direct integration of the following two equations, (\ref{eq-exp}) and (\ref{eq-var}).
+	\begin{equation}
+	\label{eq-exp}
+		\Exp{X} = \intinftoinf x \pdfxk{x} \dx
+	\end{equation}
+	and
+	\begin{equation}
+	\label{eq-var}
+		\VAR{X}
+		= \Exp{(X-\Exp{X})^2}
+		= \Exp{X^2} - \Exp{X}^2.
+	\end{equation}
+	\ifdefined\sol
+	\begin{solution}
+		The PDF of the Gaussian with $\mu$ and $\sigma>0$ as its mean and standard deviation
+		is
+		\begin{equation}
+		\label{eq-pdf-gauss}
+			\pdfxk{x} = \frac{1}{\sqrt{2\pi} \sigma} e^{-(x-\mu)^2/2\sigma^2}.
+		\end{equation}
+		If we substitute (\ref{eq-pdf-gauss}) for \pdfxk{x}\ in (\ref{eq-exp})
+		and substitute $\mu + \sigma y$ for $x$,
+		we have
+		\begin{eqnarray*}
+			\lefteqn{
+				\Exp{X} = \frac{1}{\sqrt{2\pi} \sigma} \intinftoinf x e^{-(x-\mu)^2/2\sigma^2} \dx
+				= \frac{1}{\sqrt{2\pi} \sigma } \intinftoinf (\mu + \sigma y) e^{-y^2/2} \sigma\dy
+			}
+			\\&=&
+			\mu \underbrace{\intinftoinf \frac{1}{\sqrt{2\pi} } e^{-y^2/2} \dy}_A
+			+ \sigma \underbrace{\intinftoinf \frac{1}{\sqrt{2\pi} } y e^{-y^2/2} \dy}_B
+			= \mu
+		\end{eqnarray*}
+		where $dx = \sigma dy$, $A=1$ since it is the integral from $-\infty$ to $\infty$ of
+		the PDF of the Gaussian with zero mean and unit variance,
+		and $B=0$ since the integrand is symmetric about $0$.
+		If we substitute (\ref{eq-pdf-gauss}) for \pdfxk{x}\ in (\ref{eq-var})
+		and substitute $\mu + \sigma y$ for $x$,
+		we have
+		\begin{eqnarray*}
+			\lefteqn{
+			\VAR{X} = \Exp{(X-\Exp{X})^2}
+			= \intinftoinf \frac{1}{\sqrt{2\pi} \sigma} (x-\mu)^2 e^{-(x-\mu)^2/2\sigma^2} \dx
+			}
+			\\&=&
+			\intinftoinf \frac{1}{\sqrt{2\pi} \sigma} \sigma ^2 y^2 e^{-y^2/2} \sigma \dy
+			= \sigma^ 2 \underbrace{\intinftoinf \frac{1}{\sqrt{2\pi}} y^2 e^{-y^2/2} \dy}_C
+			= \sigma^2
+		\end{eqnarray*}
+		where $C=1$ since it is the variance of the Gaussian with zero mean and unit variance.
+	\end{solution}
+	\fi
+
+	\item \lgprob{4.47}.
+	Prove the following two formula, (\ref{eq-m-1}) and (\ref{eq-m-2}).
+	\begin{equation}
+	\label{eq-m-1}
+		\Exp{X} = \int_0^\infty (1-\cdfxk{x}) \dx
+	\end{equation}
+	if \X\ is a continuous and nonnegative \randvar\
+	and
+	\begin{equation}
+	\label{eq-m-2}
+		\Exp{X} = \sumkztoi \pr{X>k}
+	\end{equation}
+	if \X\ is a nonnegative and integer-valued \randvar.
+	\ifdefined\sol
+	\begin{solution}
+	\begin{enumerate}
+		\item Suppose that \X\ is a continuous and nonnegative \randvar\
+		and $\Exp{X}$ exists.
+		Let $f:\preals \to \preals$ be a function such that
+		\[
+			f(y) = \int_0^y (1-\cdfxk{x}) \dx.
+		\]
+		Then
+		\begin{eqnarray*}
+			\lefteqn{
+			f(y) = \int_0^y \left(1-\int_0^x \pdfxk{t} \dt \right) \dx
+			= \int_0^y \dx - \int_0^y \int_0^x \pdfxk{t} \dt \dx
+			}
+			\\
+			&=& y - \int_0^y \int_t^y \pdfxk{t} \dx \dt
+			= y - \int_0^y \pdfxk{t} \int_t^y \dx \dt
+			\\
+			&=& y - \int_0^y \pdfxk{t} (y-t) \dt
+			= y - y \int_0^y \pdfxk{t} \dt + \int_0^y t \pdfxk{t} \dt
+			\\
+			&=& y \left( 1 -  \int_0^y \pdfxk{t} \dt \right) + \int_0^y t \pdfxk{t} \dt
+			\\
+			&=& y \int_y^\infty \pdfxk{t} \dt + \int_0^y t \pdfxk{t} \dt
+			\\
+			&\leq& \int_y^\infty t \pdfxk{t} \dt + \int_0^y t \pdfxk{t} \dt
+			= \int_0^\infty t \pdfxk{t} \dt = \Exp{X}
+		\end{eqnarray*}
+		by the existence of \Exp{X}.
+		Thus we have
+		\[
+			\int_0^y t \pdfxk{t} \dt \leq f(y) \leq \Exp{X},
+		\]
+		hence
+		\[
+			\Exp{X} = \lim_{y\to\infty} \int_0^y t \pdfxk{t} \dt
+			\leq \lim_{y\to\infty} f(y) \leq \Exp{X}.
+		\]
+		Therefore
+		\[
+			\int_0^\infty (1-\cdfxk{x}) \dx
+			= \lim_{y\to\infty} f(y) = \Exp{X},
+		\]
+		hence the proof.
+
+		\item Suppose that \X\ is a nonnegative and integer-valued \randvar\
+		and $\Exp{X}$ exists.
+		Let $f:\naturals\to\preals$ be a function such that
+		\[
+			f(n) = \sumkzton \pr{X>k}.
+		\]
+		Then
+		\begin{eqnarray*}
+			\lefteqn{
+			f(n) = \sumkzton \sumto{i}{k+1}{\infty} \pmfxk{i}
+			= \sumto{i}{1}{\infty} \sumto{k}{0}{\min\{i-1,n\}} \pmfxk{i}
+			= \sumto{i}{1}{\infty} \pmfxk{i} \sumto{k}{0}{\min\{i-1,n\}} 1
+			}
+			\\&=&
+			\sumto{i}{1}{n} i \pmfxk{i}
+			+ (n+1) \sumto{i}{n+1}{\infty} \pmfxk{i}
+			\leq \sumto{i}{1}{n} i \pmfxk{i}
+			+ \sumto{i}{n+1}{\infty} i \pmfxk{i}
+			= \Exp{X}
+		\end{eqnarray*}
+		by the existence of \Exp{X}.
+		Therefore
+		\[
+			\sumto{i}{1}{n} i \pmfxk{i} \leq f(n) \leq \Exp{X}.
+		\]
+		Since $\lim_{n\to\infty} \sumto{i}{1}{n} i \pmfxk{i} = \Exp{X}$,
+		\[
+			\Exp{X} = \lim_{n\to\infty} \sumiton \pmfxk{i}
+			\leq \lim_{n\to\infty} f(n)
+			\leq \Exp{X}.
+		\]
+		Therefore
+		\[
+			\sumkztoi \pr{X>k} = \lim_{n\to\infty} f(n) = \Exp{X},
+		\]
+		hence the proof.
+
+
+	\end{enumerate}
+	\end{solution}
+	\fi
+
+
+
+\end{enumerate}
+
+
+
+
+\end{document}
+

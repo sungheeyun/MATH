@@ -1,0 +1,1359 @@
+
+
+\input{D:/Multimedia/mydefs}
+%\input{D:/mydefs}
+
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhead[R]{Probability and Statistics for Electrical Engineering}
+
+\addtolength{\headsep}{.5cm}
+
+
+
+\input{statdefs}
+\renewcommand{\emph}[1]{{\it #1}}
+
+\begin{document}
+\setlength{\headheight}{15pt}
+\maketitle
+\begin{enumerate}
+	\item LG 1.1
+	\ifdefined\sol
+	Consider the following three random experiments:
+	\begin{itemize}
+		\item Experiment 1: Toss a coin.
+		\item Experiment 2: Toss a die.
+		\item Experiment 3:
+		Select a ball at random from an urn containing balls numbered $0$ to $9$.
+	\end{itemize}
+	\begin{enumerate}
+		\item Specify the sample space of each experiment.
+		\begin{solution}
+			\begin{itemize}
+				\item Experiment 1: $\sspace = \{H,T\}$
+				\item Experiment 2: $\sspace = \{1,2,\ldots,6\}$
+				\item Experiment 3: $\sspace = \{0,1,\ldots,9\}$
+			\end{itemize}
+		\end{solution}
+
+		\item Find the relative frequency of each outcome
+		in each of the above experiments
+		in a large number of repetitions of the experiment. Explain your answer.
+		\begin{solution}
+			Let $N_k(n)$ be the number of times in which the outcomes are $k$
+			when an experiment is repeated $n$ times.
+			Then the relative frequency of outcome $k$ is defined by
+			\[
+				f_k(n) = \frac{N_k(n)}{n}.
+			\]
+			\begin{itemize}
+				\item Experiment 1:
+				If it is a fair coin,
+				as we repeat tossing the coin many times,
+				the number of heads and that of tails
+				will tend to be (asymptotically) the same.
+				Hence, both $f_1(n)$ and $f_2(n)$ will get close to $1/2$.
+
+				\item Experiment 2:
+				Again, if it is a fair die,
+				as we repeat tossing the die many times,
+				the number of each outcome
+				will tend to be the same as others.
+				Hence, $f_k(n) \to 1/6$ as $n\to \infty$ for each $1\leq k\leq 6$.
+
+				\item Experiment 3:
+				Likewise,
+				$f_k(n) \to 1/10$ as $n\to \infty$ for each $0\leq k\leq 9$.
+			\end{itemize}
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+
+	\item LG 1.4
+	\ifdefined\sol
+	An urn contains three electronically labeled balls with labels
+	$00$, $01$, $10$.
+	Lisa, Homer, and Bart are asked to characterize the random experiment
+	that involves selecting a ball at random and reading the label.
+	Lisa's label reader works fine;
+	Homer's label reader has the most significant digit stuck at $1$;
+	Bart's label reader's least significant digit is stuck at $0$.
+	\begin{enumerate}
+		\item What is the sample space determined by Lisa, Homer, and Bart?
+		\begin{solution}
+			\begin{itemize}
+				\item Lisa's label reader works fine, hence $\sspace_\mathrm{Lisa} = \{00,01,10\}$.
+
+				\item Since Homer's label reader has the most significant digit stuck at $1$,
+				$00$ is read as $10$,
+				$01$ is read as $11$,
+				and $10$ is read as $10$.
+				Thus $\sspace_\mathrm{Homer} = \{10,11\}$
+
+				\item Similaryly, since
+				Bart's label reader's least significant digit is stuck at $0$,
+				$00$ is read as $00$,
+				$01$ is read as $00$,
+				and $10$ is read as $10$.
+				Thus, $\sspace_\mathrm{Bart} = \{00,10\}$
+
+			\end{itemize}
+		\end{solution}
+
+		\item What are the relative frequencies observed by Lisa, Homer, and Bart
+		in a large number of repetitions of the experiment?
+			\begin{itemize}
+				\item Lisa: The three relative frequencies will approach $1/3$.
+				\item Homer:
+				Since the outcome is $10$ when the actual label is either $00$ or $10$,
+				and the outcome is $11$ when the actual label is $01$,
+				the relative frequency of $10$ will approach $2/3$
+				and that of $11$ will approach $1/3$.
+
+				\item Bart:
+				Since the outcome is $00$ when the actual label is either $00$ or $01$,
+				and the outcome is $10$ when the actual label is $10$,
+				the relative frequency of $00$ will approach $2/3$
+				and that of $10$ will approach $1/3$.
+			\end{itemize}
+	\end{enumerate}
+	\fi
+
+	\item LG 1.10
+	\ifdefined\sol
+	Suppose that the signal $2 cos (2\pi t)$
+	is sampled at random instants of time.
+	\begin{enumerate}
+		\item Find the long-term sample mean.
+		\begin{solution}
+			Let $f(t) = 2\cos(2\pi t)$.
+			Since $f(t)$ is periodic with period $1$,
+			\ie, $f(t+1) = f(t)$ for any $t$,
+			the random sampling for $t\geq0$
+			is equivalent to the random sampling
+			within $t\in [0,1]$.
+			Since it is reasonable to assume that
+			$t$ is uniformly distributed on $[0,1]$,
+			the long-term sample mean will be
+			\[
+				\int_0^1 2\cos(2\pi t) = 0.
+			\]
+			(Indeed, the description of this problem is \emph{not} unambiguous at all.
+			We must define the ``randomness'' in a specific way,
+			\eg, it follows the Gaussian distribution, the geometric distribution, \etc)
+		\end{solution}
+
+		\item Find the long-term relative frequency of the events ``voltage is positive'';
+		``voltage is less than $-2$.''
+		\begin{solution}
+			Since we can confine our sample space to $[0,1]$,
+			the events ``voltage is positive'' happen
+			for $t\in(0,1/2)$,
+			hence the long-term relative frequencies of the event is $1/2$.
+			However, ``voltage is less than $-2$'' never happens,
+			hence the long-term relative frequencies of the event is $0$.
+		\end{solution}
+
+		\item Do the answers to parts (a) and (b) change
+		if the sampling times are periodic and taken every $\tau$ seconds?
+		\begin{solution}
+			``Yes'' for (a).
+			For example, if $\tau=1$ and we start sampling at $t=0$,
+			the long-term sample mean is just $1$.
+			``Yes'' for the first event in (b).
+			Again, if $\tau=1$ and we start sampling at $t=0$,
+			the long-term relative frequency of the event ``voltage is positive''
+			is $1$.
+			And ``No'' for the second event in (b)
+			since the event never happens
+			no matter how we sample the signal.
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+	\item LG 2.2
+	\ifdefined\sol
+	A die is tossed twice and the number of dots facing up in each toss
+	is counted and noted in the order of occurrence.
+	\begin{enumerate}
+		\item Find the sample space.
+		\begin{solution}
+		$ \sspace = \set{(x,y) \in\integers^2}{ 1 \leq x, y\leq 6, \mand x \mand y \mbox{ are integers}}.  $
+		\end{solution}
+
+		\item Find the set $A$ corresponding to the event
+		``number of dots in first toss is not less
+		than number of dots in second toss.''
+		\begin{solution}
+		$ A = \set{(x,y) \in\integers^2}{ 1 \leq y \leq  x\leq 6 }$
+		\end{solution}
+
+		\item Find the set $B$ corresponding to the event
+		``number of dots in first toss is $6$.''
+		\begin{solution}
+			$ B = \set{(6,y)\in\integers^2}{ 1\leq y\leq 6}
+			= \{ (6,1), (6,2), (6,3), (6,4), (6,5), (6,6) \}.$
+		\end{solution}
+
+		\item Does $A$ imply $B$ or does $B$ imply $A$?
+		\begin{solution}
+			Oviously, $B\subset A$, hence $B$ implies $A$.
+		\end{solution}
+
+		\item Find $A\cap \comp{B}$ and describe this event in words.
+		\begin{solution}
+			Note that
+			\[
+				A\cap \comp{B} = \set{(x,y)\in\integers^2}{ 1\leq y\leq x\leq 5}.
+			\]
+			It corresponds to the event
+			that ``number of dots in first toss is not less
+			than number of dots in second toss
+			{and} number of dots in first toss is not $6$.''
+		\end{solution}
+
+		\item Let $C$ correspond to the event
+		``number of dots in dice differs by $2$.''
+		Find $A\cap C$.
+		\begin{solution}
+			$ A\cap C = \{ (6,4), (5,3), (4,2), (3,1) \}.  $
+		\end{solution}
+
+	\end{enumerate}
+	\fi
+
+
+	\item LG 2.3
+	\ifdefined\sol
+	Two dice are tossed and the magnitude of the difference
+	in the number of dots facing up in the two dice is noted.
+	\begin{enumerate}
+		\item Find the sample space.
+		\begin{solution}
+			\sspace = \{0,1,2,3,4,5\}.
+		\end{solution}
+
+		\item Find the set $A$ corresponding to the event
+		``magnitude of difference is $3$.''
+		\begin{solution}
+			$ A = \{3\}$.
+		\end{solution}
+
+		\item Express each of the elementary events in this experiment
+		as the union of elementary events from Problem 2.2
+		\begin{solution}
+		\begin{eqnarray*}
+			\{0\} &\mbox{ corresponds to }& \{(1,1),(2,2),(3,3),(4,4),(5,5),(6,6)\}.
+			\\ \{1\} &\mbox{ corresponds to }& \{(1,2),(2,3),(3,4),(4,5),(5,6),
+			(2,1),(3,2),(4,3),(5,4),(6,5)\}.
+			\\ \{2\} &\mbox{ corresponds to }& \{(1,3),(2,4),(3,5),(4,6),
+			(3,1),(4,2),(5,3),(6,4)\}.
+			\\ \{3\} &\mbox{ corresponds to }& \{(1,4),(2,5),(3,6), (4,1),(5,2),(6,3)\}.
+			\\ \{4\} &\mbox{ corresponds to }& \{(1,5),(2,6), (5,1),(6,2) \}.
+			\\ \{5\} &\mbox{ corresponds to }& \{(1,6), (6,1) \}.
+		\end{eqnarray*}
+		\end{solution}
+
+	\end{enumerate}
+	\fi
+
+	\item LG 2.9
+	\ifdefined\sol
+		The sample space of an experiment is the real line.
+		Let the events $A$ and $B$ correspond to the following subsets of the real line:
+		$A = (\infty, r]$ and $B = (-\infty, s]$, where $r \leq s$.
+		Find an expression for the event C = $(r, s]$
+		in terms of $A$ and \sB. Show that $B = A \cup C$
+		and $A \cap C = \emptyset$.
+		\begin{solution}
+		It is obvious that
+		\[
+			A \cup C =( -\infty,s] \cup (s,r] = (-\infty,r] = B
+		\]
+		and
+		\[
+			A \cap C =( -\infty,s] \cap (s,r] = \emptyset.
+		\]
+		Note that $\{A,C\}$ is a partition of $B$,
+		thus
+		\[
+			C = B-A = B \backslash A = B\cap \comp{A}.
+		\]
+		\end{solution}
+	\fi
+
+	\item LG 2.12
+	\ifdefined\sol
+	Show that if $A\cup B = A$ and $A \cap B=A$ then $A=B$.
+	\begin{solution}
+	Suppose that $A\cup B = A$.
+	Then for any $x\in B$, $x\in A\cup B = A$, hence $x\in A$.
+	Thus $B\subset A$.
+	Now suppose that $A\cap B = A$.
+	Then for any $x\in A$, $x\in A\cap B$, hence $x\in B$.
+	Thus $A\subset B$.
+
+	Therefore $A=B$
+	(since $A=B$ if and only if $A\subset B$ and $B\subset A$).
+	\end{solution}
+	\fi
+
+	\item LG 2.15
+	\ifdefined\sol
+	Figure P2.1 shows three systems of three components,
+	$A_1$, $A_2$, and $A_3$.
+	Figure P2.1(a) is a ``series'' system in which
+	the system is functioning
+	only if all three components are functioning.
+	Figure 2.1(b) is a ``parallel'' system
+	in which the system is functioning as long as
+	at least one of the three components is functioning.
+	Figure 2.1(c) is a ``two-out-of-three'' system in which the system is functioning
+	as long as at least two components are functioning.
+	Let \Ak\ be the event ``component $k$ is functioning.''
+	For each of the three system configurations,
+	express the event ``system is functioning''
+	in terms of the events \Ak.
+	\begin{solution}
+		Let $F_1$ be the event that the ``series'' system is functioning,
+		$F_2$ be the event that the ``parallel'' system is functioning,
+		and $F_3$ be the event that the ``two-out-of-three'' system is functioning.
+		\begin{itemize}
+			\item Since the ``series'' system is functioning
+			if and only if all the components are functioning,
+			\[
+				F_1 = A_1 \cap A_2 \cap A_3.
+			\]
+
+			\item
+			Also since the ``parallel'' system is functioning
+			if and only if any of the three components is functioning,
+			\[
+				F_2 = A_1 \cup A_2 \cup A_3.
+			\]
+
+			\item
+			Lastly, we can see that the ``two-out-of-three'' system is functioning
+			if and only if
+			both the first and the second components are functioning
+			or both the second and the third components are functioning
+			or both the third and the first components are functioning.
+			Thus
+			\[
+				F_3 =
+				(A_1 \cap A_2)
+				\cup
+				(A_2 \cap A_3)
+				\cup
+				(A_1 \cap A_3).
+			\]
+		\end{itemize}
+	\end{solution}
+	\fi
+
+
+	\item LG 2.23
+	\ifdefined\sol
+	A random experiment has sample space $S = \{a, b, c, d\}$.
+	Suppose that $\pr{\{c, d\}} = 3/8$,
+	$\pr{\{b, c\}} = 6/8$,
+	and $\pr{\{d\}} = 1/8$.
+	Use the axioms of probability
+	to find the probabilities of the elementary events.
+	\begin{solution}
+	First, the Axiom III implies that $\prb{c} + \prb{d} = \pr{\{c,d\}}$,
+	hence \[
+		\prb{c} = \pr{\{c,d\}} - \prb{d} = 3/8 - 1/8 = 1/4.
+	\]
+	Similarly \[\prb{b} = \pr{\{b,c\}} - \prb{c} = 6/8 - 1/4 = 1/2.\]
+	Lastly, the Axiom II and Corollary 4 imply
+	and \[\prb{a} = 1 - \prb{a} - \prb{b} - \prb{c} = 1/8.\]
+	To summarize,
+	\[
+		\prb{a} = 1/8,\
+		\prb{b} = 1/2,\
+		\prb{c} = 1/4,\
+		\prb{d} = 1/8.
+	\]
+	\end{solution}
+	\fi
+
+	\item LG 2.36
+	\ifdefined\sol
+	The lifetime of a device behaves according to the probability law
+	$\pr{(t, \infty)} = 1/t$ for $t > 1$.
+	Let $A$ be the event ``lifetime is greater than $4$,''
+	and $B$ the event ``lifetime is greater than $8$.''
+	\begin{enumerate}
+		\item Find the probability of \acapb, and \acupb.
+		\begin{solution}
+		Note that
+		\[
+			\acapb = (4,\infty) \cap (8,\infty) = (8,\infty) = B
+			\mand
+			\acupb = (4,\infty) \cup (8,\infty) = (4,\infty) = A,
+		\]
+		hence
+		\[
+			\pr{A\cap B} = \pr{B} = 1/8
+			\mand
+			\pr{A\cup B} = \pr{A} = 1/4.
+		\]
+		\end{solution}
+
+		\item Find the probability of
+		the event ``lifetime is greater than $6$ but less than or equal to $12$.''
+		\begin{solution}
+			Let $C$ be the event ``lifetime is greater than $6$ but less than or equal to $12$.''
+			And let $D$ be the event ``lifetime is greater than $6$,''
+			and $E$ the event ``lifetime is greater than $12$.''
+			Then we have
+			\[
+				C \cup E = (6,12] \cup (12,\infty) = (6,\infty) = D.
+			\]
+			Since $C$ and $E$ are disjoint,
+			\[
+				\pr{C} = \pr{D} - \pr{E} = 1/6 - 1/12 = 1/12.
+			\]
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+
+	\item LG 2.62
+	\ifdefined\sol
+	A die is tossed twice and the number of dots facing up is
+	counted and noted in the order of occurrence.
+	Let $A$ be the event
+	``number of dots in first toss is not less than number of dots
+	in second toss,''
+	and let $B$ be the event
+	``number of dots in first toss is $6$.''
+	Find \cpr{A}{B} and \cpr{B}{A}.
+	\begin{solution}
+		Note that
+		\[
+			A = \set{(x,y)\in\integers^2}{1\leq y\leq x\leq 6}
+			\mand
+			B = \set{(6,y)\in\integers^2}{1\leq y\leq 6}
+		\]
+		and that
+		\[
+			\pr{A} = \frac{1+2+\cdots+6}{36} = \frac{21}{36} = 7/12
+			\mand
+			\pr{B} = 1/6.
+		\]
+		Since $B\subset A$, $A\cap B = B$.
+		Therefore
+		\[
+			\cpr{A}{B} = \cpreq{A}{B} = 1
+			\mand
+			\cpr{B}{A} = \cpreq{B}{A} = \frac{1}{6} \cdot \frac{12}{7}
+			= 2/7.
+		\]
+
+	\end{solution}
+	\fi
+
+	\item LG 2.67
+	\ifdefined\sol
+	In Problem 2.36 (device lifetime), find \cpr{B}{A}\ and \cpr{A}{B}.
+	\begin{solution}
+		Note that
+		\[ A = (4,\infty) \mand B = (8,\infty), \]
+		thus
+		\[ \pr{A} = 1/4 \mand \pr{B} = 1/8. \]
+		Since $B\subset A$, $A\cap B = B$,
+		hence
+		\[
+			\cpr{B}{A} = \cpreq{B}{A} = \frac{\pr{B}}{\pr{A}} = 1/2
+		\]
+		and
+		\[
+			\cpr{A}{B} = \cpreq{A}{B} = 1.
+		\]
+
+	\end{solution}
+	\fi
+
+
+	\item LG 2.76
+	\ifdefined\sol
+	In each lot of $100$ items,
+	two items are tested,
+	and the lot is rejected if either of the tested items is found defective.
+	\begin{enumerate}
+		\item Find the probability that a lot with $k$ defective items
+		is accepted.
+		\begin{solution}
+			Suppose we number each time from $1$ to $100$.
+			Without loss of generality the first $k$ items are defective.
+			The number of different combinations of size $2$ from $100$ is
+			$100 \choose 2$.
+			The number of different combinations of size $2$ from $100-k$
+			non-defective items is $100-k\choose 2$.
+			Therefore the probability that a lot with $k$
+			defective items is accepted is
+			\[
+				\frac{{100-k\choose 2}}{{100\choose2 }}
+				= \frac{(100-k)(100-k-1)}{100\cdot 99}.
+			\]
+		\end{solution}
+
+		\item Suppose that when the production process malfunctions,
+		$50$ out of $100$ items are defective.
+		In order to identify when the process is malfunctioning,
+		how many items should be tested so that the probability
+		that one or more items are found defective is at least $99$\%?
+		\begin{solution}
+			Suppose that $k$ items are tested.
+			Then the probability that no items are found defective is
+			\[
+				\frac{{50 \choose k}}{{100 \choose k}}
+			\]
+			since the number of different combinations of choosing $k$
+			items out of total of $100$ items is $100 \choose k$
+			and the number of different combinations of choosing $k$
+			items out of the $50$ non-defective items is $50 \choose k$.
+			In order for the probability that one or more items are found defective
+			to be at least $.99$,
+			the probability that no items are found defective must be
+			less than $.01$.
+			Hence we should have
+			\[
+				\frac{50\cdot49\cdots (50-k+1)}
+				{100\cdot99\cdots (100-k+1)}
+				< 0.01.
+			\]
+			Running the following Python code yields
+			this condition is equivalent to $k \geq 7$.
+			Figure~\ref{fig-prob-2-76}
+			shows this probability as a function of $k$;
+			the bottom one is drawn in log-scale.
+			Therefore $7$ items must be tested
+			in order for the probability that one or more items are found defective
+			to be at least $.99$.
+
+			\begin{figure}
+			\begin{center}
+			\includegraphics[width=.8\linewidth]{pr02_76}
+			\caption{
+			The probability that no items are found defective as
+			a function of $k$.}
+			\label{fig-prob-2-76}
+			\end{center}
+			\end{figure}
+
+			\begin{verbatim}
+import pylab as pl
+import numpy as np
+
+K = 10
+
+a = np.linspace(50,50-K+1,K)
+b = np.linspace(100,100-K+1,K)
+c = a/b
+d = np.cumprod(c)
+
+k = np.linspace(1,10,10)
+
+print d
+
+fig = pl.figure()
+ax1 = fig.add_subplot(211)
+ax2 = fig.add_subplot(212)
+ax1.plot(k,d,'o-')
+ax1.set_xlabel('k')
+ax1.set_ylabel('probability')
+
+ax2.semilogy(k,d,'o-')
+ax2.set_xlabel('k')
+ax2.set_ylabel('probability (log-scale)')
+
+pl.show()
+			\end{verbatim}
+
+
+
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+	\item LG 2.82
+	\ifdefined\sol
+	Let $\sspace = \{1, 2, 3, 4\}$
+	and $A = \{1, 2\}$, $ B = \{1, 3\}$, $ C = \{1, 4\}$.
+	Assume the outcomes are equiprobable. Are $A$, $B$, and $C$ independent events?
+	\begin{solution}
+		No, they are not independent events.
+		We must be very careful when dealing with more than $2$ events
+		and test their independence.
+		Obviously, these events are pairwise independent
+		since
+		\[
+			\pr{A\cap B} = \pr{A} \pr{B},\
+			\pr{B\cap C} = \pr{B} \pr{C},\
+			\pr{A\cap C} = \pr{A} \pr{C}.
+		\]
+		However,
+		\[
+			1/4 = \pr{A\cap B\cap C} \ne \pr{A}\pr{B} \pr{C} = 1/8,
+		\]
+		thus the three events are \emph{not} independent.
+	\end{solution}
+	\fi
+
+	\item LG 2.86
+	\ifdefined\sol
+	Show that events $A$ and $B$ are independent if $\cpr{A}{B} = \cpr{A}{\comp{B}}$.
+	\begin{solution}
+		Before diving into solving the problem depending on definitions and equations,
+		let us examine what this means.
+		The equation means the conditional probability of $A$ given $B$
+		is the same as that of $A$ given $\comp{B}$
+		or in other words, the conditional probability of $A$
+		assuming $B$ does not happen.
+		Thus the statement of the problem
+		is ``if the conditional probability remains the same
+		whether or not $B$ happens,
+		$A$ and $B$ are independent.''
+
+
+		\newcommand{\A}{\pr{A\cap B}}
+		\newcommand{\B}{\pr{B}}
+		\newcommand{\C}{\pr{A\cap \comp{B}}}
+		\newcommand{\D}{\pr{\comp{B}}}
+		Now let us try to show whether this is true
+		using equations.
+		We first note that $\cpr{A}{B} = \cpr{A}{\comp{B}}$ implies
+		that
+		\begin{eqnarray*}
+			\lefteqn{
+			\cpreq{A}{B} = \cpreq{A}{\comp{B}}
+			\Leftrightarrow \A \D = \B \C
+			}
+			\\&\Leftrightarrow& \A \D + \A \B  = \B \C + \A \B
+			\\&\Leftrightarrow& \A \left( \D + \B \right)  = \B \left( \C + \A  \right)
+			\\&\Leftrightarrow& \pr{A\cap B} = \pr{A} \pr{B}
+		\end{eqnarray*}
+		where we use the two equalities
+		$\pr{B} + \pr{\comp{B}} = 1$
+		and $\pr{A\cap B} + \pr{A \cap \comp{B}} = \pr{A}$.
+		Therefore $A$ and $B$ are independent.
+		(Indeed, $\cpr{A}{B} = \cpr{A}{\comp{B}}$ if and only if $A$ and $B$ are independent.)
+	\end{solution}
+	\fi
+
+	\item LG 2.92
+	\ifdefined\sol
+	A random experiment is repeated a large number of times
+	and the occurrence of events $A$ and $B$ is noted.
+	How would you test whether events $A$ and $B$ are independent?
+	\begin{solution}
+		While performing the random experiment repeatedly,
+		we keep calculating the relative frequencies of $A$, $B$ and $A\cap B$,
+		\ie,
+		$\relfreq{A}(n)$,
+		$\relfreq{B}(n)$,
+		and $\relfreq{A\cap B}(n)$ respectively.
+		Here $\relfreq{A}(n)$ and $\relfreq{B}(n)$ represent the relative frequencies in isolation,
+		and $\relfreq{A\cap B}(n)$ represents the relative frequency of the joint occurence of $A$ and $B$.
+		Then test whether $\relfreq{A\cap B}(n)/\relfreq{A}(n) \relfreq{B}(n)$
+		converges to $1$ as the number of the random experiments increase.
+	\end{solution}
+	\fi
+
+
+	\item LG 2.95
+	\ifdefined\sol
+	In the binary communication system in Example~2.26,
+	find the value of \eps\ for which the input of the channel
+	is independent of the output of the channel.
+	Can such a channel be used to transmit information?
+	\begin{solution}
+	Let $S_i$ be the event that the input is $i$
+	and let $R_i$ be the event that the output is $i$.
+	Let us consider $S_1$ and $R_1$.
+	The theorem of total probabilities
+	implies
+	\[
+		\pr{R_1} = \cpr{R_1}{S_0}\pr{S_0} + \cpr{R_1}{S_1} \pr{S_1}
+		 = (1-p) \eps + p (1-\eps).
+	\]
+	Thus in order for $S_1$ and $R_1$ to be independent,
+	the equation $\cpr{R_1}{S_1} = \pr{R_1}$ must hold.
+	Hence,
+	\[
+		1-\eps = (1-p) \eps + p (1-\eps),
+	\]
+	which implies that $\eps = 1/2$ (unless $p=1$).
+	This means the receiver does not give any information regarding
+	which signal was originally sent.
+	Hence such a channel cannot transmit any information.
+	\end{solution}
+	\fi
+
+	\item LG 2.98
+	\ifdefined\sol
+	A fraction $p$ of items from a certain production line is defective.
+	\begin{enumerate}
+		\item What is the probability that there is more than one defective
+		item in a batch of $n$ items?
+		\begin{solution}
+			Let $A$ be the event
+			that there is zero or one defective item in a batch of $n$ item.
+			Then the binomial probability law implies that
+			\[
+				\pr{A} = (1-p)^n + {n\choose 1}p(1-p)^{n-1}
+				= (1-p)^n + n p(1-p)^{n-1}.
+			\]
+			Therefore the probability that there is more than one defective
+			item in a batch of $n$ items is
+			\[
+				\pr{\comp{A}} = 1-\pr{A}
+				=1 - (1-p)^n - n p(1-p)^{n-1}.
+			\]
+		\end{solution}
+
+
+		\item During normal production $p = 10^{-3}$,
+		but when production malfunctions $p = 10^{-1}$.
+		Find the size of a batch that should be tested
+		so that if any items are found defective,
+		we are $99$\% sure that there is a production malfunction.
+		\begin{solution}
+		\emph{I think this problem is not properly stated.
+		I apologize if you spend too much time on this.
+		}
+		\iffalse
+			\[
+				1-(1-p)^n \geq 0.99
+				\Leftrightarrow
+				(1-p)^n \leq 0.01
+				\Leftrightarrow
+				n \geq \frac{\log0.01}{\log(1-p)}
+				= \frac{\log0.01}{\log(0.9)}
+				= 43.71,
+			\]
+			hence
+			we should test at least $44$ items.
+		\fi
+
+			
+		\iffalse
+			Let $M$ be the event that there is a production malfunction
+			and let $D$ be the event that any items are found defective.
+			Let $q$ be the probability that the production operates in normal mode
+			and let $p_1 = 10^{-3}$ and $p_2 = 10^{-1}$.
+			Then the probability that there is a production malfunctions
+			given that any items are found defective is
+			\begin{eqnarray*}
+				\lefteqn{\cpr{M}{D} = \cpreq{M}{D}
+				= \frac{\cpr{D}{M}\pr{M}}{\cpr{D}{M}\pr{M} + \cpr{D}{\comp{M}}\pr{\comp{M}}}
+				}
+				\\&=& \frac{(1-(1-p_2)^n)(1-q)}
+				{ (1-(1-p_2)^n)(1-q) + (1-(1-p_1)^n) q }
+				\geq 0.99
+			\end{eqnarray*}
+		\fi
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+	\item LG 2.106
+	\ifdefined\sol
+	A biased coin is tossed repeatedly until heads has come up three times.
+	Find the probability that $k$ tosses are required.
+	\emph{Hint:}
+	Show that $\{\mbox{``k tosses are required''}\} = A \cap B$, where
+	$A = \{\mbox{``$k$th toss is heads''}\}$ and $B = \{ \mbox{``2 heads occurs in $k - 1$ tosses''}\}$.
+	\begin{solution}
+		Let $A$ be the event that ``$k$th toss is heads,''
+		let $B$ be the event that ``$2$ heads occurs in $k - 1$ tosses,''
+		and let $C$ be the event that ``$k$ tosses are required.''
+		If it required $k$ tosses to see heads three times,
+		it means that the $k$th toss was head and $2$ heads have been seen
+		during the first $k-1$ tosses.
+		Hence, $C = A\cap B$.
+
+		Now let $p$ be the probability that the (biased) coin toss yields heads.
+		Then the event that $2$ heads occurs in $k-1$ tosses is governed by the binomial probability law:
+		\[
+			\pr{B} = {k-1 \choose 2}p^2 (1-p)^{k-3}.
+		\]
+		Thus,
+		\[
+			\pr{C} = \pr{A\cap B} = \pr{A} \pr{B}
+			= {k-1 \choose 2} p^3 (1-p)^{k-3}
+		\]
+		for $k=3,4,\ldots$ since $A$ and $B$ are independent.
+	\end{solution}
+	\fi
+
+\end{enumerate}
+
+\section*{Bonus problems}
+
+\begin{enumerate}
+	\item LG 2.26
+	\ifdefined\sol
+	Show that
+	\[
+		\pr{A\cup B\cup C}
+		= \pr{A} + \pr{B} + \pr{C}
+		-\pr{A\cap B} -\pr{B\cap C} -\pr{A\cap C}
+		+\pr{A\cap B\cap C}.
+	\]
+	\begin{solution}
+		Corollary 5 implies that
+		\beql{eq-1}
+			\pr{A\cup B\cup C}
+			= \pr{A\cup (B\cup C)}
+			= \pr{A} + \pr{B\cup C} - \pr{A\cap (B\cup C)}
+		\eeql
+		First, note that the same Corollary implies
+		\beql{eq-2}
+			\pr{B\cup C} = \pr{B} + \pr{C} - \pr{B\cap C}.
+		\eeql
+		Now the distributivity implies
+		$A\cap (B\cup C) = (A\cap B) \cup (A\cap C)$
+		and the same Corollary again implies
+		\begin{eqnarray}
+			\nonumber
+			\pr{A\cap (B\cup C)}
+			&=& \pr{A\cap B} + \pr {A\cap C}
+			- \pr{(A\cap B)\cap( A\cap C)}
+			\\ &=& \pr{A\cap B} + \pr {A\cap C} - \pr {A\cap B\cap C}.
+			\label{eq-3}
+		\end{eqnarray}
+		Then (\ref{eq-1}), (\ref{eq-2}), and (\ref{eq-3}) imply
+		\[
+			\pr{A\cup B\cup B}
+			= \pr{A} + \pr{B} + \pr{C} - \pr{B\cap C}
+			- \pr{A\cap B} - \pr{A\cap C} + \pr{A\cap B\cap C},
+		\]
+		hence the proof.
+	\end{solution}
+
+	\fi
+
+	\item LG 2.30
+	\ifdefined\sol
+	Use Corollary 5 to prove the following:
+	\begin{enumerate}
+		\item $\pr{A\cup B\cup C} \leq \pr{A} + \pr{B} + \pr{C}$.
+		\begin{solution}
+			Corollary 5 implies that
+			\[
+				\pr{A\cup B} \leq \pr{A} + \pr{B}.
+			\]
+			Thus
+			\[
+				\pr{A\cup B\cup C}
+				= \pr{A\cup (B\cup C)}
+				\leq \pr{A} + \pr{B\cup C}
+				\leq \pr{A} + \pr{B} + \pr{C},
+			\]
+			hence the proof.
+		\end{solution}
+
+		\item
+		\beql{eq-subadd}
+			\bpr{\bigcupkton A_k } \leq \sumkton \pr{A_k}.
+		\eeql
+		\begin{solution}
+			It is obvious that (\ref{eq-subadd}) holds for $n=1$.
+			Corollary 5 implies (\ref{eq-subadd}) also holds for $n=2$.
+			Now we suppose that (\ref{eq-subadd}) holds for $n=m$,
+			\ie,
+			\[
+				\bpr{\bigcupto{k}{1}{m} A_k } \leq \sumto{k}{1}{m} \pr{A_k}.
+			\]
+			Then the inductive assumption and Corollary 5 imply
+			\begin{eqnarray*}
+				\bpr{\bigcupto{k}{1}{m+1} A_k }
+				&=& \bpr{\left(\bigcupto{k}{1}{m} A_k \right) \cup A_{m+1} }
+				\leq \bpr{\bigcupto{k}{1}{m} A_k} + \pr{A_{m+1}}
+				\\&\leq& \sumto{k}{1}{m} \pr{A_k}  + \pr{A_{m+1}}
+				\leq \sumto{k}{1}{m+1} \pr{A_k},
+			\end{eqnarray*}
+			hence (\ref{eq-subadd}) holds also for $n= m+1$.
+			Therefore the mathematical induction implies
+			(\ref{eq-subadd}) is true for all $n\geq1$.
+		\end{solution}
+		\item
+		\beql{eq-another}
+			\bpr{\bigcapkton A_k } \geq 1- \sumkton \pr{\comp{A_k}}.
+		\eeql
+		\begin{solution}
+			Note that the DeMorgan's relues and (\ref{eq-subadd}) imply
+			\[
+				\bpr{\comp{\left( \bigcapkton A_k \right)}}
+				= \bpr{\bigcupkton \comp{A_k} }
+				\leq \sumkton \pr{\comp{A_k}}.
+			\]
+			Then Corollary 1 and the above inequality imply
+			\[
+				\bpr{\bigcapkton A_k }
+				= 1 - \bpr{\comp{\left( \bigcapkton A_k \right)}}
+				\geq 1 - \sumkton \pr{\comp{A_k}}.
+			\]
+
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+	\item LG 2.61
+	\ifdefined\sol
+	In this problem we derive the multinomial coefficient.
+	Suppose we partition a set of $n$ distinct objects
+	into $J$ subsets \xcomma{B}{J}\ of size \xcomma{k}{J},
+	respectively,
+	where $k_i\geq 0$, and $k_1+k_2+\cdots+k_J = n$.
+	\begin{enumerate}
+		\item Let $N_i$ denote the number of possible outcomes when
+		the $i$th subset is selected
+		in an increasing order,
+		\ie,
+		$k_1$ objects for $B_1$ are selected,
+		then $k_2$ objects for $B_2$ are selected,
+		and so on. Show that
+		\[
+			N_1 = {n \choose k_1},\
+			N_2 = {n-k_1 \choose k_2},\
+			\ldots,
+			N_{J-1} = {n-k_1-\cdots-k_{J-2} \choose k_{J-1}}
+		\]
+		\begin{solution}
+		The number of different combinations of size $k_1$
+		from a set of size $n$ is $n \choose k_1$, hence
+		\[
+			N_1 = { n \choose k_1}.
+		\]
+		Now we have $n-k_1$ objects left.
+		Hence $N_2$
+		is the number of different combinations of size $k_2$
+		from a set of size $n-k_1$, thus
+		\[
+			N_2 = { n-k_1 \choose k_2}.
+		\]
+		If we repeat this procedure until $N_J$,
+		we have
+		\beql{eq-4}
+			N_j = { n - \sumto{i}{1}{j-1} k_i \choose k_j }
+		\eeql
+
+		for $j = 1,2, \ldots, J$.
+		\end{solution}
+
+		\item Show that the number of partitions is then:
+		\[
+			N_1N_2\cdots N_{J-1} = \frac{n!}{k_1!k_2!\cdots k_J!}
+		\]
+		\begin{solution}
+		The number of possible partitions is the product of $N_j$ in (\ref{eq-4})
+		from $j=1$ to $J$,
+		hence
+		\begin{eqnarray*}
+			\lefteqn{
+			N_1 N_2 \cdots N_J
+			= \prod_{j=1}^J { n - \sumto{i}{1}{j-1} k_i \choose k_j }
+			= \prod_{j=1}^J
+			\frac{ \left( n - \sumto{i}{1}{j-1} k_i\right)!  }
+			{ k_j!  \left( n - \sumto{i}{1}{j} k_i\right)!  }
+			}
+			\\&=&
+			\frac{n!} { k_1!  \left( n - \sumto{i}{1}{1} k_i\right)!  }
+			\cdot
+			\frac{ \left( n - \sumto{i}{1}{1} k_i\right)!  }
+			{ k_2!  \left( n - \sumto{i}{1}{2} k_i\right)!  }
+			\cdots
+			\frac{ \left( n - \sumto{i}{1}{J-1} k_i\right)!  }
+			{ k_J!  \left( n - \sumto{i}{1}{J} k_i\right)!  }
+			\\&=& \frac{n!}{k_1!k_2!\cdots k_J!},
+		\end{eqnarray*}
+		hence the proof.
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+	\newcommand{\szero}{\ensuremath{S_0}}
+	\newcommand{\sone}{\ensuremath{S_1}}
+	\newcommand{\stwo}{\ensuremath{S_2}}
+	\newcommand{\skei}{\ensuremath{S_k}}
+
+	\newcommand{\rzero}{\ensuremath{R_0}}
+	\newcommand{\rone}{\ensuremath{R_1}}
+	\newcommand{\rtwo}{\ensuremath{R_2}}
+	\newcommand{\reye}{\ensuremath{R_i}}
+
+	\item LG 2.81
+	\ifdefined\sol
+	A ternary communication system is shown in Fig.~P2.4.
+	Suppose that input symbols $0$, $1$, and $2$
+	occur with probability $1/3$ respectively.
+	\begin{enumerate}
+		\item Find the probabilities of the output symbols.
+		\begin{solution}
+			Let \szero, \sone, and \stwo\
+			be the events that the input is $0$, $1$, and $2$
+			respectively.
+			Let \rzero, \rone, and \rtwo\
+			be the events that the output is $0$, $1$, and $2$
+			respectively.
+			Then the theorm on total probability implies
+			\[
+				\pr{\reye} = \sum_{k=0}^2 \cpr{\reye}{\skei} \pr{\skei}
+			\]
+			for $i=0,1,2$.
+			Thus
+			\begin{eqnarray*}
+				\pr{\rzero} &=&
+				\onethird \cdot (1-\eps) + \onethird \cdot 0 + \onethird \cdot \eps =1/3,
+				\\\pr{\rone} &=&
+				\onethird \cdot \eps + \onethird \cdot (1-\eps) + \onethird \cdot 0 =1/3,
+				\\\pr{\rtwo} &=&
+				\onethird \cdot 0 + \onethird \cdot \eps + \onethird \cdot (1-\eps) =1/3.
+			\end{eqnarray*}
+		\end{solution}
+
+		\item Suppose that a $1$ is observed at the output.
+		What is the probability that the input was $0$? $1$? $2$?
+		\begin{solution}
+			The Bayes' rule implies
+			\begin{eqnarray*}
+				\cpr{\szero}{\rone}
+				&=& \frac{\cpr{\rone}{\szero}\pr{\szero}}{ \sum_{k=0}^2 \cpr{\rone}{\skei} \pr{\skei} }
+				= \eps,
+				\\\cpr{\sone}{\rone}
+				&=& \frac{\cpr{\rone}{\sone}\pr{\sone}}{ \sum_{k=0}^2 \cpr{\rone}{\skei} \pr{\skei} }
+				= 1-\eps,
+				\\\cpr{\stwo}{\rone}
+				&=& \frac{\cpr{\rone}{\stwo}\pr{\stwo}}{ \sum_{k=0}^2 \cpr{\rone}{\skei} \pr{\skei} }
+				= 0.
+			\end{eqnarray*}
+		\end{solution}
+
+	\end{enumerate}
+
+	\fi
+
+	\item LG 2.108
+	\ifdefined\sol
+	In Example~2.45, let $p_0(n)$ and $p_1(n)$ be the probabilities
+	that urn $0$ or urn $1$ is used in the $n$th subexperiment.
+	\begin{enumerate}
+		\item Find $p_0(1)$ and $p_1(1)$.
+		\begin{solution}
+			Since the first draw is decided by a fair coin flip,
+			\[
+				p_0(1) = p_1(1) = 1/2.
+			\]
+		\end{solution}
+
+		\item Express $p_0(n + 1)$ and $p_1(n + 1)$ in terms of $p_0(n)$ and $p_1(n)$.
+		\begin{solution}
+			Note that these sequential experiments
+			are Markov chains,
+			\ie, a subexperiment only depends on the previous subexperiment only.
+			Hence, we can derive the following recursive formula:
+			\beql{eq-markov-rec}
+				p_0(n+1) = \frac{2}{3} p_0(n) +  \frac{1}{6} p_1(n)
+				\mand
+				p_1(n+1) = \frac{1}{3} p_0(n) +  \frac{5}{6} p_1(n).
+			\eeql
+
+			If we let 
+			\[
+				p(n) = \colvectwo{p_0(n)}{p_1(n)} \in \reals^2,
+			\]
+			the recursive formula (\ref{eq-markov-rec}) implies
+			\beql{eq-markov-rec-matrix}
+				p(n+1) = \underbrace{\mattwotwo{2/3}{1/6}{1/3}{5/6}}_{A} p(n),
+			\eeql
+			hence
+			\beql{eq-sol}
+				p(n) = A^{n-1} p(1).
+			\eeql
+			The matrix $A$ here is called the \emph{transition matrix}.
+
+		\end{solution}
+
+		\item Evaluate $p_0(n)$ and $p_1(n)$  for $n = 2, 3, 4$.
+		\begin{solution}
+			Since $p(1) = [1/2\ 1/2]^T$,
+			\[
+				p(2) = Ap(1) = [5/12\ 6/12]^T,\
+				p(3) = Ap(2) = [3/8\ 5/8]^T,\
+				p(4) = Ap(3) = [17/48\ 31/48]^T.
+			\]
+		\end{solution}
+
+		\item Find the solution to the recursion in part b
+		with the initial conditions given in part a.
+		\begin{solution}
+			It is already given by (\ref{eq-sol}).
+		\end{solution}
+
+		\item What are the urn probabilities as $n$ approaches infinity?
+		\begin{solution}
+			Let
+			\[
+				A V = V \diag(\ld_1,\ld_2) = V \Lambda
+			\]
+			be the eigenvalue decomposition of $A$. 
+			Then
+			\[
+				A = V \Lambda V^{-1}.
+			\]
+			If we let $v_1$ and $v_2$ be the column vectors of $V$ and
+			$w_1$ and $w_2$ be the row vectors of $V^{-1}$,
+			\[
+				A^n = \sum_{i=1}^ 2\ld_i^n v_iw_i^T.
+			\]
+			Since we can find $V$ and $\Lambda$ such that $\ld_1 = 1/2$ and $\ld_2 = 1$,
+			\[
+				\lim_{n\to\infty} A^n = v_2 w_2^T.
+			\]
+			Therefore
+			\[
+				\lim_{n\to\infty} p(n) = v_2w_2^T p(1) = \colvectwo{1/3}{2/3}
+			\]
+			where $\Lambda$ and $V$ above can be found by the following Python code.
+			(The code was also used for solving (c).)
+			
+\begin{verbatim}
+	from numpy import matrix
+	import numpy.linalg as la
+
+	# the transition matrix for the Markov chains
+	A = matrix([[2./3,1./6],[1./3,5./6]])
+
+	# initial probability distribution
+	p1 = matrix([[.5],[.5]])
+
+	p2 = A * p1
+	p3 = A * p2
+	p4 = A * p3
+
+	print p2,p3,p4
+
+	# eigenvalue decomposition of A
+	L, V = la.eig( A ) # L: eigenvalues, V: eigenvectors
+	Vi = la.inv( V ) # the inverse of V
+
+	# examine the eigenvalues of A
+	print L
+
+	# Since the first eigenvalue is .5, and the second is 1,
+	# at the equilibrium, the probabilities converge to
+	# those corresponding to 1.
+	# Then the equilibrium can be calculated as
+	print V[:,1] * Vi[1,:] * p1
+\end{verbatim}
+
+		\end{solution}
+	\end{enumerate}
+	\fi
+
+
+	\item A set $A$ is said to be a countably infinite set
+		if and only if there exists one-to-one mapping between $A$ and $\naturals$
+		where $\naturals = \{1,2,\ldots\}$.
+	\begin{enumerate}
+		\item Prove that the set of all the integers is countable.
+		\ifdefined\sol
+		\begin{solution}
+			Let $\integers$ be the set of all the integers.
+			We define a map (or function) $f:\naturals \to \integers$
+			such that
+			\[
+				f(n) = \left\{\begin{array}{ll}
+					(n-1)/2 &\mif n \mbox{ is an odd integer,}
+					\\-n/2 &\mif n \mbox{ is an even integer,}
+				\end{array}\right.
+			\]
+			then
+			\begin{eqnarray*}
+				f(1) &=& 0
+				\\f(2) &=& -1
+				\\f(3) &=& 1
+				\\f(4) &=& -2
+				\\f(5) &=& 2
+				\\ &\vdots&
+			\end{eqnarray*}
+			Therefore $f$ is a one-to-one mapping from $\naturals$ to $\integers$,
+			hence $integers$ is a countable set.
+		\end{solution}
+		\fi
+
+		\newlength{\aaa}
+		\newlength{\bbb}
+		\settowidth{\aaa}{$2/2$}
+		\settoheight{\bbb}{$2/2$}
+		\newcommand{\erase}{\rule[.5\bbb]{\aaa}{.1pt} \hspace{-\aaa}}
+
+		\item Prove that the set of all the rational numbers is countable.
+		\ifdefined\sol
+		\begin{solution}
+			Let $\rationals$ be the set of all the rational numbers.
+			Then group all the positive rational numbers
+			so that
+			the sum of the numerator and the denominator of each number
+			are the same in the same group
+			with the constraint that the numerator is relatively prime to the denominator.
+			If we call such groups as $G_2$, $G_3$, \etc,
+			we have
+			\begin{eqnarray*}
+				G_2 &=& \{ 1/1 \},
+				\\G_3 &=& \{ 1/2, 2/1 \},
+				\\G_4 &=& \{ 1/3, \erase 2/2, 3/1 \},
+				\\G_5 &=& \{ 1/4, 2/3, 3/2, 4/1 \},
+				\\G_6 &=& \{ 1/5, \erase 2/4, \erase 3/3, \erase 4/2, 5/1 \},
+				\\G_7 &=& \{ 1/6, 2/5, 3/4, 4/3, 5/2, 6/1 \},
+				\\    &\vdots&
+			\end{eqnarray*}
+			Note that $2/2$, $2/4$, $3/3$ and $4/2$ are not acceptable since
+			the numerators are not relatively prime to the denominators.
+			Now we define a map $f:\integers \to \rationals$ as follows.
+			Let $f(1) = 0$. Then we define $f(2)$ and $f(3)$ as the values listed in $G_2$
+			and define $f(4)$ and $f(5)$ as their negative values.
+			Therefore
+			\[
+				f(2) = 1/2,\
+				f(3) = 2/1,\
+				f(4) = -1/2,\
+				f(5) = -2/1.
+			\]
+			Then we repeat this with $G_3$, $G_4$, and so on.
+			Then this function is one-to-one,
+			hence $\rationals$ is a countable set.
+
+		\end{solution}
+		\fi
+
+
+		\item Prove that $[0,1] = \set{x\in\reals}{0\leq x\leq1}$ is not countable.
+		\ifdefined\sol
+		\begin{solution}
+			Suppose that the set is countable.
+			Then there must exist a function $f:\integers\to[0,1]$ which is one-to-one.
+			Now let us write the numbers $f(n)$ for $n=1,2,\ldots$
+			using binary notation.  (We always use inifinite number of digits.)
+			For example,
+			\[
+				0.5 = 0.01111111111\cdots_{(2)},\
+				0.7 = 0.10110011001\cdots_{(2)},\
+				1 = 0.11111111111\cdots_{(2)}.
+			\]
+			Now suppose that
+			\begin{eqnarray*}
+				f(1) &=& 0.b_{11} b_{12} b_{13} b_{14} b_{15} b_{16} \cdots_{(2)}
+				\\f(2) &=& 0.b_{21} b_{22} b_{23} b_{24} b_{25} b_{26} \cdots_{(2)}
+				\\f(3) &=& 0.b_{31} b_{32} b_{33} b_{34} b_{35} b_{36} \cdots_{(2)}
+				\\f(4) &=& 0.b_{41} b_{42} b_{43} b_{44} b_{45} b_{46} \cdots_{(2)}
+				\\ &\vdots&
+			\end{eqnarray*}
+			\newcommand{\bb}[1]{(1-b_{#1 #1})}
+			Now we consider followng number:
+			\[
+				x = a_1 a_2 a_3 \cdots_{(2)}
+			\]
+			where $a_i = 1-b_i$. Since $a_i\in\{0,1\}$ for all $i\geq 1$,
+			$x$ is properly represented with base $2$ and it is in $[0.1]$.
+			However, there is not $n$ such that $f(n)=x$
+			since for any $n$, $n$th digit of $f(n)$ differs from that of $x$.
+			This is a contradiction to the assumption that the function is one-to-one,
+			\ie, there exists $x$ such that no $n$ satisfies $f(n)=x$.
+			Therefore $[0,1]$ is not a coutable set.
+			\qed
+		\end{solution}
+		\fi
+
+		\item Argue that $\reals$ is not countable from the fact that $[0,1]$ is not countable.
+		\ifdefined\sol
+		\begin{solution}
+			Suppose that $\reals$ is a countable set.
+			Then there exists $f:\integers \to \reals$ which is one-to-one.
+			Thus, for any $x\in[0,1]\subset \reals$, there exists $n$ such that $f(n)=x$.
+			However, if we list such $n$'s in an increasing order
+			as $n_1$, $n_2$, \ldots,
+			and define $g:\integers\to[0,1]$
+			such that $g(i) = f(n_i)$,
+			$g$ must be an one-to-one function from $\integers$ to $[0,1]$.
+			But this contradicts to the above proof.
+			Therefore $\reals$ is not a countable set.
+		\end{solution}
+		\fi
+	\end{enumerate}
+
+	\item Prove \corollaryname~$6$ of \S2.2, \ie,
+	\begin{eqnarray}
+	\nonumber
+		\lefteqn{
+		\bpr{ \bigcup_{k=1}^{n} A_k }
+		}
+		\\&=& \sum_{k=1}^n \pr{A_k}
+		- \sum_{1\leq j<k\leq n} \pr{A_j\cap A_k}
+		+ \sum_{1\leq i<j<k\leq n} \pr{A_i\cap A_j\cap A_k}
+		\cdots
+		+ (-1)^{n+1} \pr{A_1\cap \cdots \cap A_n}
+		\nonumber
+		\\&=& \sum_{i=1}^n (-1)^{i+1} \sum_{1\leq k_1<k_2<\cdots<k_i \leq n} \bpr{\bigcap_{j=1}^i A_{k_j}}
+		\label{eq-cor-6}
+	\end{eqnarray}
+	\ifdefined\sol
+	\begin{solution}
+	The Corollary~5 implies that
+	\[
+		\pr{A\cup B} = \pr{A} + \pr{B} - \pr{A\cap B}.
+	\]
+	Thus, (\ref{eq-cor-6}) holds for $n=2$.
+	Now suppose that (\ref{eq-cor-6}) holds for $n=m$.
+	Then Corollary~5 and the inductive assumption imply
+	\begin{eqnarray*}
+		\lefteqn{
+		\bpr{ \bigcup_{k=1}^{m+1} A_k }
+		= \bpr{ \left( \bigcup_{k=1}^{m} A_k \right) \cup A_{m+1} }
+		= \bpr{ \bigcup_{k=1}^{m} A_k } + \pr{A_{m+1}}
+		 - \bpr{ \left( \bigcup_{k=1}^{m} A_k \right) \cap A_{m+1} }
+		}
+		\\&=& \bpr{ \bigcup_{k=1}^{m} A_k } + \pr{A_{m+1}}
+		 - \bpr{ \bigcup_{k=1}^{m} (A_k \cap A_{m+1}) }
+		\\&=& \sum_{i=1}^m (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m} \bpr{\bigcap_{j=1}^i A_{k_j}}
+		\\&&
+		- \sum_{i=1}^m (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m} \bpr{\left(\bigcap_{j=1}^i A_{k_j}\right)\cap A_{m+1}}
+		 + \pr{A_{m+1}}
+		\\&=& \sum_{i=2}^m (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m} \bpr{\bigcap_{j=1}^i A_{k_j}}
+		\\&&- \sum_{i=1}^{m-1} (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m} \bpr{\left(\bigcap_{j=1}^i A_{k_j}\right)\cap A_{m+1}}
+		\\&& + \pr{A_1} + \cdots + \pr{A_m} + \pr{A_{m+1}} - (-1)^{m+1}\bpr{A_1\cap \cdots \cap A_{m+1}}
+		\\&=& \sum_{i=2}^m (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m} \bpr{\bigcap_{j=1}^i A_{k_j}}
+		\\&&+ \sum_{i=2}^{m} (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_{i-1} \leq m} \bpr{\left(\bigcap_{j=1}^{i-1} A_{k_j}\right)\cap A_{m+1}}
+		\\&& + \pr{A_1} + \cdots + \pr{A_m} + \pr{A_{m+1}} - (-1)^{m+1}\bpr{A_1\cap \cdots \cap A_{m+1}}
+		\\&=& \sum_{i=2}^m (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m} \bpr{\bigcap_{j=1}^i A_{k_j}}
+		\\&&+ \sum_{i=2}^{m} (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_{i-1} \leq m,\ k_i = m+1} \bpr{\bigcap_{j=1}^{i} A_{k_j}}
+		\\&& + \pr{A_1} + \cdots + \pr{A_m} + \pr{A_{m+1}} - (-1)^{m+1}\bpr{A_1\cap \cdots \cap A_{m+1}}
+		\\&=& \sum_{i=2}^m (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m+1} \bpr{\bigcap_{j=1}^i A_{k_j}}
+		\\&& + \pr{A_1} + \cdots + \pr{A_m} + \pr{A_{m+1}} + (-1)^{m+2}\bpr{A_1\cap \cdots \cap A_{m+1}}
+		\\&=& \sum_{i=1}^{m+1} (-1)^{i+1} \sum_{1\leq k_1<\cdots<k_i \leq m+1} \bpr{\bigcap_{j=1}^i A_{k_j}},
+	\end{eqnarray*}
+	hence, (\ref{eq-cor-6}) also holds for $n=m+1$.
+	Therefore the mathematical induction implies
+	(\ref{eq-cor-6}) holds for all $n\geq2$.
+	\qed
+
+
+
+	\end{solution}
+
+\fi
+
+\end{enumerate}
+
+\end{document}

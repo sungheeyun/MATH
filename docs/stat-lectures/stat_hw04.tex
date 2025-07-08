@@ -1,0 +1,1108 @@
+
+
+\input{D:/Multimedia/mydefs}
+%\input{D:/mydefs}
+
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhead[R]{Probability and Statistics for Electrical Engineering}
+
+\addtolength{\headsep}{.5cm}
+
+
+
+\input{statdefs}
+\renewcommand{\emph}[1]{{\it #1}}
+
+\begin{document}
+\setlength{\headheight}{15pt}
+\maketitle
+
+\begin{enumerate}
+
+	\item \lgprob{3.35}.
+	\begin{enumerate}
+		\item In \lgprob{3.11} (a),
+		find the conditional PMF of \X,
+		the maximum of coin tosses, given that $\X > 0$.
+		\ifdefined\sol
+		\begin{solution}
+		Recall from \lgprob{3.11} (a) that the PMF of \X\ is defined by
+		\[
+			\pmfxk{0} = 1/16,\
+			\pmfxk{1} = 8/16,\
+			\pmfxk{2} = 7/16.
+		\]
+		Thus
+		\begin{eqnarray*}
+			\cpmfxk{1}{X>0} &=& \cpr{X=1}{X>0}
+			= \frac{\pr{\{X=1\}\cup\{X>0\}}}{\pr{X>0}}
+			\\&=& \frac{\pr{X=1}}{\pr{X>0}}
+			= \frac{8/16}{15/16} = 8/15.
+		\end{eqnarray*}
+		Likewise,
+		\begin{eqnarray*}
+			\cpmfxk{2}{X>0} &=& \cpr{X=2}{X>0}
+			= \frac{\pr{\{X=2\}\cup\{X>0\}}}{\pr{X>0}}
+			\\&=& \frac{\pr{X=2}}{\pr{X>0}}
+			= \frac{7/16}{15/16} = 7/15.
+		\end{eqnarray*}
+		\end{solution}
+		\fi
+
+		\item Find the conditional PMF of \X\ given that Michael got one head in two tosses.
+		\ifdefined\sol
+		\begin{solution}
+			Let $A$ be the event that Michael got one head in two tosses
+			and let $Y$ be the number of heads of Carlos.
+			Suppose that the Michael got one head in two coin tosses.
+			Since the maximum of the numbers of heads of Carlos and Michael
+			cannot be less than 1,
+			\[
+				\cpr{X=0}{A}= 0.
+			\]
+			Also since the maximum is $1$ the number of heads of Carlos
+			is either $0$ or $1$,
+			we have
+			\[
+				\cpr{X=1}{A} = \pr{Y=0} + \pr{Y=1} = 3/4.
+			\]
+			The maximum is $2$ if and only if the number of heads of Carlos is $2$,
+			\[
+				\cpr{X=2}{A} = \pr{Y=2} = 1/4.
+			\]
+			Therefore
+			\[
+				\cpmfxk{k}{A} = \left\{\begin{array}{ll}
+					3/4	&\mbox{if }k=1,
+					\\1/4	&\mbox{if }k=2.
+				\end{array} \right.
+			\]
+
+		\end{solution}
+		\fi
+
+		\item Find the conditional PMF of \X\ given
+		that Michael got one head in the first toss.
+		\ifdefined\sol
+		\begin{solution}
+			Let $B$ be the event that Michael got one head in the first toss.
+			Let $Y$ be the number of heads Carlos got
+			and $Z$ be the number of heads for the second toss of Michael,
+			\ie, $Z=0$ if the second toss of Michael is tail
+			and $Z=1$ otherwise.
+			Again, since Michael already got one head in the first toss,
+			the maximum number cannot be less than $1$,
+			hence
+			\[
+				\cpr{X=0}{B} = 0.
+			\]
+			Now suppose that $B$ happens.
+			In order for $X$ to be $1$,
+			$Z$ must be $0$
+			and $Y$ must be either $0$ or $1$.
+			Therefore
+			\[
+				\cpr{X=1}{B} = \pr{\{Y \leq 1\}\cap\{Z=0\}}
+				= \pr{Y \leq 1} \pr{Z=0 }
+				= 3/4 \times  1/2 = 3/8
+			\]
+			and
+			\[
+				\cpr{X=2}{B} = 1 - \cpr{X=0}{B} - \cpr{X=1}{B} = 5 /8.
+			\]
+			Therefore
+			\[
+				\cpmfxk{k}{B} = \left\{\begin{array}{ll}
+					3/8	&\mbox{if }k=1,
+					\\5/8	&\mbox{if }k=2.
+				\end{array} \right.
+			\]
+
+		\end{solution}
+		\fi
+
+		\item In \lgprob{3.11} (b),
+		find the probability that Carlos got the maximum given that $X = 2$.
+		\ifdefined\sol
+		\begin{solution}
+			Recall from \lgprob{3.11} (a) that the PMF of \X\ is defined by
+			\[
+				\pmfxk{0} = 1/64,\
+				\pmfxk{1} = 20/64,\
+				\pmfxk{2} = 43/64.
+			\]
+			Now let $Y$ be the number of heads of Carlos.
+			Then
+			\[
+				\pr{\{Y=2\}\cap\{X=2\}}
+				= \pr{Y=2} = 9/16.
+			\]
+			Thus
+			the (conditional) probability
+			that Carlos got the maximum given that $X = 2$
+			is
+			\[
+				\cpr{Y=2}{X=2} = \frac{\pr{\{Y=2\}\cap\{X=2\}}}{\pr{X=2}}
+				= \frac{9}{16} \cdot \frac{64}{43}
+				= \frac{36}{43}.
+			\]
+		\end{solution}
+		\fi
+	\end{enumerate}
+
+
+	\item \lgprob{3.36}.
+	Find the conditional PMF for the quaternary information source in \lgprob{3.12},
+	parts (a), (b), and (c) given that $X < 4$.
+	\ifdefined\sol
+	\begin{solution}
+	\begin{enumerate}
+		\item Recall from \lgprob{3.12} (a) that
+		\[
+			\pmfxk{k} = \frac{12}{25k}
+		\]
+		for $k=1,2,3,4$.
+		Thus
+		\[
+			\pr{X<4} = 1- \pr{X=4} = 1-\frac{3}{25} = \frac{22}{25}.
+		\]
+		Therefore
+		\[
+			\cpmfxk{k}{X<4} = \frac{\pr{\{X=k\}\cap \{X<4\}}}{\pr{X<4}}
+			= \frac{\pr{X=k}}{\pr{X<4}}
+			= \frac{12}{25k} \cdot \frac{25}{22} = \frac{6}{11k}.
+		\]
+		for $k=1,2,3$.
+
+		\item Recall from \lgprob{3.12} (b) that
+		\[
+			\pmfxk{k} = \frac{16}{15\cdot 2^k}
+		\]
+		for $k=1,2,3,4$.
+		Thus
+		\[
+			\pr{X<4} = 1- \pr{X=4} = 1-\frac{1}{15} = \frac{14}{15}.
+		\]
+		Therefore
+		\[
+			\cpmfxk{k}{X<4} = \frac{\pr{\{X=k\}\cap \{X<4\}}}{\pr{X<4}}
+			= \frac{\pr{X=k}}{\pr{X<4}}
+			= \frac{16}{15\cdot 2^k} \cdot \frac{15}{14} = \frac{8}{7\cdot 2^k}.
+		\]
+		for $k=1,2,3$.
+
+		\item Recall from \lgprob{3.12} (c) that
+		\[
+			\pmfxk{1} = \frac{64}{105},\
+			\pmfxk{2} = \frac{32}{105},\
+			\pmfxk{3} = \frac{8}{105},\
+			\pmfxk{4} = \frac{1}{105}.
+		\]
+		Thus
+		\[
+			\pr{X<4} = 1- \pr{X=4} = \frac{104}{105}.
+		\]
+		Therefore
+		\begin{eqnarray*}
+			\cpmfxk{1}{X<4} &=& \frac{64}{105} \cdot \frac{105}{104} = \frac{8}{13},
+			\\\cpmfxk{2}{X<4} &=& \frac{32}{105} \cdot \frac{105}{104} = \frac{4}{13},
+			\\\cpmfxk{3}{X<4} &=& \frac{8}{105} \cdot \frac{105}{104} = \frac{1}{13}.
+		\end{eqnarray*}
+
+	\end{enumerate}
+	\end{solution}
+	\fi
+
+
+	\item \lgprob{3.40}.
+	Explain why \lgeq{3.31b} can be used to find \Exp{X^2},
+	but it cannot be used to directly find \VAR{X}.
+	\ifdefined\sol
+	\begin{solution}
+		Note that \lgeq{3.31b} is
+		\begin{equation}
+		\label{eq-3.31b}
+			\Exp{g(X)} = \sumiton \cExp{g(X)}{B_i} \pr{B_i}
+		\end{equation}
+		for some partition $B_1, B_2, \ldots, B_n$.
+		If we let $g(x) = x^2$, then (\ref{eq-3.31b})
+		becomes
+		\[
+			\Exp{X^2} = \sumiton \cExp{X^2}{B_i} \pr{B_i},
+		\]
+		hence it can be used to find \Exp{X^2}.
+		However,
+		in general
+		\begin{eqnarray*}
+			\lefteqn{
+			\VAR{X} = \Exp{X^2} - \Exp{X}^2
+			= \sumiton \cExp{X^2}{B_i} \pr{B_i}
+			- \left(\sumiton \cExp{X}{B_i} \pr{B_i}  \right)^2
+			}
+			\\&=&
+			\sumiton (\cExp{X^2}{B_i} \pr{B_i} - \cExp{X}{B_i}^2 \pr{B_i}^2)
+			- 2 \sum_{1\leq i< j\leq n} \cExp{X}{B_i} \cExp{X}{B_j} \pr{B_i} \pr{B_j}
+			\\&\neq&
+			\sumiton \VAR{X} \pr{B_i}.
+		\end{eqnarray*}
+	\end{solution}
+	\fi
+
+	\item \lgprob{3.50}.
+	Let \X\ be the binomial random variable.
+	\begin{enumerate}
+		\item Show that
+		\[
+			\frac{\pmfxk{k+1}}{\pmfxk{k}}
+			= \frac{n-k}{k+1} \cdot \frac{p}{1-p}
+		\]
+		where $\pmfxk{0} = (1-p)^n$.
+		\ifdefined\sol
+		\begin{solution}
+			Note that
+			\[
+				\pmfxk{k} = \chs{n}{k} p^k q^{n-k},
+			\]
+			thus
+			\begin{eqnarray*}
+				\frac{\pmfxk{k+1}}{\pmfxk{k}}
+				&=& \frac{n!}{(k+1)!(n-k-1)!} p^{k+1} q^{n-k-1}
+				\frac{k!(n-k)!}{n!} p^{-k} q^{-n+k}
+				\\&=&
+				\frac{n-k}{k+1} p q^{-1}
+				= \frac{n-k}{k+1} \cdot \frac{p}{1-p}.
+			\end{eqnarray*}
+			Note that if we use this recursion,
+			we can calculate the PMF of the \binomrv\ in $\mathcal{O}(n)$.
+		\end{solution}
+		\fi
+
+		\item Show that part (a) implies that:
+		\begin{enumerate}
+			\item \pr{X = k}\ is maximum at $\kmax = \floor{(n + 1)p}$,
+			where \floor{x}\ denotes the largest integer that is smaller than or equal to $x$;
+			and
+			\ifdefined\sol
+			\begin{solution}
+			Let $f:\{0,\ldots,n-1\} \to \reals$ be a function defined by
+			$f(k) = {\pmfxk{k+1}}/{\pmfxk{k}}$.
+			Then
+			\begin{eqnarray*}
+				\lefteqn{
+				f(k) - 1
+				= \frac{n-k}{k+1} \frac{p}{1-p} - 1
+				= \frac{(n-k) p - (k+1) (1-p)}{(k+1)(1-p)}
+				}
+				\\&=&
+				 \frac{(-p-1+p)k + np-1+p}{(k+1)(1-p)}
+				= \frac{-k + (n+1)p - 1}{(k+1)(1-p)}.
+			\end{eqnarray*}
+			Therefore
+			\begin{equation}
+			\label{eq-var}
+				f(k) =
+				\frac{\pmfxk{k+1}}{\pmfxk{k}}
+				\left\{ \begin{array}{ll}
+				> 1	&\mbox{if } k < (n+1)p - 1,
+				\\ = 1	&\mbox{if } k = (n+1)p - 1,
+				\\ < 1	&\mbox{if } k > (n+1)p - 1.
+				\end{array} \right.
+			\end{equation}
+			The definition of $\floor{x}$ implies that
+			\[(n+1)p - 1 < \kmax \leq (n+1)p.\]
+			If $k \leq \kmax - 2$,
+			then $k < \kmax - 1 \leq (n+1)p - 1$.
+			Thus $f(k) > 1$
+			and
+			\begin{equation}
+			\label{eq-inc}
+				\pmfxk{0} < \pmfxk{1} < \cdots < \pmfxk{\kmax-2} < \pmfxk{\kmax-1}.
+			\end{equation}
+			Also since $\kmax - 1 \leq (n+1)p-1$, $f(\kmax-1) \geq 1$,
+			thus
+			\begin{equation}
+			\label{eq-eq}
+				\pmfxk{\kmax-1} \leq \pmfxk{\kmax}.
+			\end{equation}
+			Lastly, if $k \geq \kmax$,
+			then $k \geq \kmax > (n+1)p-1$, hence $ f(k) < 1$.
+			Therefore we have
+			\begin{equation}
+			\label{eq-dec}
+				\pmfxk{\kmax} > \pmfxk{\kmax+1} > \cdots > \pmfxk{n}.
+			\end{equation}
+			In summary, (\ref{eq-inc}), (\ref{eq-eq}), and (\ref{eq-dec}) imply
+			\begin{equation}
+			\label{eq-order}
+				\pmfxk{0} < \cdots
+				< \pmfxk{\kmax-1} \leq \pmfxk{\kmax}
+				> \pmfxk{\kmax+1} > \cdots > \pmfxk{n}.
+			\end{equation}
+			Therefore \pmfxk{k}\ achieves its maximum at $k=\kmax$.
+			\end{solution}
+			\fi
+
+			\item when $(n + 1)p$ is an integer,
+			then the maximum is achieved at $\kmax$ and $\kmax-1$.
+			\ifdefined\sol
+			\begin{solution}
+				If $(n+1)p$ is an integer,
+				then
+				$\kmax-1 = \floor{(n+1)p} -1 = (n+1)p -1 $
+				and (\ref{eq-var}) implies $f(\kmax-1)=1$,
+				\ie,
+				\[
+					\pmfxk{\kmax-1} = \pmfxk{\kmax}.
+				\]
+				Then (\ref{eq-order}) becomes
+			\begin{equation}
+			\label{eq-order-1}
+				\pmfxk{0} < \cdots
+				< \pmfxk{\kmax-1} = \pmfxk{\kmax}
+				> \pmfxk{\kmax+1} > \cdots > \pmfxk{n},
+			\end{equation}
+			thus the maximum is achieved at both $\kmax-1$ and $\kmax$.
+			\end{solution}
+			\fi
+		\end{enumerate}
+	\end{enumerate}
+
+	\item \lgprob{3.54}.
+	Let $M$ be a geometric random variable.
+	Show that $M$ satisfies the memoryless property:
+	$\cpr{M \geq k + j}{M \geq j + 1} = \pr{M \geq k}$ for all $j$, $k > 1$.
+	\ifdefined\sol
+	\begin{solution}
+		First note that
+		\[
+			\pr{M\geq n} = \sumto{k}{n}{\infty} q^{k-1}p
+			= q^{n-1}p \frac{1}{1-q} = q^{n-1}.
+		\]
+		Thus
+		\begin{eqnarray*}
+			\lefteqn{
+			\cpr{M \geq k + j}{M \geq j + 1}
+			= \cprbeq{M \geq k + j}{M \geq j + 1}
+			}
+			\\&=&
+			\frac{\pr{M \geq k+j}}{\pr{M\geq j+1}}
+			= \frac{q^{k+j-1}}{q^{j}}
+			= q^{k-1}
+			= \pr{M\geq k}.
+		\end{eqnarray*}
+	\end{solution}
+	\fi
+
+
+	\item \lgprob{3.57}.
+	A Christmas fruitcake has Poisson-distributed independent
+	numbers of sultana raisins,
+	iridescent red cherry bits,
+	and radioactive green cherry bits with respective averages
+	$48$, $24$, and $12$ bits per cake
+	respectively.
+	Suppose you politely accept a slice of $1/12$ of the cake.
+	\begin{enumerate}
+		\item What is the probability that you get lucky and get no green bits in your slice?
+		\ifdefined\sol
+		\begin{solution}
+			Let $X$ be the number of green cherry bits in $1/12$ of the cake.
+			Then since the average number of green cherry bits in $1/12$ of the cake is $12/12=1$,
+			$X$ follows the \possdist\ with $\al=1$.
+			Therefore the probability that you get no green bits in your slice is
+			\[
+				\pr{X=0}
+				= \pmfxk{0} = \frac{(1)^0}{0!}e^{-1} = 0.3679.
+			\]
+		\end{solution}
+		\fi
+
+		\item What is the probability that you get really lucky and get no green bits
+		and two or fewer red bits in your slice?
+		\ifdefined\sol
+		\begin{solution}
+			Let $Y$ be the number of red cherry bits in $1/12$ of the cake.
+			Then since the average number of red cherry bits in $1/12$ of the cake is $24/12=2$,
+			$Y$ follows the \possdist\ with $\al=2$.
+			Thus the probability that you get two or fewer red bits in your slice is
+			\[
+				\pr{Y\leq2}
+				= \sumto{k}{0}{2} \pmfk{Y}{k}
+				= \sumto{k}{0}{2} \frac{2^k}{k!} e^{-2}
+				= 0.6767.
+			\]
+			Since $X$ and $Y$ are independent,
+			the probability that you get no green bits
+			and two or fewer red bits in your slice
+			is
+			\[
+				\pr{X=0\mand Y\leq2}
+				= \pr{X=0} \pr{Y\leq2}
+				= 0.3679 \times 0.6767
+				= 0.2489.
+			\]
+		\end{solution}
+		\fi
+
+		\item What is the probability that you get extremely lucky and get no green
+		or red bits and more than five raisins in your slice?
+		\ifdefined\sol
+		\begin{solution}
+			Let $Z$ be the number of sultana raisins in $1/12$ of the cake.
+			Since the average number of sultana raisins in $1/12$
+			of the cake is $48/12=4$,
+			$Z$ follows the \possdist\ with $\al=4$.
+			Hence,
+			the probability that you get more than five raisins in your slice
+			is
+			\[
+				\pr{Z>5} = 1 - \pr{Z\leq 5}
+				= 1- \sumto{k}{0}{5} \frac{4^k}{k!} e^{-4}
+				= 0.2149.
+			\]
+			Since $X$, $Y$, and $Z$ are mutually independent,
+			the probability that you get extremely lucky
+			is
+			\[
+				\pr{X=0} \pr{Y=0} \pr{Z>5}
+				= 0.3679 \times 0.1353 \times 0.2149
+				= 0.0107.
+			\]
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+\ifdefined\sol
+\begin{pcode}
+\begin{verbatim}
+import scipy.stats as ss
+x = ss.poisson(1)
+y = ss.poisson(2)
+z = ss.poisson(4)
+
+print 'Pr{X=0} = %g' % x.pmf(0)
+print 'Pr{Y<=2} = %g' % y.cdf(2)
+print 'Pr{X=0}*Pr{Y<=2} = %g' % (x.pmf(0)*y.cdf(2))
+print 'Pr{X=0}*Pr{Y=0}*Pr{Z>5} = %g' % (x.pmf(0)*y.cdf(0)*z.sf(5)
+\end{verbatim}
+\end{pcode}
+\fi
+
+	\item \lgprob{3.65}.
+	An LCD display has $1000 \times 750$ pixels.
+	A display is accepted if it has $15$ or fewer faulty pixels.
+	The probability that a pixel is faulty coming out of the production line is $10^{-5}$.
+	Find the proportion of displays that are accepted.
+	\ifdefined\sol
+	\begin{solution}
+	Let $X$ be the number of faulty pixels of an LCD display.
+	Then it is a \binomrv\ with $n=1000\times 750$ and $p=10^{-5}$.
+	Since $n$ is huge, it (almost) perfectly approximate
+	the \possdist\ with $\al = np = 7.5$.
+	Hence
+	the acceptance probability is
+	\[
+		\pr{X\leq 15}
+		= \sumto{k}{0}{15} \frac{7.5^k}{k!} e^{-7.5}
+		= 0.9954.
+	\]
+	\end{solution}
+	\fi
+
+
+	\item \lgprob{3.66}.
+	A data center has $10,000$ disk drives.
+	Suppose that a disk drive fails in a given day with probability $10^{-3}$.
+	\begin{enumerate}
+		\item Find the probability that there are no failures in a given day.
+		\ifdefined\sol
+		\begin{solution}
+			Let $X$ be the number of disk drives that fail.
+			Then it is a \binomrv\ with $n=10,000$ and $p=10^{-3}$.
+			Again since $n$ is large, it can be well approximated
+			by the \possrv\ with $\al = np = 10$.
+			Thus the probability of no failure in a day is
+			\[
+				\pr{X=0} =
+				\frac{10^0}{0!} e^{-10}
+				= 4.54 \times 10^{-5}.
+			\]
+			\end{solution}
+			\fi
+
+			\item Find the probability that there are fewer than $10$ failures in two days.
+			\ifdefined\sol
+			\begin{solution}
+			The number of failures for two days
+			is the \possrv\ with $\al = 20$.
+			Thus the probability that there are fewer than $10$ failures in two days
+			is
+			\[
+				\pr{X<10} =
+				\sumto{k}{0}{9} \frac{20^k}{k!}e^{-20}
+				= 4.995 \times 10^{-3}.
+			\]
+		\end{solution}
+		\fi
+
+		\item Find the number of spare disk drives that should be available
+		so that all failures in a day can be replaced with probability $99$\%.
+		\ifdefined\sol
+		\begin{solution}
+			We need to find $x$ so that
+			\[
+				\pr{X\leq x}
+				= \sumto{k}{0}{x} \frac{10^k}{k!}e^{-10}
+				\geq 0.99.
+			\]
+			The below Python code finds that $x\geq 18$.
+			Thus we need $18$ spare disk drives
+			in order to replace all the failures in a day
+			with probability $99$\%.
+		\end{solution}
+		\fi
+	\end{enumerate}
+\ifdefined\sol
+\begin{pcode}
+\begin{verbatim}
+import scipy.stats as ss
+n = 10000
+p = 1e-3
+x = ss.poisson( n * p )
+print 'Pr{X=0} = %g' % x.pmf( 0 )
+y = ss.poisson( 2. * n * p )
+print 'Pr{Y<10} = %g' % y.cdf( 9 )
+
+print 'Pr{X<%d} >= 0.99' % x.ppf( .99 )
+\end{verbatim}
+\end{pcode}
+\fi
+
+
+	\item \lgprob{3.67}.
+	A binary communication channel has a probability of bit error of $10^{-6}$.
+	Suppose that transmissions occur in blocks of $10,000$ bits.
+	Let $N$ be the number of errors introduced by the channel in a transmission block.
+	\begin{enumerate}
+		\item Find \pr{N = 0}, \pr{N \leq 3}.
+		\ifdefined\sol
+		\begin{solution}
+			The number of errors $N$ is the \binomrv\
+			with $n=10,000$ and $p=10^{-6}$.
+			Thus
+			\[
+				\pr{N=0} = (1-p)^n = 0.99005
+			\]
+			and
+			\[
+				\pr{N\leq 3} = \sumto{k}{0}{3} \chs{n}{k} p^k(1-p)^{n-k}
+				= 1.
+			\]
+		\end{solution}
+		\fi
+
+		\item For what value of $p$ will the probability of $1$ or more errors in a block be
+		$99$\%?
+		\ifdefined\sol
+		\begin{solution}
+			\[
+				(1-p)^n = 0.01
+				\Leftrightarrow
+				p = 1- (0.01)^{1/n}
+				= 4.6 \times 10^{-4}.
+			\]
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+	\item \lgprob{3.68}.
+	Find the mean and variance of the uniform discrete random variable that takes
+	on values in the set $\{1,2,\ldots,L\}$ with equal probability.
+	You will need the following formulas:
+	\[ \sumkton k = \frac{n(n+1)}{2} \]
+	\[ \sumkton k^2 = \frac{n(n+1)(2n+1)}{6}  \]
+	\ifdefined\sol
+	\begin{solution}
+		Note that $\pmfxk{k} = 1/L$ for $k\in\{1,2,\ldots,L\}$.
+		Then by definition
+		\[
+			\Exp{X} =
+			\sumkzton k \pmfxk{k} =
+			\frac{1}{L} \sumkzton k =
+			\frac{1}{L} \frac{L(L+1)}{2} =
+			\frac{L+1}{2}.
+		\]
+		The second moment of \X\ is
+		\[
+			\Exp{X^2} =
+			\sumkzton k^2 \pmfxk{k} =
+			\frac{1}{L} \sumkzton k^2 =
+			\frac{1}{L} \frac{L(L+1)(2L+1)}{6} =
+			\frac{(L+1)(2L+1)}{6},
+		\]
+		hence the variance of \X\ is
+		\[
+			\VAR{X} =
+			\Exp{X^2} - \Exp{X}^2 =
+			\frac{(L+1)(2L+1)}{6} - \frac{(L+1)^2}{4}
+			=\frac{L^2-1}{12}.
+			\]
+	\end{solution}
+	\fi
+
+
+\end{enumerate}
+
+\section*{Bonus problem}
+
+\begin{enumerate}
+	\item \lgprob{3.55}.
+	Let \X\ be a discrete random variable that assumes only positive integer
+	values and that satisfies the memoryless property.
+	Show that \X\ must be a geometric random variable.
+	Hint: Find an equation that must be satisfied by $g(x) = \pr{X \geq x}$.
+	\ifdefined\sol
+	\begin{solution}
+		The memoryless property is
+		\begin{equation}
+		\label{eq-memoryless}
+			\cpr{X\geq k+j}{X\geq j+1} = \pr{X\geq k}
+		\end{equation}
+		for all $j,k\geq1$.
+
+		Now suppose a discrete \randvar\ taking only on positive integer values
+		satisfies the memoryless property (\ref{eq-memoryless}).
+		Let $g:\naturals \to [0,1]$
+		such that $g(x) = \pr{X\geq x}$.
+		Since
+		\[
+			\cpr{X\geq k+j}{X\geq j+1} =
+			\cprbeq{X\geq k+j}{X\geq j+1} =
+			\frac{\pr{X\geq k+j}}{\pr{X\geq j+1}},
+		\]
+		(\ref{eq-memoryless}) implies
+		\[
+			\frac{g(k+j)}{g(j+1)} = g(k).
+		\]
+		If we substitute $j$ with $1$, we have
+		\[
+			g(k+1) = g(k)g(2)
+		\]
+		and
+		\begin{equation}
+		\label{eq-rec}
+			g(k) = g(1) c ^{k-1} = c^{k-1}
+		\end{equation}
+		for $k=1,2,\ldots$ where $c = g(2)$
+		and the following fact is used:
+		\[ g(1)=\pr{X\geq 1} = 1. \]
+
+		Now note that $0\leq c=\pr{X\geq 2} \leq 1$.
+		We consider the following three cases.
+		\begin{enumerate}
+			\item
+			Suppose that $0<c<1$.
+			Then (\ref{eq-rec}) implies
+			\[
+				\pmfxk{k} =
+				\pr{X=k} = \pr{X\geq k } - \pr{X\geq k+1}
+				= c^{k-1} - c^k
+				= c^{k-1} (1-c).
+			\]
+			Therefore it is the \geomrv\ with $p=1-c$.
+
+			\item Suppose that $c=0$.
+			Then $\pr{X\geq2} = 1$,
+			thus $\pmfxk{k} = 0$ for $k=2,3,\ldots$ and $\pmfxk{1} = 1$,
+			hence it is the \geomrv\ with $p=1$.
+
+			\item Suppose that $c=1$.
+			Then (\ref{eq-rec}) implies that $\pr{X\geq k}=1$
+			for any $k=1,2,\ldots$.
+			However, then $\pmfxk{k} = \pr{X\geq k} - \pr{X\geq k+1}
+			= 0$ for any $k$, hence the contradiction.
+			Therefore $c$ cannot be $1$.
+		\end{enumerate}
+
+		In summary, any memoryless \randvar\
+		taking only on positive integer values
+		must be the \geomrv\ with $0< p \leq 1$
+		with
+		\[
+			\pmfxk{k} = (1-p)^{k-1} p
+		\]
+		for $k=1,2,\ldots$ with convention $0^0 = 1$.
+		\qed
+
+
+	\end{solution}
+	\fi
+
+
+	\newcommand{\mux}{\expect{x}}
+	\newcommand{\sigx}{\std{x}}
+	\item
+	The skewness of a \randvar\ \X\ is the third standardized moment,
+	denoted by $\gamma_1$ and defined as
+	\[
+		\gamma_1 = \bExp{\left(\frac{X-\mux}{\sigx}\right)^3}.
+	\]
+	The \emph{skewness} is a measure of the asymmetry of the probability distribution
+	of a real-valued random variable.
+	The skewness value can be positive or negative, or even undefined.
+	Qualitatively,
+	a negative skew indicates that the tail on the left side of the probability density function
+	is longer than the right side and the bulk of the values (possibly including the median)
+	lie to the right of the mean.
+	A positive skew indicates the opposite.
+	A zero value indicates that the values are relatively evenly distributed on both sides of the mean, typically but not necessarily implying a symmetric distribution.
+
+	\begin{enumerate}
+		\item Show that
+		\[
+			\gamma_1 = \frac{\Exp{X^3}-3\mux \Exp{X^2} + 2 \mux^3}{\std{x}^3}.
+		\]
+		\ifdefined\sol
+		\begin{solution}
+			Note that
+			\[
+				(X-\mux)^3
+				= X^3 - 3\mux X^2 + 3 \mux^2 X - \mux^3.
+			\]
+			Then the linearity of \Exp{\cdot}\ implies
+			\[
+				\Exp{(X-\mux)^3}
+				= \Exp{X^3} - 3\mux \Exp{X^2} + 3 \mux^2 \Exp{X} - \mux^3
+				= \Exp{X^3} - 3\mux \Exp{X^2} + 2 \mux^3,
+			\]
+			hence
+			\[
+				\gamma_1 = \frac{1}{\sigx^3} \Exp{(X-\mux)^3}
+				= \frac{ \Exp{X^3} - 3\mux \Exp{X^2} + 2 \mux^3 }{\sigx^3}.
+			\]
+
+		\end{solution}
+		\fi
+
+
+		\item The skewnesses of \randvar s:
+		\begin{enumerate}
+			\item Show that the skewness of the \binomrv\ is
+			\begin{equation}
+			\label{eq-skew-binom}
+				\frac{1-2p}{\sqrt{np(1-p)}}.
+			\end{equation}
+			\ifdefined\sol
+			\begin{solution}
+				Let $X$ be the \binomrv\ with parameters $n$ and $p$
+				and let $Y$ be the \binomrv\ with parameters $n-1$ and $p$.
+				Then the third moment of $X$ is
+				\begin{eqnarray*}
+					\lefteqn{
+					\Exp{X^3}
+					= \sumkzton k^3 \chs{n}{k}  p^k q^{n-k}
+					= \sumkton k^3 \frac{n!}{k!(n-k)!} p^k q^{n-k}
+					}
+					\\
+					&=& np \sumkton k^2 \frac{(n-1)!}{(k-1)!(n-k)!} p^{k-1} q^{n-k}
+					= np \sumkton k^2 \chs{n-1}{k-1} p^{k-1} q^{n-k}
+					\\
+					&=& np \sumto{k}{0}{n-1} (k+1)^2 \chs{n-1}{k} p^{k} q^{(n-1)-k}
+					\\
+					&=& np \sumto{k}{0}{n-1} k^2 \chs{n-1}{k} p^{k} q^{(n-1)-k}
+					+ 2np \sumto{k}{0}{n-1} k \chs{n-1}{k} p^{k} q^{(n-1)-k}
+					\\
+					&&
+					+ np \sumto{k}{0}{n-1} \chs{n-1}{k} p^{k} q^{(n-1)-k}
+					\\
+					&=&
+					np(\Exp{Y^2} + 2\Exp{Y} + 1 )
+					= np(\VAR{Y^2} + \Exp{Y}^2 + 2\Exp{Y} + 1 )
+					\\ &=&
+					np( (n-1)pq + (n-1)^2p^2 + 2 (n-1)p + 1)
+					\\ &=&
+					np( n^2p^2 + n ( pq -2p^2 + 2p ) -pq + p^2 - 2p  + 1 )
+					\\ &=&
+					np( n^2p^2 + 3 n pq -pq + p^2 - p  + q )
+					\\ &=&
+					np( n^2p^2 + 3 n pq -pq - pq  + q )
+					\\ &=&
+					np( n^2p^2 + 3 n pq -2pq + q )
+					\\ &=&
+					n^3p^3 + 3 n^2 p^2q + npq(1-2p)
+				\end{eqnarray*}
+				and the second moment of $X$ is
+				\[
+					\Exp{X^2} = \VAR{X} + \Exp{X}^2
+					= npq + n^2p^2
+				\]
+				where $q=1-p$,
+				thus
+				\begin{eqnarray*}
+					\lefteqn{
+					\Exp{X^3} - 3\mux \Exp{X^2} + 2 \mux^3
+					}
+					\\ &=&
+					n^3p^3 + 3 n^2 p^2q + npq(1-2p)
+					-3np(npq+n^2p^2) + 2n^3p^3
+					\\ &=&
+					n^3( p^3 -3 p^3 + 2p^3)
+					+ n^2( 3p^2q - 3p^2q)
+					+ npq(1-2p)
+					\\ &=&
+					npq(1-2p).
+				\end{eqnarray*}
+				Therefore the skewness of the \binomrv\ is
+				\[
+					\frac{npq(1-2p)}{(npq)^{3/2}}
+					= \frac{1-2p}{\sqrt{np(1-p)}},
+				\]
+				hence the proof.
+			\end{solution}
+			\fi
+
+			\item Show that the skewness of the \geomrv\ is
+			\begin{equation}
+			\label{eq-skew-geom}
+				\frac{2-p}{\sqrt{1-p}}.
+			\end{equation}
+			\ifdefined\sol
+			\begin{solution}
+			First, we note that for $0\leq q<1$
+			\[
+				\sumkztoi q^k = \frac{1}{1-q}
+			\]
+			and differentiating both sides three times \wrt\ $q$ yields
+			\[
+				\sumkztoi k(k-1)(k-2)q^{k-3} = \frac{6}{(1-q)^4},
+			\]
+			thus
+			\begin{equation}
+			\label{eq-1}
+				\sumkztoi k(k-1)(k-2)q^{k-1}p = \frac{6pq^2}{(1-q)^4}.
+			\end{equation}
+			Note that the PMF of the \geomrv\ is $\pmfxk{k} = q^{k-1}p$
+			and the mean and the variance are
+			\[
+				\Exp{X} = 1/p,\
+				\VAR{X} = (1-p)/p^2.
+			\]
+			Thus if we expand the left-hand-side (LHS) of (\ref{eq-1}),
+			\begin{eqnarray*}
+				\lefteqn{
+				\sumkztoi (k^3 - 3k^2 + 2k ) q^{k-1} p
+				= \sumkztoi k^3 \pmfxk{k}
+				-3 \sumkztoi k^2 \pmfxk{k}
+				+ 2 \sumkztoi k \pmfxk{k}
+				}
+				\\&=&
+				\Exp{X^3}
+				-3\Exp{X^2}
+				+2\Exp{X}
+				= 6q^2/p^3
+			\end{eqnarray*}
+			where we let $q=1-p$.
+			Thus the third moment of the \geomrv\ is
+			\begin{eqnarray*}
+				\lefteqn{
+				\Exp{X^3}  = 3 \Exp{X^2} - 2\Exp{X} + 6q^2/p^3
+				= 3 (\VAR{X}+\Exp{X}^2) - 2\Exp{X} + 6q^2/p^3
+				}
+				\\&=&
+				3q/p^2 + 3/p^2 - 2/p + 6q^2/p^3
+				= (3pq + 3p - 2p^2 + 6q^2)/p^3,
+			\end{eqnarray*}
+			thus
+			\begin{eqnarray*}
+				\lefteqn{
+				\Exp{X^3} - 3\mux \Exp{X^2} + 2 \mux^3
+				= \Exp{X^3} - 3 (\VAR{X} + \Exp{X}^2)/p + 2 /p^3
+				}
+				\\&=&
+				\Exp{X^3} - 3 (q/p^2 + 1/p^2)/p + 2 /p^3
+				= ( 3pq + 3p - 2p^2 + 6q^2 - 3q - 3 + 2 )/p^3
+				\\&=&
+				 ( (-3 -2 +6 )p^2 + (3+3-12+3)p+(6-3-3+2))/p^3
+				\\&=&
+				(p^2-3p+2)/p^3
+				= (1-p)(2-p)/p^3
+				= q(2-p)/p^3.
+			\end{eqnarray*}
+			Therefore the skewness of the \geomrv\ is
+			\[
+				\frac{q(2-p)}{p^3} \cdot \frac{p^3}{q^{3/2}}
+				= \frac{2-p}{q^{1/2}}
+				= \frac{2-p}{\sqrt{1-p}},
+			\]
+			hence the proof.
+			\end{solution}
+			\fi
+
+
+			\item Show that the skewness of the \possrv\ is
+			\begin{equation}
+			\label{eq-skew-poss}
+				\alpha^{-1/2}.
+			\end{equation}
+			\ifdefined\sol
+			\begin{solution}
+			Since the PMF of the \possrv\ is
+			\[
+				\pmfxk{k} =  \frac{\alpha^k}{k!}e^{-\alpha},
+			\]
+			the third moment is
+			\begin{eqnarray*}
+				\lefteqn{
+				\Exp{X^3}
+				= \sumkztoi k^3 \frac{\alpha^k}{k!}e^{-\alpha}
+				= \sumkztoi k^2 \frac{\alpha^k}{(k-1)!}e^{-\alpha}
+				}
+				\\&=&
+				\sumkztoi (k+1)^2 \frac{\alpha^{k+1}}{k!}e^{-\alpha}
+				= \alpha \sumkztoi (k^2+2k+1) \frac{\alpha^{k}}{k!}e^{-\alpha}
+				\\&=&
+				\alpha( \Exp{X^2} + 2\Exp{X} + 1 )
+				= \alpha( \al^2 + \al + 2\al + 1 )
+				= \al^3 + 3\al^2 + \al,
+			\end{eqnarray*}
+			thus
+			\[
+				\Exp{X^3} - 3\mux \Exp{X^2} + 2 \mux^3
+				= \al^3 + 3\al^2 + \al - 3\al(\al^2+\al) + 2 \al^3
+				= \al,
+			\]
+			hence
+			the skewness of the \possrv\ is
+			\[
+				\frac{\al}{\al^{3/2}} = \al^{-1/2},
+			\]
+			hence the proof.
+			\end{solution}
+			\fi
+
+
+		\end{enumerate}
+
+		\item For the above three cases, explain how they make sense,
+		\eg, explain why the skewness of the \binomrv\ goes down in the negative direction
+		as $p$ grows.
+		\ifdefined\sol
+		\begin{solution}
+		\begin{enumerate}
+			\item The skewness of the \binomrv:
+			\figurename~\ref{fig-binoms}
+			show the three \binomrv s
+			with $p=0.3$, $p=0.5$, and $p=0.8$
+			and with same $n=10$.
+			In the figure,
+			we notice that
+			if $p=0.5$,
+			the PMF is symmetric around $k=5$.
+			However,
+			if $p<0.5$,
+			it is skewed to the left
+			and if $p>0.5$,
+			it is skewed to the right.
+			The skewness for the \binomrv\ in (\ref{eq-skew-binom})
+			is drawn in \figurename~\ref{fig-skew-binom}
+			as a function of $p$ when $n=10$.
+			The skewness is $0$ when $p=0.5$,
+			which is consistent
+			with the fact that the PMF is symmetric about $k=5$
+			when $p=0.5$.
+			The skewness grows
+			as $p$ departs from $0.5$ in the negative direction,
+			which is consistent
+			with the fact that the PMF has longer tail on the right
+			for $p=0.3$.
+			On the contrary,
+			the skewness decreases below $0$
+			as $p$ departs from $0.5$ in the positive direction,
+			which is consistent
+			with the fact that the PMF has longer tail on the left
+			for $p=0.8$.
+
+			\begin{figure}\begin{center}
+			\includegraphics[width=.6\linewidth]{figures/binoms}
+			\caption{The PMFs of the \binomrv s with
+			$p=0.3$, $p=0.5$, and $p=0.8$ (from top to bottomo)
+			with $n=10$ for all three.}
+			\label{fig-binoms}
+			\end{center}\end{figure}
+
+			\begin{figure}\begin{center}
+			\includegraphics[width=.6\linewidth]{figures/skew_binom}
+			\caption{The skewness of the \binomrv\ as a function of $p$ when $n=10$.}
+			\label{fig-skew-binom}
+			\end{center}\end{figure}
+
+
+			\item The skewness of the \geomrv:
+			\figurename~\ref{fig-geoms}
+			show the three \geomrv s
+			with $p=0.2$, $p=0.6$, and $p=0.95$
+			(with green lines for mean values).
+			In the figure,
+			we notice that
+			as $p$ grows,
+			the PMF is skewed more to the right.
+			The skewness can be also thought
+			of how mush portion of the total probability
+			is to the left of the mean;
+			in the bottom most PMF,
+			almost all probability lies to the left of the mean.
+			\figurename~\ref{fig-skew-geom}
+			shows the skewness of the \geomrv\
+			as a function of $p$,
+			which is consistent with the above observation.
+
+			\begin{figure}\begin{center}
+			\includegraphics[width=.6\linewidth]{figures/geoms}
+			\caption{The PMFs of the \binomrv s with
+			$p=0.2$, $p=0.6$, and $p=0.95$}
+			\label{fig-geoms}
+			\end{center}\end{figure}
+
+			\begin{figure}\begin{center}
+			\includegraphics[width=.6\linewidth]{figures/skew_geom}
+			\caption{The skewness of the \geomrv\ as a function of $p$.}
+			\label{fig-skew-geom}
+			\end{center}\end{figure}
+
+
+			\item
+			\figurename~\ref{fig-posss}
+			show the three \possrv s
+			with $\al=1$, $\al=5$, and $\al=10$.
+			In the figure,
+			we notice that
+			as $\al$ grows,
+			the PMF becomes more symmetric
+			whereas for small $\al$,
+			the PMF is skewed to the right,
+			which is consistent
+			with (\ref{eq-skew-poss}).
+
+			\begin{figure}\begin{center}
+			\includegraphics[width=.6\linewidth]{figures/posss}
+			\caption{The PMFs of the \possrv s with
+			with $\al=1$, $\al=5$, and $\al=10$.}
+			\label{fig-posss}
+			\end{center}\end{figure}
+		\end{enumerate}
+		\end{solution}
+		\fi
+	\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}
+
+

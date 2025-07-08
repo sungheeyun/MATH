@@ -1,0 +1,591 @@
+
+
+\input{D:/Multimedia/mydefs}
+%\input{D:/mydefs}
+
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhead[R]{Probability and Statistics for Electrical Engineering}
+
+\addtolength{\headsep}{.5cm}
+
+
+
+\input{statdefs}
+\renewcommand{\emph}[1]{{\it #1}}
+
+\begin{document}
+\setlength{\headheight}{15pt}
+\maketitle
+
+\begin{enumerate}
+	\item LG 2.127. In order for a circuit board to work,
+	seven identical chips must be in working order.
+	To improve reliability, an additional chip is included in the board,
+	and the design allows it to replace any of the seven other chips
+	when they fail.
+	\begin{enumerate}
+		\item Find the probability $p_b$ that the board is working
+		in terms of the probability $p$ that an individual chip is working.
+		\ifdefined\sol
+		\begin{solution}
+			\begin{enumerate}
+				\item Method 1:
+				The board can afford to have one chip failure at most
+				due to the additional chip.
+				The number of working chips is governed
+				by the binomial probability law,
+				hence
+				\begin{eqnarray*}
+					\lefteqn{
+					p_b =
+					\pr{\{\mbox{all chips are working}\}}
+					}
+					\\&&
+					+ \pr{\{\mbox{only one chip is not working \emph{and} the additional chip is working}\}}
+					\\&=& p^7 + {7 \choose 1} (1-p) p^6 \cdot p
+					= p^7 ( 8 - 7p).
+				\end{eqnarray*}
+				since the event that ``only one chip is not working''
+				and the event ``the additional chip is working''
+				are independent.
+
+				\item Method 2:
+				Indeed, we can consider the $8$ chips ($7$ main chips plus $1$ additional chip)
+				all together. The board will work if at least $7$ chips are working.
+				Hence, the answer can be obtained by
+				\[
+					p_b = p^8 + {8 \choose 1} p^7 (1-p)
+					= p^7(8-7p).
+				\]
+			\end{enumerate}
+			(It is interesting to verify that $p_b$ is a nondecreasing increasing
+			function in $p$ (since it should be!).
+			To verify this, let $f(p) = 8p^7 - 7p^8$
+			and differentiate it by $p$:
+			\[
+				f'(p) = 56p^6 - 56p^7 = 56p^6(1-p).
+			\]
+			Since $f'(p)>0$ for $0<p<1$, $p_b$ indeed is a monotonically increasing function in $p$,
+			\ie, if the probability that an individual chip is working increases,
+			the probability that the board is working also increase.)
+		\end{solution}
+		\fi
+
+		\item Suppose that $n$ circuit boards are operated in parallel,
+		and that we require a $99.9$\% probability that at least one
+		board is working. How many boards are needed?
+
+		\ifdefined\sol
+		\begin{solution}
+			In order for the probability that at least one board is working
+			to be at least $99.9$\%,
+			the probability that all board fail to work should be less than $0.1$\%.
+			Hence,
+			\[
+				(1-p_b)^n < 10^{-3}
+				\iff
+				n \log_{10}(1-p_b) < -3
+				\Rightarrow
+				n \geq \lceil -3 / \log_{10}(1-p_b) \rceil
+			\]
+			where $\lceil x \rceil$ is defined by
+			the smallest integer that is greater than or equal to $x$.
+			For example,
+			if $p=.9$, $n\geq 5$,
+			if $p=.7$, $n\geq 24$,
+			and if $p=.5$, $n\geq 194$.
+			
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+	\item LG 3.1. Let \X\ be the maximum of the number of heads
+	obtained when Carlos and Michael each flip a fair coin twice.
+	\begin{enumerate}
+		\item Describe the underlying space \sspace\ of this random experiment
+		and specify the probabilities of its elementary events.
+		\ifdefined\sol
+		\begin{solution}
+		\begin{eqnarray*}
+			\sspace &=& \{
+			(HH,HH), (HH,HT), (HH,TH), (HH,TT),
+			\\&&(HT,HH), (HT,HT), (HT,TH), (HT,TT),
+			\\&&(TH,HH), (TH,HT), (TH,TH), (TH,TT),
+			\\&&(TT,HH), (TT,HT), (TT,TH), (TT,TT)
+			\}
+		\end{eqnarray*}
+		and the probability of every elementary event
+		is $1/16$.
+		\end{solution}
+		\fi
+
+		\item Show the mapping from \sspace\ to \ssx, the range of \X.
+		\ifdefined\sol
+		\begin{solution}
+		Let $A_0, A_1, A_2 \subset \sspace$ such that
+		\[
+			A_0 = \{ (TT,TT) \},
+		\]
+		\[
+			A_1 = \{
+			(HT,HT), (HT,TH), (HT,TT),
+			(TH,HT), (TH,TH), (TH,TT),
+			(TT,HT), (TT,TH) \},
+		\]
+		\[
+			A_2 = \{
+			(HH,HH), (HH,HT), (HH,TH), (HH,TT),
+			(HT,HH),
+			(TH,HH),
+			(TT,HH) \}.
+		\]
+		Obviously, $\ssx = \{0,1,2\}$
+		and $X$ maps all the elements in $A_k$ to $k$
+		for $k=0,1,2$.
+		\end{solution}
+		\fi
+
+		\item Find the probabilities for the various values of \X.
+		asdf
+		\ifdefined\sol
+		\begin{solution}
+		\begin{enumerate}
+			\item Method I: Since the event $A_k$ corresponds to $X=k$ for $k=0,1,2$,
+			we can easily calculate each probability as follows:
+			\begin{eqnarray*}
+				\pr{X=0} &=& \pr{A_0} = 1/16,
+				\\\pr{X=1} &=& \pr{A_1} = 8/16,
+				\\\pr{X=2} &=& \pr{A_2} = 7/16.
+			\end{eqnarray*}
+
+			\item Method II:
+			This method can seem a bit complicated, but it will pay off later.
+			Let us introduce two new random varaibles, $Y$ and $Z$,
+			each of each represents the number of heads of Carlos and Michael
+			respectively.
+			Then obviously,
+			\[ \pr{Y=0} = 1/4,\ \pr{Y=1} = 1/2,\ \pr{Y=2} = 1/4 \]
+			and
+			\[ \pr{Z=0} = 1/4,\ \pr{Z=1} = 1/2,\ \pr{Z=2} = 1/4. \]
+			Since $X = \max{Y,Z}$, and $Y$ and $Z$ are independent,
+			we have
+			\begin{eqnarray*}
+				\pr{X=0} &=& \pr{Y=0 \mand Z=0}
+				= \pr{Y=0}\pr{Z=0} = 1/16,
+				\\ \pr{X=1}&=&
+				\pr{Y\leq 1 \mand Z\leq 1} - \pr{Y=0 \mand Z=0}
+				= (3/4)^2 - 1/16 =  8/16,
+				\\ \pr{X=2}&=& 1 - \pr{X=0} - \pr{X=1}
+				 = 7/16.
+			\end{eqnarray*}
+
+		\end{enumerate}
+		\end{solution}
+		\fi
+
+
+	\end{enumerate}
+
+	\item LG 3.6.
+	An information source produces binary triplets
+	$\{000, 111, 010, 101, 001, 110, 100, 011\}$
+	with corresponding probabilities
+	$\{1/4, 1/4, 1/8, 1/8, 1/16, 1/16, 1/16, 1/16\}$.
+	A binary code assigns a codeword of length $-\log_2 p_k$
+	to triplet $k$.
+	Let \X\ be the length of the string assigned to the output of the information source.
+	\begin{enumerate}
+		\item Show the mapping from \sspace\ to \ssx,
+		the range of \X.
+		\ifdefined\sol
+		\begin{solution}
+			Since $-\log_2 (1/4) = 2$, $-\log_2 (1/8) = 3$, and $-\log_2 (1/16) = 4$,
+			\[
+				\ssx = \{2,3,4\}.
+			\]
+			Let
+			\[ A_2 = \{ 000, 111 \}, \]
+			\[ A_3 = \{ 010, 101 \}, \]
+			\[ A_4 = \{ 001, 110, 100, 011 \}. \]
+			Then $X$ maps every element in $A_k$ to $k$
+			for $k=2,3,4$.
+		\end{solution}
+		\fi
+
+		\item Find the probabilities for the various values of \X.
+		\ifdefined\sol
+		\begin{solution}
+		\begin{eqnarray*}
+			\pr{X=2} &=& \pr{A_2} = 1/4 + 1/4 = 1/2,
+			\\\pr{X=3} &=& \pr{A_3} = 1/8 + 1/8 = 1/4,
+			\\\pr{X=4} &=& \pr{A_4} = 1/16 + 1/16 + 1/16 + 1/16 = 1/4.
+		\end{eqnarray*}
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+	\item LG 3.10.
+	An $m$-bit password
+	is required to access a system.
+	A hacker systematically works through all possible $m$-bit patterns.
+	Let \X\ be the number of patterns
+	tested until the correct password is found.
+	(Assume that all the possible combination for the password
+	is equiprobable.)
+	\begin{enumerate}
+		\item Describe the sample space of \sspace.
+		\ifdefined\sol
+		\begin{solution}
+		Let \sspace\ be the set of all possible
+		passwords. Then
+		\[
+			\sspace  =  \{0,1\}^m
+			= \set{(\xcomma{x}{n})}{x_i\in\{0,1\}\mfor 1\leq i\leq m}.
+		\]
+		The size of the sample space is $2^m$.
+		\end{solution}
+		\fi
+
+		\item Show the mapping from \sspace\ to \ssx, the range of \X.
+		\ifdefined\sol
+		\begin{solution}
+			Without loss of generality,
+			we assume that the hacker tries
+			passwords in an increasing order
+			when the $n$-tuple is interpreted as binary number,
+			\ie, in the following order:
+			\[
+				(\ldots,0,0,0),
+				(\ldots,0,0,1),
+				(\ldots,0,1,0),
+				(\ldots,0,1,1),
+				(\ldots,1,0,0),
+				(\ldots,1,0,1),
+			\]
+			\[
+				(\ldots,1,1,0),
+				(\ldots,1,1,1),
+				\ldots,
+				(1,\ldots,1,1,1),
+				\]
+			Then $\ssx = \{1,2,\ldots, 2^m\}$
+			and \X\ maps each \[(\xcomma{x}{n})\]
+			to \[2^{n-1}x_1 + 2^{n-2} x_2 + \cdots + 2 x_{n-1} + x_{n} + 1.\]
+
+		\end{solution}
+		\fi
+
+
+		\item Find the probabilities for the various values of \X.
+		\ifdefined\sol
+		\begin{solution}
+			Since all the possible passwords are equiprobable,
+			\[
+				\pr{X=k} = 1/2^m
+				\mfor k =1,2,\ldots,2^m.
+			\]
+
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+	\item LG 3.11.
+	Let \X\ be the maximum of the coin tosses in Problem 3.1.
+	\begin{enumerate}
+		\item Compare the PMF of \X\ with the PMF of $Y$,
+		the number of heads in two tosses of a fair coin.
+		Explain the difference.
+		\ifdefined\sol
+		\begin{solution}
+			In Problem 3.1, 
+			the PMF of \X\ was obtained as
+			\[
+				\pmf{X}(0) = 1/16,\
+				\pmf{X}(1) = 8/16,\
+				\pmf{X}(2) = 7/16,
+			\]
+			and that of $Y$ is
+			\[
+				\pmf{Y}(0) = 1/4,\
+				\pmf{Y}(1) = 1/2,\
+				\pmf{Y}(2) = 1/4.
+			\]
+			The ranges of the two random variables
+			are the same; $\{0,1,2\}$.
+			However, the probability assignment is different
+			because \emph{the underlying sample spaces are different}.
+	
+		\end{solution}
+		\fi
+
+		\item Suppose that Carlos uses a coin with probability of heads
+		$p = 3/4$. Find the PMF of \X.
+		\ifdefined\sol
+		\begin{solution}
+		\begin{enumerate}
+			\item Method I:
+			Let \sspace\ be the sample space defined in 3.1
+			and $A_0$, $A_1$, and $A_2$ be the events defined in the same problem.
+			Then
+			\begin{eqnarray*}
+				\pmf{X}(0) &=& \pr{A_0} = \frac{1}{16} \cdot \frac{1}{4}
+					= \frac{1}{64},
+				\\\pmf{X}(1) &=& \pr{A_1}
+				= 6 \cdot \frac{3}{16} \cdot \frac{1}{4}
+				+ 2 \cdot \frac{1}{16} \cdot \frac{1}{4}
+				= \frac{20}{64},
+				\\\pmf{X}(2) &=& \pr{A_2}
+				= 4 \cdot \frac{9}{16} \cdot \frac{1}{4}
+				+ 2 \cdot \frac{3}{16} \cdot \frac{1}{4}
+				+ \frac{1}{16} \cdot \frac{1}{4}
+				= \frac{43}{64}.
+			\end{eqnarray*}
+
+			\item Method II:
+			Define $Y$ and $Z$ as in Method II of Problem 3.1.
+			The PMF of $Z$ remaines the same,
+			but that of $Y$ is changed as follows:
+			\[
+				\pr{Y=0} = 1/16,\ \pr{Y=1} = 6/16,\ \pr{Y=2} = 9/16.
+			\]
+			Thus
+			\begin{eqnarray*}
+				\pr{X=0} &=& \pr{Y=0 \mand Z=0}
+				= \pr{Y=0}\pr{Z=0} = \frac{1}{16} \cdot \frac{1}{4} = \frac{1}{64},
+				\\ \pr{X=1}&=&
+				\pr{Y\leq 1} \pr{Z\leq 1} - \pr{Y=0} \pr{ Z=0}
+				= \frac{7}{16}\cdot \frac{3}{4} - \frac{1}{64} =  \frac{20}{64},
+				\\ \pr{X=2}&=& 1 - \pr{X=0} - \pr{X=1}
+				 = \frac{43}{64}.
+			\end{eqnarray*}
+
+
+		\end{enumerate}
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+	\item LG 3.12. Consider an information source that produces binary pairs
+	that we designate as $\ssx = \{1, 2, 3, 4\}$.
+	Find and plot the PMF in the following cases.
+	You're free to use the following two facts without proof:
+	\begin{itemize}
+		\item An infinite series $\sumktoi 1/k^p$
+		converges if and only if $p > 1$.
+
+		\item If two infinite sequences
+		$\{a_k\}_{k=1}^\infty$
+		and $\{b_k\}_{k=1}^\infty$
+		satisfy $0\leq a_k\leq b_k$ for all $k\in\{1,2,\ldots\}$
+		and $\sumktoi b_k$ converges,
+		then $\sumktoi a_k$ converges.
+	\end{itemize}
+	\begin{enumerate}
+		\item $p_k = p_1/k$ for all $k$ in \ssx.
+		\ifdefined\sol
+		\begin{solution}
+		Since the sum of all the PMF values must be $1$,
+		we have
+		\[
+			\sumto{k}{1}{4} \pmf{X}(k)
+			= \sumto{k}{1}{4} p_k
+			= (1 + 1/2 + 1/3 + 1/4) p_1
+			= \frac{25}{12} p_1 = 1.
+		\]
+		Thus, $p_1 = 12/25$ and
+		\[
+			\pmf{X}(k) = \frac{12}{25k} \mfor k=1,2,3,4.
+		\]
+		\end{solution}
+		\fi
+
+		\item $p_{k+1} = p_k/2$ for $k = 1, 2, 3$.
+		\ifdefined\sol
+		\begin{solution}
+		The recursive formula implies
+		\[
+			p_2 = p_1 /2,\
+			p_3 = p_1 /4,\
+			p_4 = p_1 /8,
+		\]
+		thus,
+		\[
+			\sumto{k}{1}{4} \pmfxk{k}
+			= \sumto{k}{1}{4} p_1 / 2^{k-1}
+			= (1+1/2+1/4+1/8) p_1
+			= \frac{15}{8} p_1 = 1
+		\]
+		and we have $p_1 = 8/15$.
+		Therefore
+		\[
+			\pmfxk{k} = \frac{16}{15\cdot 2^k}
+			= \frac{1}{15} 2^{-k+4}
+			\mfor k=1,2,3,4.
+		\]
+		\end{solution}
+		\fi
+
+		\item $p_{k+1} = p_k/2^k$ for $k = 1, 2, 3$.
+		\ifdefined\sol
+		\begin{solution}
+		The recursive equation implies
+		\[
+			p_2 = p_1 /2,\
+			p_3 = p_2 /4 = p_1/8,\
+			p_4 = p_3 /8 = p_1/64,
+		\]
+		thus,
+		\[
+			\sumto{k}{1}{4} \pmfxk{k}
+			= (1+1/2+1/8+1/64) p_1
+			= \frac{105}{64} p_1 = 1
+		\]
+		and we have $p_1 = 64/105$.
+		Therefore
+		\[
+			\pmfxk{k} = \frac{64}{105} 2^{-k(k-1)/2}
+			\mfor k=1,2,3,4.
+		\]
+		\end{solution}
+		\fi
+
+
+		\item Can the random variables in parts (a), (b), and (c)
+		be extended to take on values in the set $\{1, 2, \ldots\}$?
+		If yes, specify the PMF of the resulting random variables.
+		If no, explain why not.
+		\ifdefined\sol
+		\begin{solution}
+			\begin{enumerate}
+			\item
+				For (a), we \emph{cannot}
+				extend the random variable so as to take
+				on values $\{1,2,\ldots\}$
+				for if $p_1>0$,
+				\[
+					\sumktoi \pmfxk{k} = p_1 \sumktoi 1/k = \infty
+				\]
+				and if $p_1=0$, $\pmfxk{k} = 0 $ for all $k$.
+
+			\item
+				For (b), we \emph{can}
+				extend the random variable so as to take
+				on values $\{1,2,\ldots\}$
+				for the recursion gives $p_k  = p_1/2^{k-1}$
+				and
+				\[
+					\sumktoi \pmfxk{k}
+					= \sumktoi p_1/ 2^{k-1}
+					= \frac{p_1}{1-1/2} = 2p_1 = 1.
+				\]
+				Therefore the PMF
+				\[
+					\pmfxk{k} = 1/ 2^k \mfor k =1,2,\ldots
+				\]
+				defines the random variable.
+
+			\item
+				For (c), we \emph{can}
+				extend the random variable so as to take
+				on values $\{1,2,\ldots\}$.
+				If we let $q_k = \log_2 p_k$,
+				the recursion becomes
+				\[
+					q_{k+1} = q_k - k,
+				\]
+				hence
+				\begin{eqnarray*}
+					\lefteqn{
+					q_k = q_{k-1} - (k-1)
+					= q_{k-2} - (k-2) - (k-1) 
+					= \cdots
+					}
+					\\&=& q_{1} - (1+2+\cdots+(k-1))
+					= q_{1} - k(k-1)/2.
+				\end{eqnarray*}
+				Thus,
+				\[
+					p_k = 2^{q_k} = p_1 2^{-k(k-1)/2}.
+				\]
+				Now we need to check whether there exists $p_1>0$
+				such that the following equation holds:
+				\begin{equation}
+				\label{eq-1}
+					\sumktoi p_k = p_1 \sumktoi 2^{-k(k-1)/2} = 1.
+				\end{equation}
+				Since $ 2^{-k(k-1)/2} \leq 2^{-(k-1)}$
+				for all $k\in\{1,2,\ldots\}$
+				and $\sumktoi 2^{-(k-1)}$ converges,
+				the infinite series (\ref{eq-1}) converges
+				(though we (or at least I) cannot evaulate the exact value).
+				If we let $p = 1/\sumktoi 2^{-k(k-1)/2}$,
+				the PMF
+				\[
+					\pmfxk{k} = p \cdot 2^{-k(k-1)/2}
+				\]
+				defined the random variable.
+			\end{enumerate}
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+	\item LG 3.17.
+	A modem transmits a $+2$
+	voltage signal into a channel.
+	The channel adds to this signal a noise term that
+	is drawn from the set $\{0, -1, -2, -3\}$
+	with respective probabilities $\{4/10, 3/10, 2/10, 1/10\}$.
+	\begin{enumerate}
+		\item Find the PMF of the output $Y$ of the channel.
+		\ifdefined\sol
+		\begin{solution}
+		\[
+			\pmf{Y}(2) = 4/10,\
+			\pmf{Y}(1) = 3/10,\
+			\pmf{Y}(0) = 2/10,\
+			\pmf{Y}(-1) = 1/10.
+			\]
+		\end{solution}
+		\fi
+
+		\item What is the probability that the output of the channel
+		is equal to the input of the channel?
+		\ifdefined\sol
+		\begin{solution}
+			In order for the output of the channel to be equal to the input of the channel,
+			the noise must be zero,
+			hence the probability is $4/10$.
+		\end{solution}
+		\fi
+
+		\item What is the probability that the output of the channel is positive?
+		\ifdefined\sol
+		\begin{solution}
+			The probability is $0.7$ for
+			\[
+				\sum_{k>0} \pmf{Y}(k)
+				= \pmf{Y}(1) + \pmf{Y}(2)
+				= 3/10 + 4/10 = 7/10.
+			\]
+		\end{solution}
+		\fi
+
+	\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
